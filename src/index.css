@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-white: #FFFEFE;
+  --color-primary: #C80000;
+  --color-primary-light: #FFF0F0;
+  --color-secondary: #F9FAFB;
+  --color-heading: #4D4D4D;
+  --color-image-text: #4D4D4D;
+  --color-linear-end: #FFD700;
+  --color-primary-extra-light: #FFE2E2;
+}
+
+.bg-linear-gradient {
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-linear-end) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
