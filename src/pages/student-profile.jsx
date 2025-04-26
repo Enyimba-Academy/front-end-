@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Download, Edit, Lock, Share2 } from "lucide-react";
-
+import { Link } from "react-router";
 export default function StudentProfile() {
   const [activeTab, setActiveTab] = useState("enrolled");
 
@@ -45,9 +45,12 @@ export default function StudentProfile() {
             </div>
 
             {/* Edit Profile Button */}
-            <button className="border border-red-600 text-red-600 px-4 py-2 rounded hover:bg-red-50 transition-colors">
+            <Link
+              to="/edit-profile"
+              className="border border-red-600 text-red-600 px-4 py-2 rounded hover:bg-red-50 transition-colors"
+            >
               Edit Profile
-            </button>
+            </Link>
           </div>
         </div>
       </div>

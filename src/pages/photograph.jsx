@@ -144,7 +144,7 @@ export default function PhotographySchool() {
               </div>
               <div className="p-6 flex justify-between">
                 <a
-                  href="/enroll"
+                  href="/course"
                   className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
                 >
                   Enroll Now

@@ -156,7 +156,7 @@ export default function Schools() {
                   </span>
                 </div>
                 <a
-                  href="/schools/photography"
+                  href="/photography"
                   className="text-red-600 text-sm font-medium hover:underline"
                 >
                   View Courses →
@@ -272,7 +272,7 @@ export default function Schools() {
                   </span>
                 </div>
                 <a
-                  href="/schools/cinematography"
+                  href="/photography"
                   className="text-red-600 text-sm font-medium hover:underline"
                 >
                   View Courses →

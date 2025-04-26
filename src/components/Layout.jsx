@@ -1,16 +1,15 @@
-import PropTypes from "prop-types";
+import { Outlet } from "react-router";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
-export default function Layout({ children }) {
+
+export default function Layout() {
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow">
+        <Outlet />
+      </main>
       <Footer />
     </div>
   );
 }
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-};

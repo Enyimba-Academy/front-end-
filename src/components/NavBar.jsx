@@ -1,7 +1,5 @@
 import { useState } from "react";
-
 import { Menu, X } from "lucide-react";
-
 import { Link } from "react-router";
 import PrimaryLink from "./shared/PrimaryLink";
 
@@ -38,12 +36,15 @@ export default function NavBar() {
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-4 text-heading font-semibold text-xl">
           <Link to="/" className="hover:text-primary transition-colors">
-            Home
-          </Link>
-          <Link to="/about-us" className="hover:text-primary transition-colors">
             About
           </Link>
-          <Link to="/contact" className="hover:text-primary transition-colors">
+          <Link to="/schools" className="hover:text-primary transition-colors">
+            Schools
+          </Link>
+          <Link
+            to="/contact-us"
+            className="hover:text-primary transition-colors"
+          >
             Contact
           </Link>
         </div>
@@ -57,12 +58,17 @@ export default function NavBar() {
             Login
           </Link>
           <Link
-            to="/signup"
+            to="/register"
             className="text-heading font-semibold text-xl hover:text-primary transition-colors"
           >
-            Signup
+            Sign up
           </Link>
-          <PrimaryLink href="/enroll">Enroll Now</PrimaryLink>
+          <Link
+            to="/onboarding"
+            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
+          >
+            Enroll Now
+          </Link>
         </div>
 
         {/* Mobile Menu */}
@@ -99,20 +105,20 @@ export default function NavBar() {
                 Login
               </Link>
               <Link
-                to="/signup"
+                to="/register"
                 className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
                 onClick={toggleMenu}
               >
-                Signup
+                Sign up
               </Link>
               <div className="w-full pt-4">
-                <PrimaryLink
-                  to="/enroll"
-                  className="w-full justify-center"
+                <Link
+                  to="/onboarding"
+                  className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
                   onClick={toggleMenu}
                 >
                   Enroll Now
-                </PrimaryLink>
+                </Link>
               </div>
             </div>
           </div>
