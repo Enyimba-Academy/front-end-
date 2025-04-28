@@ -9,7 +9,7 @@ export function useAuth() {
   const loginMutation = useMutation({
     mutationFn: authService.login,
     onSuccess: (data) => {
-      const { token } = data;
+      const { token } = data.data;
       setToken(token);
 
       queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -30,6 +30,15 @@ export function useAuth() {
     enabled: useAuthStore.getState().isAuthenticated,
   });
 
+  const registerMutation = useMutation({
+    mutationFn: authService.register,
+    onSuccess: (data) => {
+      const { token } = data.data;
+      setToken(token);
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    },
+  });
+
   return {
     user,
     isLoadingUser,
@@ -38,5 +47,8 @@ export function useAuth() {
     loginError: loginMutation.error,
     logout: logoutMutation.mutate,
     isLoggingOut: logoutMutation.isPending,
+    register: registerMutation.mutate,
+    isRegistering: registerMutation.isPending,
+    registerError: registerMutation.error,
   };
 }

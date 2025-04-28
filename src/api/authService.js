@@ -15,4 +15,8 @@ export const authService = {
     const response = await api.get("/auth/me");
     return response.data;
   },
+  register: async (credentials) => {
+    const response = await api.post("/auth/register", credentials);
+    return response.data;
+  },
 };

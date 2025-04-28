@@ -13,6 +13,7 @@ import ContactUs from "@/pages/contact-us";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import OnboardingFlow from "@/pages/onboarding";
+import RequireAuth from "@/components/RequireAuth";
 
 function App() {
   return (
@@ -20,19 +21,76 @@ function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/student-profile" element={<StudentProfile />} />
-        <Route path="/certificate" element={<CertificatePage />} />
-        <Route path="/course" element={<Course />} />
-
-        <Route path="/photography" element={<PhotographySchool />} />
-        <Route path="/schools" element={<Schools />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/edit-profile"
+          element={
+            //<RequireAuth>
+            <EditProfile />
+            // </RequireAuth>
+          }
+        />
+        <Route
+          path="/student-profile"
+          element={
+            //<RequireAuth>
+            <StudentProfile />
+            // </RequireAuth>
+          }
+        />
+        <Route
+          path="/certificate"
+          element={
+            //<RequireAuth>
+            <CertificatePage />
+            // </RequireAuth>
+          }
+        />
+        <Route
+          path="/course"
+          element={
+            //<RequireAuth>
+            <Course />
+            // </RequireAuth>
+          }
+        />
+        <Route
+          path="/photography"
+          element={
+            //<RequireAuth>
+            <PhotographySchool />
+            // </RequireAuth>
+          }
+        />
+        <Route
+          path="/schools"
+          element={
+            //<RequireAuth>
+            <Schools />
+            // </RequireAuth>
+          }
+        />
       </Route>
-      <Route path="/video-lesson" element={<VideoLessonPage />} />
-      <Route path="/onboarding" element={<OnboardingFlow />} />
+      <Route
+        path="/video-lesson"
+        element={
+          // <RequireAuth>
+          <VideoLessonPage />
+          //  </RequireAuth>
+        }
+      />
+      <Route
+        path="/onboarding"
+        element={
+          // <RequireAuth>
+          <OnboardingFlow />
+          //  </RequireAuth>
+        }
+      />
     </Routes>
   );
 }

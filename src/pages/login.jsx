@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { Eye, EyeOff, Facebook } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Formik, Form, Field } from "formik";
 import { loginSchema } from "@/schema/login.schema";
 import { toast } from "react-toastify";
+import { useNavigate, useLocation } from "react-router";
+
 export default function LoginPage() {
-  const navigate = useNavigate();
   const { login, isLoggingIn, loginError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const initialValues = {
     email: "",
     password: "",
@@ -23,7 +25,8 @@ export default function LoginPage() {
         {
           onSuccess: () => {
             toast.success("Login successful");
-            navigate("/");
+            const from = location.state?.from?.pathname || "/";
+            navigate(from, { replace: true });
           },
         }
       );
