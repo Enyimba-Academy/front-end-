@@ -12,8 +12,10 @@ export const authService = {
   },
 
   getCurrentUser: async () => {
-    const response = await api.get("/auth/me");
-    return response.data;
+    const response = await api.get("/auth/me").then((res) => {
+      return res.data.data;
+    });
+    return response;
   },
   register: async (credentials) => {
     const response = await api.post("/auth/register", credentials);

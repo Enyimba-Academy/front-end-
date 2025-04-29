@@ -1,9 +1,111 @@
 import { useState } from "react";
 import { Download, Edit, Lock, Share2 } from "lucide-react";
-import { Link } from "react-router";
-export default function StudentProfile() {
-  const [activeTab, setActiveTab] = useState("enrolled");
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
 
+function LoadingSkeleton() {
+  return (
+    <div className="max-w-7xl mx-auto bg-white animate-pulse">
+      {/* Header Skeleton */}
+      <div className="px-4 py-8 md:px-8 flex flex-col md:flex-row items-center md:items-start gap-6">
+        {/* Profile Image Skeleton */}
+        <div className="w-24 h-24 rounded-full bg-gray-200"></div>
+
+        {/* Profile Info Skeleton */}
+        <div className="flex-1 text-center md:text-left">
+          <div className="h-8 w-48 bg-gray-200 rounded mb-4"></div>
+          <div className="h-4 w-64 bg-gray-200 rounded mb-6"></div>
+
+          {/* Stats Skeleton */}
+          <div className="flex flex-wrap justify-center md:justify-start gap-8 mb-6">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="text-center">
+                <div className="h-4 w-32 bg-gray-200 rounded mb-2"></div>
+                <div className="h-6 w-16 bg-gray-200 rounded"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Button Skeleton */}
+          <div className="h-10 w-32 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="flex flex-col md:flex-row">
+        {/* Left Content Skeleton */}
+        <div className="flex-1 border-r border-gray-200">
+          {/* Tabs Skeleton */}
+          <div className="border-b border-gray-200">
+            <div className="flex">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="px-6 py-4">
+                  <div className="h-4 w-24 bg-gray-200 rounded"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tab Content Skeleton */}
+          <div className="p-6">
+            <div className="h-8 w-48 bg-gray-200 rounded mb-6"></div>
+            <div className="border border-gray-200 rounded-lg overflow-hidden mb-6">
+              <div className="aspect-video w-full bg-gray-200"></div>
+              <div className="p-4">
+                <div className="h-6 w-64 bg-gray-200 rounded mb-2"></div>
+                <div className="h-4 w-48 bg-gray-200 rounded mb-4"></div>
+                <div className="h-4 w-24 bg-gray-200 rounded"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Sidebar Skeleton */}
+        <div className="w-full md:w-80 p-6 bg-gray-50">
+          {/* Quick Actions Skeleton */}
+          <div className="mb-8">
+            <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
+            <ul className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <li key={i}>
+                  <div className="h-4 w-40 bg-gray-200 rounded"></div>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Achievements Skeleton */}
+          <div>
+            <div className="h-6 w-32 bg-gray-200 rounded mb-4"></div>
+            <ul className="space-y-4">
+              {[1, 2].map((i) => (
+                <li key={i} className="flex items-start">
+                  <div className="w-6 h-6 rounded-full bg-gray-200"></div>
+                  <div className="ml-3">
+                    <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                    <div className="h-3 w-24 bg-gray-200 rounded mt-1"></div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function StudentProfile() {
+  const { user, isLoadingUser } = useAuth();
+  const [activeTab, setActiveTab] = useState("enrolled");
+  const navigate = useNavigate();
+
+  if (isLoadingUser) {
+    return <LoadingSkeleton />;
+  }
+  if (!user.profile) {
+    return navigate("/onboarding");
+  }
   return (
     <div className="max-w-7xl mx-auto bg-white">
       {/* Header with blue top border */}
@@ -22,7 +124,7 @@ export default function StudentProfile() {
           {/* Profile Info */}
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-2xl font-semibold text-gray-800">
-              Amina Adeyemi
+              {user.firstName} {user.lastName}
             </h1>
             <p className="text-gray-600 mb-6">
               School of Photography | Enrolled: Jan 2024

@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import {
+  ArrowBigDownDash,
+  ArrowDown,
+  Menu,
+  MoveDown,
+  Settings,
+  X,
+} from "lucide-react";
 import { Link } from "react-router";
 import PrimaryLink from "./shared/PrimaryLink";
+import { useAuth } from "../hooks/useAuth";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const { user, isAuthenticated } = useAuth();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -50,27 +58,38 @@ export default function NavBar() {
         </div>
 
         {/* Desktop Action Buttons */}
-        <div className="hidden lg:flex items-center gap-4">
-          <Link
-            to="/login"
-            className="text-heading font-semibold text-xl hover:text-primary transition-colors"
-          >
-            Login
-          </Link>
-          <Link
-            to="/register"
-            className="text-heading font-semibold text-xl hover:text-primary transition-colors"
-          >
-            Sign up
-          </Link>
-          <Link
-            to="/onboarding"
-            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
-          >
-            Enroll Now
-          </Link>
-        </div>
-
+        {isAuthenticated ? (
+          <div className="hidden lg:flex items-center gap-4">
+            <Link
+              to="/login"
+              className="text-heading font-semibold text-xl hover:text-primary transition-colors"
+            >
+              Login
+            </Link>
+            <Link
+              to="/register"
+              className="text-heading font-semibold text-xl hover:text-primary transition-colors"
+            >
+              Sign up
+            </Link>
+            <Link
+              to="/onboarding"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
+            >
+              Enroll Now
+            </Link>
+          </div>
+        ) : (
+          <div className="hidden lg:flex items-center gap-4">
+            <Settings className="h-6 w-6 text-heading cursor-pointer" />
+            <img
+              class="inline-block size-10 rounded-full ring-2 ring-white"
+              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              alt=""
+            />
+            <MoveDown className="h-6 w-6 text-heading cursor-pointer" />
+          </div>
+        )}
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="fixed inset-0 bg-white z-10 lg:hidden pt-20 px-4">

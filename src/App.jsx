@@ -34,14 +34,7 @@ function App() {
             // </RequireAuth>
           }
         />
-        <Route
-          path="/student-profile"
-          element={
-            //<RequireAuth>
-            <StudentProfile />
-            // </RequireAuth>
-          }
-        />
+
         <Route
           path="/certificate"
           element={
@@ -89,6 +82,14 @@ function App() {
           // <RequireAuth>
           <OnboardingFlow />
           //  </RequireAuth>
+        }
+      />
+      <Route
+        path="/student-profile"
+        element={
+          <RequireAuth>
+            <StudentProfile />
+          </RequireAuth>
         }
       />
     </Routes>
