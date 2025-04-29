@@ -1,0 +1,8 @@
+const levelEnum = {
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  ADVANCED: "ADVANCED",
+  PROFESSIONAL: "PROFESSIONAL",
+};
+
+export default levelEnum;

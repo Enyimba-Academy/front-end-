@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useAuth } from "../hooks/useAuth";
+import { useOnboarding } from "../hooks/useOnboarding.hook";
 
 export default function SettingsPage() {
+  const { user } = useAuth();
+  const { updateUser, isUpdatingOnboarding } = useOnboarding();
   const [activeTab, setActiveTab] = useState("account");
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [emailUpdates, setEmailUpdates] = useState(true);
@@ -230,7 +234,7 @@ export default function SettingsPage() {
                       <input
                         type="text"
                         id="firstName"
-                        defaultValue="John"
+                        defaultValue={user?.firstName}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
                       />
                     </div>
@@ -244,7 +248,7 @@ export default function SettingsPage() {
                       <input
                         type="text"
                         id="lastName"
-                        defaultValue="Doe"
+                        defaultValue={user?.lastName}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
                       />
                     </div>
@@ -260,7 +264,7 @@ export default function SettingsPage() {
                     <input
                       type="email"
                       id="email"
-                      defaultValue="john.doe@example.com"
+                      defaultValue={user?.email}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
                     />
                   </div>
@@ -275,6 +279,7 @@ export default function SettingsPage() {
                     <textarea
                       id="bio"
                       rows={4}
+                      defaultValue={user?.profile?.bio}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500"
                     ></textarea>
                   </div>

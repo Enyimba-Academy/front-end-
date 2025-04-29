@@ -12,7 +12,13 @@ export const authService = {
   },
 
   getCurrentUser: async () => {
-    const response = await api.get("/auth/me");
+    const response = await api.get("/auth/me").then((res) => {
+      return res.data.data;
+    });
+    return response;
+  },
+  register: async (credentials) => {
+    const response = await api.post("/auth/register", credentials);
     return response.data;
   },
 };
