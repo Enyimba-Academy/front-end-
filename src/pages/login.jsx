@@ -6,7 +6,7 @@ import { Formik, Form, Field } from "formik";
 import { loginSchema } from "@/schema/login.schema";
 import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router";
-
+import { ROLES } from "@/constant/role";
 export default function LoginPage() {
   const { login, isLoggingIn, loginError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
@@ -23,10 +23,17 @@ export default function LoginPage() {
       await login(
         { email: values.email, password: values.password },
         {
-          onSuccess: () => {
+          onSuccess: (data) => {
+            const user = data.data.user;
+            console.log(user);
             toast.success("Login successful");
-            const from = location.state?.from?.pathname || "/";
-            navigate(from, { replace: true });
+            if (user.role === ROLES.ADMIN) {
+              navigate("/admin/dashboard");
+            } else {
+              navigate("/");
+            }
+            // const from = location.state?.from?.pathname || "/";
+            //   navigate(from, { replace: true });
           },
         }
       );

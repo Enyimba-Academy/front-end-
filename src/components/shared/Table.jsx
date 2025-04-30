@@ -96,7 +96,7 @@ function StyledTable({
   return (
     <div className="flex flex-col gap-2 w-full">
       <div
-        className={`bg-white rounded-[10px] scale-100 ${
+        className={`bg-white  scale-100 ${
           showShadow ? "shadow-[0px_4px_12px_rgba(0.05,0.05,0.05,0.05)]" : ""
         }`}
       >
@@ -155,7 +155,7 @@ function StyledTable({
                     {labels?.map((label, index) => (
                       <th
                         key={index}
-                        className="p-4 font-semibold"
+                        className="p-4 font-semibold text-left"
                         style={{
                           paddingLeft: hasCheckBoxAction ? "2.5rem" : "1rem",
                         }}
@@ -168,7 +168,9 @@ function StyledTable({
                       onEdit ||
                       onView ||
                       subActions?.length > 0) && (
-                      <th>{actionLabel ? actionLabel : ""}</th>
+                      <th className="text-left">
+                        {actionLabel ? actionLabel : ""}
+                      </th>
                     )}
                   </tr>
                 </thead>
@@ -240,7 +242,7 @@ function StyledTable({
                               {onDelete && (
                                 <button
                                   onClick={() => onDelete(row?.onRowClickData)}
-                                  className="bg-inherit"
+                                  className="bg-inherit cursor-pointer"
                                 >
                                   <Trash2 size={14} color="#667085" />
                                 </button>
@@ -250,7 +252,7 @@ function StyledTable({
                                   onClick={() => {
                                     onEdit(row?.onRowClickData);
                                   }}
-                                  className="bg-inherit"
+                                  className="bg-inherit cursor-pointer"
                                 >
                                   <Edit2 size={13} color="#667085" />
                                 </button>
@@ -260,7 +262,7 @@ function StyledTable({
                                   onClick={() => {
                                     onView(row?.onRowClickData);
                                   }}
-                                  className="bg-inherit"
+                                  className="bg-inherit cursor-pointer    "
                                 >
                                   <Eye size={15} color="#667085" />
                                 </button>

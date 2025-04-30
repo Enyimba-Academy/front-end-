@@ -1,6 +1,6 @@
 import React from "react";
-
 import Portal from "../portal";
+import { X } from "lucide-react";
 
 const RightModal = ({
   toggleModal,
@@ -41,15 +41,9 @@ const RightModal = ({
             {showClose && (
               <button
                 onClick={toggleModal}
-                className="absolute top-4 right-6 bg-transparent border-none"
+                className="absolute top-4 right-6 bg-transparent border-none text-gray-500 hover:text-gray-700 cursor-pointer"
               >
-                <img
-                  src="/close.svg"
-                  alt="cancel button"
-                  className="h-[50px] w-[50px]"
-                  height="50"
-                  width="50"
-                />
+                <X size={24} />
               </button>
             )}
             {children}

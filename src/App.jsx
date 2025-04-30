@@ -14,7 +14,15 @@ import Login from "@/pages/login";
 import Register from "@/pages/register";
 import OnboardingFlow from "@/pages/onboarding";
 import RequireAuth from "@/components/RequireAuth";
-
+import Dashboard from "@/components/admin/SideBar";
+import Admin from "@/pages/admin";
+import Student from "@/pages/admin/student";
+import Instructor from "@/pages/admin/instructor";
+import ContentLibrary from "@/pages/admin/content-library";
+import EnrollmentPayments from "@/pages/admin/enrollment-payments";
+import Settings from "@/pages/admin/settings";
+import AdminCourses from "@/pages/admin/courses";
+import AdminSchoolForm from "@/pages/admin/school/add";
 function App() {
   return (
     <Routes>
@@ -92,6 +100,16 @@ function App() {
           </RequireAuth>
         }
       />
+      <Route path="/admin" element={<Dashboard />}>
+        <Route path="dashboard" element={<Admin />} />
+        <Route path="students" element={<Student />} />
+        <Route path="instructors" element={<Instructor />} />
+        <Route path="courses" element={<AdminCourses />} />
+        <Route path="content-library" element={<ContentLibrary />} />
+        <Route path="enrollment-payments" element={<EnrollmentPayments />} />
+        <Route path="settings" element={<Settings />} />
+        <Route path="add-school" element={<AdminSchoolForm />} />
+      </Route>
     </Routes>
   );
 }
