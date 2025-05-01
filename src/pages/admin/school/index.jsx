@@ -3,17 +3,26 @@ import PrimaryButton from "../../../components/shared/PrimaryButton";
 import StyledTable from "../../../components/shared/Table";
 import SearchButton from "../../../components/shared/SearchInput";
 import SelectDropDown from "../../../components/shared/SelectDropDown";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useGetSchools } from "../../../hooks/admin/school.hook";
 import { useMemo, useState } from "react";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import RightModal from "../../../components/shared/RightModal";
 export default function School() {
-  const { schools, isLoading } = useGetSchools();
+  const [filters, setFilters] = useState(true);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+
+  const { schools, isLoading } = useGetSchools({
+    filters,
+    page,
+    search,
+  });
   const [selectedSchool, setSelectedSchool] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+
   const tableData = useMemo(() => {
     return schools?.data?.map((school) => ({
       name: school?.name,
@@ -24,15 +33,10 @@ export default function School() {
       noOfCertificates: school?.certificates?.length,
       action: (
         <div className="flex items-center gap-2">
-          <Edit2
-            size={18}
-            color="#667085"
-            className="cursor-pointer"
-            onClick={() => {
-              setSelectedSchool(school);
-              setIsEditModalOpen(true);
-            }}
-          />
+          <Link to={`/admin/add-school/${school?.id}`}>
+            <Edit2 size={18} color="#667085" className="cursor-pointer" />
+          </Link>
+
           <Trash2
             size={18}
             color="#667085"
@@ -53,26 +57,12 @@ export default function School() {
     }));
   }, [schools]);
   const handleApplyFilters = (activeFilters) => {
-    console.log("Applied filters:", activeFilters);
-    // In a real application, you would use these filters to query your data
-    alert("Filters applied: " + JSON.stringify(activeFilters, null, 2));
+    console.log(activeFilters);
+    setFilters(activeFilters);
   };
-  const handleRowClick = (row) => {
-    console.log("Row clicked:", row);
-  };
-  const handleEdit = (row) => {
-    console.log("Edit clicked:", row);
-  };
-  const handleDelete = (row) => {
-    console.log("Delete clicked:", row);
-  };
-  const handleView = (row) => {
-    console.log("View clicked:", row);
-  };
+
   const navigate = useNavigate();
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+
   console.log(schools);
   return (
     <div>
@@ -122,17 +112,15 @@ export default function School() {
           ]}
           title={`Schools (${schools?.data?.length || 0})`}
           bodyRows={tableData}
+          isTableLoading={isLoading}
           rightItem={
             <div className="flex items-center gap-2 justify-end">
-              <SearchButton />
+              <SearchButton onSearch={setSearch} />
               <SelectDropDown
                 className="w-fit"
                 options={[
-                  { value: "Electronics", label: "Electronics" },
-                  { value: "Clothing", label: "Clothing" },
-                  { value: "Home & Garden", label: "Home & Garden" },
-                  { value: "Books", label: "Books" },
-                  { value: "Sports", label: "Sports" },
+                  { value: true, label: "Active" },
+                  { value: false, label: "InActive" },
                 ]}
                 onChange={handleApplyFilters}
               />
@@ -198,7 +186,9 @@ export default function School() {
                   </h3>
                   <div className="w-full h-32 border rounded-lg overflow-hidden">
                     <img
-                      src={selectedSchool?.coverImage}
+                      src={`http://localhost:4000${
+                        selectedSchool?.coverImage?.startsWith("/") ? "" : "/"
+                      }${selectedSchool?.coverImage}`}
                       alt="School Cover"
                       className="w-full h-full object-cover"
                     />

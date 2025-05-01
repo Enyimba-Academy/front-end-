@@ -111,6 +111,7 @@ function App() {
         <Route path="settings" element={<Settings />} />
         <Route path="add-school" element={<AdminSchoolForm />} />
         <Route path="my-school" element={<School />} />
+        <Route path="add-school/:id" element={<AdminSchoolForm />} />
       </Route>
     </Routes>
   );

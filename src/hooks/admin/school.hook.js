@@ -18,10 +18,10 @@ export const useAddSchool = () => {
   return { addSchool, isLoading };
 };
 
-export const useGetSchools = () => {
+export const useGetSchools = ({ filters, page, search }) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["schools"],
-    queryFn: schoolService.getSchool,
+    queryKey: ["schools", filters, page, search],
+    queryFn: () => schoolService.getSchool({ filters, page, search }),
     onError: (error) => {
       toast.error("Failed to fetch schools");
       console.error("Error fetching schools:", error);
@@ -30,6 +30,20 @@ export const useGetSchools = () => {
 
   return {
     schools: data,
+    isLoading,
+    error,
+  };
+};
+
+export const useGetSchoolById = (id) => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["school", id],
+    queryFn: () => schoolService.getSchoolById(id),
+    enabled: !!id,
+  });
+
+  return {
+    school: data,
     isLoading,
     error,
   };
