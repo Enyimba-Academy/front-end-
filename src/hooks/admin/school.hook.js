@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { schoolService } from "@/api/admin/schoolService";
 import { toast } from "react-toastify";
 
@@ -16,4 +16,21 @@ export const useAddSchool = () => {
   });
 
   return { addSchool, isLoading };
+};
+
+export const useGetSchools = () => {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["schools"],
+    queryFn: schoolService.getSchool,
+    onError: (error) => {
+      toast.error("Failed to fetch schools");
+      console.error("Error fetching schools:", error);
+    },
+  });
+
+  return {
+    schools: data,
+    isLoading,
+    error,
+  };
 };

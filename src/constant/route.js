@@ -10,6 +10,11 @@ export const adminRoutes = [
     icon: "Users",
   },
   {
+    name: "School",
+    path: "my-school",
+    icon: "Users",
+  },
+  {
     name: "Instructors",
     path: "instructors",
     icon: "GraduationCap",

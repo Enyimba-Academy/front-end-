@@ -23,6 +23,7 @@ import EnrollmentPayments from "@/pages/admin/enrollment-payments";
 import Settings from "@/pages/admin/settings";
 import AdminCourses from "@/pages/admin/courses";
 import AdminSchoolForm from "@/pages/admin/school/add";
+import School from "@/pages/admin/school";
 function App() {
   return (
     <Routes>
@@ -109,6 +110,7 @@ function App() {
         <Route path="enrollment-payments" element={<EnrollmentPayments />} />
         <Route path="settings" element={<Settings />} />
         <Route path="add-school" element={<AdminSchoolForm />} />
+        <Route path="my-school" element={<School />} />
       </Route>
     </Routes>
   );
