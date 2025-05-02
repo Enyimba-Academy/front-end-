@@ -1,5 +1,8 @@
-import { Bell } from "lucide-react";
+import { Bell, Plus } from "lucide-react";
+import { useNavigate } from "react-router";
+import PrimaryButton from "../../../components/shared/PrimaryButton";
 export default function AdminCourses() {
+  const navigate = useNavigate();
   return (
     <div>
       {" "}
@@ -23,6 +26,18 @@ export default function AdminCourses() {
               />
             </div>
           </div>
+        </div>
+        <div className="flex justify-end px-6 py-4">
+          <PrimaryButton
+            className="flex gap-2 cursor-pointer"
+            type={"button"}
+            onClick={() => {
+              navigate("/admin/add-course");
+            }}
+          >
+            <Plus />
+            Add Course
+          </PrimaryButton>
         </div>
       </header>
     </div>

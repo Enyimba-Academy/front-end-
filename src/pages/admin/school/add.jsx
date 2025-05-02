@@ -39,14 +39,21 @@ const validationSchema = Yup.object().shape({
 export default function AdminSchoolForm() {
   const { id } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
-  const [schoolLogo, setSchoolLogo] = useState(null);
-  const [featuredImage, setFeaturedImage] = useState(null);
+
   const { addSchool, isLoading } = useAddSchool();
   const { school, isLoading: isLoadingSchool, error } = useGetSchoolById(id);
   const { isUploading, progress, mutate: uploadImage } = useUploadImage();
   const [logoUrl, setLogoUrl] = useState(null);
   const [featuredUrl, setFeaturedUrl] = useState(null);
-  console.log(school?.name);
+  const [schoolLogo, setSchoolLogo] = useState(
+    school?.logo ? `http://localhost:4000/uploads/school/${school.logo}` : null
+  );
+  const [featuredImage, setFeaturedImage] = useState(
+    school?.coverImage
+      ? `http://localhost:4000/uploads/school/${school.coverImage}`
+      : null
+  );
+
   const initialValues = {
     name: school?.name || "",
     description: school?.description || "",

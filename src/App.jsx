@@ -24,6 +24,7 @@ import Settings from "@/pages/admin/settings";
 import AdminCourses from "@/pages/admin/courses";
 import AdminSchoolForm from "@/pages/admin/school/add";
 import School from "@/pages/admin/school";
+import AdminCoursesForm from "@/pages/admin/courses/add";
 function App() {
   return (
     <Routes>
@@ -112,6 +113,7 @@ function App() {
         <Route path="add-school" element={<AdminSchoolForm />} />
         <Route path="my-school" element={<School />} />
         <Route path="add-school/:id" element={<AdminSchoolForm />} />
+        <Route path="add-course" element={<AdminCoursesForm />} />
       </Route>
     </Routes>
   );
