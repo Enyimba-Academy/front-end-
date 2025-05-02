@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   ImageIcon,
@@ -14,8 +12,12 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import { toast } from "react-toastify";
-import { useAddSchool } from "../../../hooks/admin/school.hook";
+import {
+  useAddSchool,
+  useGetSchoolById,
+} from "../../../hooks/admin/school.hook";
 import { useUploadImage } from "../../../hooks/image";
+import { useParams } from "react-router";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("School name is required"),
   description: Yup.string().required("School description is required"),
@@ -35,22 +37,24 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function AdminSchoolForm() {
+  const { id } = useParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [schoolLogo, setSchoolLogo] = useState(null);
   const [featuredImage, setFeaturedImage] = useState(null);
   const { addSchool, isLoading } = useAddSchool();
+  const { school, isLoading: isLoadingSchool, error } = useGetSchoolById(id);
   const { isUploading, progress, mutate: uploadImage } = useUploadImage();
   const [logoUrl, setLogoUrl] = useState(null);
   const [featuredUrl, setFeaturedUrl] = useState(null);
-
+  console.log(school?.name);
   const initialValues = {
-    name: "",
-    description: "",
-    logo: "",
-    coverImage: "",
-    is_active: true,
-    slug: "",
-    certificates: [
+    name: school?.name || "",
+    description: school?.description || "",
+    logo: school?.logo || "",
+    coverImage: school?.coverImage || "",
+    is_active: school?.is_active || true,
+    slug: school?.slug || "",
+    certificates: school?.certificates || [
       {
         program_name: "",
         program_type: "",
@@ -297,6 +301,7 @@ export default function AdminSchoolForm() {
                     type="text"
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="e.g. School of Photography & Cinematography"
+                    value={school?.name || ""}
                   />
                   {errors.name && touched.name && (
                     <div className="text-red-500 text-sm mt-1">
@@ -315,6 +320,7 @@ export default function AdminSchoolForm() {
                     rows={4}
                     className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                     placeholder="Provide a detailed description of the school..."
+                    value={school?.description || ""}
                   />
                   {errors.description && touched.description && (
                     <div className="text-red-500 text-sm mt-1">
@@ -350,6 +356,7 @@ export default function AdminSchoolForm() {
                       type="email"
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                       placeholder="e.g. photography@artschool.com"
+                      value={school?.email || ""}
                     />
                     {errors.email && touched.email && (
                       <div className="text-red-500 text-sm mt-1">
@@ -371,6 +378,7 @@ export default function AdminSchoolForm() {
                         type="tel"
                         className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                         placeholder="e.g. +234 123 456 7890"
+                        value={school?.phone || ""}
                       />
                     </div>
                     {errors.phone && touched.phone && (
@@ -393,6 +401,7 @@ export default function AdminSchoolForm() {
                         type="text"
                         className="pl-10 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
                         placeholder="e.g. Lagos, Nigeria"
+                        value={school?.location || ""}
                       />
                     </div>
                     {errors.location && touched.location && (

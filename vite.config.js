@@ -11,4 +11,7 @@ export default defineConfig({
       "@components": "/src/components",
     },
   },
+  define: {
+    "process.env": process.env,
+  },
 });
