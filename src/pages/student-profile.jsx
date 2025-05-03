@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Download, Edit, Lock, Share2 } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 function LoadingSkeleton() {

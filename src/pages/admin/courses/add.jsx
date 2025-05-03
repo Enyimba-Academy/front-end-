@@ -1,7 +1,7 @@
 import CustomInput from "@/components/shared/CustomInput";
 import CustomTextArea from "@/components/shared/CustomTextArea";
 import SelectDropDown from "@/components/shared/SelectDropDown";
-import { Form, Formik } from "formik";
+import { Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 import ImageUpload from "@/components/shared/ImageUpload";
@@ -13,14 +13,35 @@ import BasicInformation from "../../../components/admin/courses/BasicInformation
 import { Bell } from "lucide-react";
 import SectionsForm from "../../../components/admin/courses/Module";
 import FinalStep from "../../../components/admin/courses/FinalStep";
+import { addSchoolSchema } from "../../../schema/add-school.schema";
 
 export default function AdminCoursesForm() {
   const [file, setFile] = useState(null);
-  const [_, setError] = useState({});
   const { prev } = useSteps();
+  const [showError, setShowError] = useState(false);
 
   const firstValidation = (errors) => {
-    return !(errors?.name || errors?.description || errors?.image);
+    return !(
+      errors?.name ||
+      errors?.description ||
+      errors?.school ||
+      errors?.image
+    );
+  };
+
+  const secondValidation = (errors, values, touched) => {
+    return !(
+      (errors?.sections && touched?.sections) ||
+      !values.sections ||
+      values.sections.length === 0
+    );
+  };
+
+  const thirdValidation = (errors, values, touched) => {
+    return !(
+      (errors?.visibility && touched?.visibility) ||
+      (values.isPaid && errors?.price && touched?.price)
+    );
   };
 
   return (
@@ -53,41 +74,47 @@ export default function AdminCoursesForm() {
           name: "",
           description: "",
           image: "",
+          school: "",
+          sections: [],
+          price: 0,
+          isPaid: false,
+          visibility: "draft",
         }}
-        validationSchema={Yup.object({
-          name: Yup.string()
-            .required("Course name is required")
-            .max(100, "Course name must be less than 100 characters"),
-          description: Yup.string()
-            .required("Course description is required")
-            .max(500, "Course description must be less than 500 characters"),
-          image: Yup.string().required("Course image is required"),
-        })}
+        validationSchema={addSchoolSchema}
         onSubmit={(values) => {
           console.log(values);
         }}
+        enableReinitialize
+        validateOnMount
       >
-        {({ values, errors, touched, handleChange, handleBlur }) => {
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          isSubmitting,
+          setSubmitting,
+
+          validateField,
+        }) => {
+          console.log("Formik - Errors:", errors);
+          console.log("Formik - Touched:", touched);
+          console.log("Formik - Values:", values);
           const steps = [
             {
               label: "Course Details",
               component: (
                 <BasicInformation
-                  file={file}
-                  setFile={setFile}
-                  handleChange={handleChange}
-                  handleBlur={handleBlur}
-                  values={values}
-                  errors={errors}
-                  touched={touched}
+                  showError={showError}
                   footerButtons={
                     <FormFooter
                       onCancel={() => {}}
-                      values={values}
+                      setError={(bool) => setShowError(bool)}
                       validation={() => {
                         return firstValidation(errors);
                       }}
-                      setError={(bool) => setError(bool)}
+                      values={values}
                     />
                   }
                 />
@@ -97,14 +124,15 @@ export default function AdminCoursesForm() {
               label: "Course Content",
               component: (
                 <SectionsForm
+                  errors={errors}
+                  touched={touched}
                   formFooter={
                     <FormFooter
                       onCancel={prev}
                       values={values}
                       validation={() => {
-                        return firstValidation(errors);
+                        return secondValidation(errors, values, touched);
                       }}
-                      setError={(bool) => setError(bool)}
                     />
                   }
                 />
@@ -114,11 +142,15 @@ export default function AdminCoursesForm() {
               label: "Course Settings & Visibility",
               component: (
                 <FinalStep
+                  errors={errors}
+                  touched={touched}
                   formFooter={
                     <FormFooter
                       onCancel={prev}
                       values={values}
-                      setError={(bool) => setError(bool)}
+                      validation={() => {
+                        return thirdValidation(errors, values, touched);
+                      }}
                     />
                   }
                 />
@@ -129,14 +161,14 @@ export default function AdminCoursesForm() {
           return (
             <Form>
               <StepsProvider>
-                <div className="m-auto w-1/2   p-10">
+                <div className="m-auto w-[70%] p-10">
                   <Heading
                     isDisabled
                     stepNames={steps.map((step) => step.label)}
                   />
                   <Steps startsFrom={1}>
                     {steps.map((step) => (
-                      <div className="  bg-white p-10">
+                      <div className="bg-white p-10">
                         <h1 className="text-2xl font-bold">{step.label}</h1>
                         <div>{step.component}</div>
                       </div>

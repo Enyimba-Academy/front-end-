@@ -1,24 +1,17 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-
-import { Plus, ArrowLeft, ArrowRight } from "lucide-react";
+import { ErrorMessage, useFormikContext } from "formik";
+import { Plus } from "lucide-react";
 import SectionItem from "./SectionItem";
 
-export default function SectionsForm({ formFooter }) {
-  // Start at step 2 (Sections)
-  const [sections, setSections] = useState([
-    {
-      id: "section-1",
-      title: "Week 1: Camera Basics",
-      contents: [
-        { id: "content-1", type: "video", title: "Video Lecture" },
-        { id: "content-2", type: "material", title: "Course Materials" },
-        { id: "content-3", type: "quiz", title: "Quiz" },
-        { id: "content-4", type: "assignment", title: "Assignment" },
-      ],
-    },
-  ]);
+export default function SectionsForm({ formFooter, errors, touched }) {
+  const { values, setFieldValue } = useFormikContext();
+  const [sections, setSections] = useState(values.sections || []);
+  console.log(errors);
+  useEffect(() => {
+    setSections(values.sections || []);
+  }, [values.sections]);
 
   const handleAddSection = () => {
     const newSection = {
@@ -26,25 +19,30 @@ export default function SectionsForm({ formFooter }) {
       title: `Week ${sections.length + 1}: New Section`,
       contents: [],
     };
-    setSections([...sections, newSection]);
+    const updatedSections = [...sections, newSection];
+    setSections(updatedSections);
+    setFieldValue("sections", updatedSections);
   };
 
   const handleUpdateSection = (updatedSection) => {
-    setSections(
-      sections.map((section) =>
-        section.id === updatedSection.id ? updatedSection : section
-      )
+    const updatedSections = sections.map((section) =>
+      section.id === updatedSection.id ? updatedSection : section
     );
+    setSections(updatedSections);
+    setFieldValue("sections", updatedSections);
   };
 
   const handleDeleteSection = (sectionId) => {
-    setSections(sections.filter((section) => section.id !== sectionId));
+    const updatedSections = sections.filter(
+      (section) => section.id !== sectionId
+    );
+    setSections(updatedSections);
+    setFieldValue("sections", updatedSections);
   };
 
   const onDragEnd = (result) => {
-    const { destination, source, type, draggableId } = result;
+    const { destination, source, type } = result;
 
-    // If there's no destination or the item was dropped in its original position
     if (
       !destination ||
       (destination.droppableId === source.droppableId &&
@@ -53,17 +51,13 @@ export default function SectionsForm({ formFooter }) {
       return;
     }
 
-    // Handle section reordering
-    if (type === "section") {
-      const reorderedSections = Array.from(sections);
-      const [removed] = reorderedSections.splice(source.index, 1);
-      reorderedSections.splice(destination.index, 0, removed);
-      setSections(reorderedSections);
-      return;
-    }
+    let updatedSections;
 
-    // Handle content reordering within a section or between sections
-    if (type === "content") {
+    if (type === "section") {
+      updatedSections = Array.from(sections);
+      const [removed] = updatedSections.splice(source.index, 1);
+      updatedSections.splice(destination.index, 0, removed);
+    } else if (type === "content") {
       const sourceSection = sections.find(
         (section) => section.id === source.droppableId
       );
@@ -71,32 +65,28 @@ export default function SectionsForm({ formFooter }) {
         (section) => section.id === destination.droppableId
       );
 
-      // If source or destination section not found
       if (!sourceSection || !destSection) return;
 
-      // Create deep copies to avoid mutation
-      const newSections = JSON.parse(JSON.stringify(sections));
-      const newSourceSectionIndex = newSections.findIndex(
+      updatedSections = JSON.parse(JSON.stringify(sections));
+      const newSourceSectionIndex = updatedSections.findIndex(
         (section) => section.id === source.droppableId
       );
-      const newDestSectionIndex = newSections.findIndex(
+      const newDestSectionIndex = updatedSections.findIndex(
         (section) => section.id === destination.droppableId
       );
 
-      // Get the content item being moved
       const contentItem = sourceSection.contents[source.index];
-
-      // Remove from source
-      newSections[newSourceSectionIndex].contents.splice(source.index, 1);
-
-      // Add to destination
-      newSections[newDestSectionIndex].contents.splice(
+      updatedSections[newSourceSectionIndex].contents.splice(source.index, 1);
+      updatedSections[newDestSectionIndex].contents.splice(
         destination.index,
         0,
         contentItem
       );
+    }
 
-      setSections(newSections);
+    if (updatedSections) {
+      setSections(updatedSections);
+      setFieldValue("sections", updatedSections);
     }
   };
 

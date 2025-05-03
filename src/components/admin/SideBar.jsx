@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import { Outlet, NavLink } from "react-router";
+import { Outlet, NavLink } from "react-router-dom";
 import { adminRoutes } from "../../constant/route";
 import Icon from "../icons/Icon";
 

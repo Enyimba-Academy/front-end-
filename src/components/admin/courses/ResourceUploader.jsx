@@ -26,7 +26,7 @@ export default function ResourceUploader({
     const newResources = files.map((file) => ({
       id: `resource-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: "file",
-      title: file.name,
+      name: file.name,
       file: file,
       // Create a temporary URL for preview
       url: URL.createObjectURL(file),
@@ -81,7 +81,7 @@ export default function ResourceUploader({
     const newResource = {
       id: `resource-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       type: "link",
-      title: linkTitle || linkUrl,
+      name: linkTitle || linkUrl,
       url: linkUrl.startsWith("http") ? linkUrl : `https://${linkUrl}`,
       status: "completed",
     };
@@ -149,7 +149,7 @@ export default function ResourceUploader({
         <div className="p-4 border rounded-md bg-gray-50">
           <div className="mb-3">
             <label className="block text-sm font-medium mb-1">
-              Link Title (optional)
+              Link Title (required)
             </label>
             <input
               type="text"
@@ -203,7 +203,7 @@ export default function ResourceUploader({
                 )}
 
                 <div className="flex-1">
-                  <div className="font-medium">{resource.title}</div>
+                  <div className="font-medium">{resource.name}</div>
                   {resource.type === "file" && resource.fileSize && (
                     <div className="text-xs text-gray-500">
                       {formatFileSize(resource.fileSize)}

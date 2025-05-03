@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Steps, StepsProvider, useSteps } from "react-step-builder";
-import { toast } from "react-toastify";
 import PrimaryButton from "./PrimaryButton";
+import PropTypes from "prop-types";
+
 const FormFooter = ({
   handleSubmit,
   onCancel,
@@ -26,6 +27,35 @@ const FormFooter = ({
     localStorage.setItem("currentStep", current);
   };
 
+  const handleBack = () => {
+    if (isFirst) {
+      onCancel();
+    } else {
+      prev();
+    }
+  };
+
+  const handleNext = () => {
+    if (!isSubmitting) {
+      const isValid = validation();
+      console.log("isValid", isValid);
+      if (isValid) {
+        setError(false);
+        if (isLast) {
+          setSubmitting(true);
+          setLastText("Submitting...");
+          handleSubmit && handleSubmit();
+        } else {
+          next();
+          saveCurrentStep();
+          saveToDraft && saveToDraft(values);
+        }
+      } else {
+        setError(true);
+      }
+    }
+  };
+
   return (
     <>
       <hr className="mt-4 border-gray-300" />
@@ -33,33 +63,14 @@ const FormFooter = ({
         <div className="flex justify-between w-full">
           <PrimaryButton
             className={"bg-white text-primary border border-primary"}
-            onClick={() => {
-              setError(false);
-              isFirst || onCancel ? onCancel() : prev();
-            }}
+            onClick={handleBack}
           >
             {isFirst ? "Cancel" : "Back"}
           </PrimaryButton>
           <PrimaryButton
-            onClick={() => {
-              if (!isSubmitting) {
-                if (validation()) {
-                  setError(false);
-                  if (isLast) {
-                    setSubmitting(true);
-                    setLastText("Submitting...");
-                    handleSubmit && handleSubmit();
-                  } else {
-                    next();
-                    saveCurrentStep();
-                    saveToDraft && saveToDraft(values);
-                  }
-                } else {
-                  setError(true);
-                }
-              }
-            }}
+            onClick={handleNext}
             type={"button"}
+            disabled={isSubmitting}
           >
             {lastText}
           </PrimaryButton>
@@ -70,3 +81,14 @@ const FormFooter = ({
 };
 
 export default FormFooter;
+
+FormFooter.propTypes = {
+  handleSubmit: PropTypes.func,
+  onCancel: PropTypes.func,
+  validation: PropTypes.func,
+  setError: PropTypes.func,
+  isSubmitting: PropTypes.bool,
+  setSubmitting: PropTypes.func,
+  saveToDraft: PropTypes.func,
+  values: PropTypes.object,
+};

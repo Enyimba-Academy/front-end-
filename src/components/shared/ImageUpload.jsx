@@ -1,9 +1,15 @@
 import { useState, useRef } from "react";
 import { Upload, X } from "lucide-react";
 import PrimaryButton from "./PrimaryButton";
-export default function ImageUpload({ label, file, setFile }) {
+import { useUploadImage } from "../../hooks/image";
+import { toast } from "react-toastify";
+import { useFormikContext } from "formik";
+
+export default function ImageUpload({ label }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const { mutate: uploadImage } = useUploadImage();
+  const { setFieldValue, values } = useFormikContext();
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -20,13 +26,35 @@ export default function ImageUpload({ label, file, setFile }) {
     setIsDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFile(e.dataTransfer.files[0]);
+      uploadImage(
+        { file: e.dataTransfer.files[0], folder: "school" },
+        {
+          onSuccess: (data) => {
+            setFieldValue("image", data.file.path);
+            console.log(data.file);
+          },
+          onError: () => {
+            toast.error("Failed to upload image");
+          },
+        }
+      );
     }
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+      uploadImage(
+        { file: e.target.files[0], folder: "school" },
+        {
+          onSuccess: (data) => {
+            setFieldValue("image", data.file.path);
+            console.log(data.file);
+          },
+          onError: () => {
+            toast.error("Failed to upload image");
+          },
+        }
+      );
     }
   };
 
@@ -35,7 +63,7 @@ export default function ImageUpload({ label, file, setFile }) {
   };
 
   const removeFile = () => {
-    setFile(null);
+    setFieldValue("image", "");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -56,11 +84,11 @@ export default function ImageUpload({ label, file, setFile }) {
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        {file ? (
+        {values.image ? (
           <div className="w-full">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                {file.name}
+                {values.image}
               </span>
               <button
                 onClick={removeFile}
@@ -69,15 +97,14 @@ export default function ImageUpload({ label, file, setFile }) {
                 <X className="h-5 w-5" />
               </button>
             </div>
-            {file.type.startsWith("image/") && (
-              <div className="relative aspect-video w-full overflow-hidden rounded-md">
-                <img
-                  src={URL.createObjectURL(file) || "/placeholder.svg"}
-                  alt="Preview"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-            )}
+
+            <div className="relative aspect-video w-full overflow-hidden rounded-md">
+              <img
+                src={`http://localhost:4000${values.image}`}
+                alt="Preview"
+                className="object-cover w-full h-full"
+              />
+            </div>
           </div>
         ) : (
           <>

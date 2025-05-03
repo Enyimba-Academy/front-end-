@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Eye, EyeOff, Facebook } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Formik, Form, Field } from "formik";

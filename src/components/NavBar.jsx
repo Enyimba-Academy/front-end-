@@ -7,7 +7,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import PrimaryLink from "./shared/PrimaryLink";
 import { useAuth } from "../hooks/useAuth";
 

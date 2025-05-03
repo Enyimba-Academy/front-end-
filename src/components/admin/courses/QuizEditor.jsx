@@ -1,4 +1,3 @@
-"use client";
 import { Plus, Trash2, Check, X } from "lucide-react";
 import CustomInput from "../../shared/CustomInput";
 import SelectDropDown from "../../shared/SelectDropDown";

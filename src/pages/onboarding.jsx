@@ -6,7 +6,7 @@ import {
   ChevronRight,
   Upload,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { useOnboarding } from "../hooks/useOnboarding.hook";

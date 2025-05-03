@@ -7,6 +7,7 @@ export default function CustomInput({
   placeholder,
   value,
   onChange,
+  onBlur,
   maxLength,
   className,
   disabled,
@@ -28,6 +29,7 @@ export default function CustomInput({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onBlur={onBlur}
         maxLength={maxLength}
         disabled={disabled}
       />
