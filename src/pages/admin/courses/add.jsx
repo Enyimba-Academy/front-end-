@@ -3,18 +3,22 @@ import CustomTextArea from "@/components/shared/CustomTextArea";
 import SelectDropDown from "@/components/shared/SelectDropDown";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import ImageUpload from "@/components/shared/ImageUpload";
 import FormFooter from "@/components/shared/FormFooter";
-import { Steps, StepsProvider } from "react-step-builder";
+import { Steps, StepsProvider, useSteps } from "react-step-builder";
 import HeadingList from "../../../components/shared/HeadingList";
 import Heading from "../../../components/shared/Header";
 import BasicInformation from "../../../components/admin/courses/BasicInformation";
 import { Bell } from "lucide-react";
 import SectionsForm from "../../../components/admin/courses/Module";
+import FinalStep from "../../../components/admin/courses/FinalStep";
+
 export default function AdminCoursesForm() {
   const [file, setFile] = useState(null);
   const [_, setError] = useState({});
+  const { prev } = useSteps();
+
   const firstValidation = (errors) => {
     return !(errors?.name || errors?.description || errors?.image);
   };
@@ -95,11 +99,26 @@ export default function AdminCoursesForm() {
                 <SectionsForm
                   formFooter={
                     <FormFooter
-                      onCancel={() => {}}
+                      onCancel={prev}
                       values={values}
                       validation={() => {
                         return firstValidation(errors);
                       }}
+                      setError={(bool) => setError(bool)}
+                    />
+                  }
+                />
+              ),
+            },
+            {
+              label: "Course Settings & Visibility",
+              component: (
+                <FinalStep
+                  formFooter={
+                    <FormFooter
+                      onCancel={prev}
+                      values={values}
+                      setError={(bool) => setError(bool)}
                     />
                   }
                 />
