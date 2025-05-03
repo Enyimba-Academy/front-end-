@@ -4,10 +4,10 @@ function HeadingList({ number, title, active, onClick }) {
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-2 px-4 py-2 cursor-pointer"
+      className="flex items-center gap-2 px-4 py-2 cursor-pointer my-2"
     >
       <div
-        className={`flex items-center justify-center w-6 h-6 rounded-full ${
+        className={`flex items-center justify-center w-8 h-8 rounded-full ${
           active ? "bg-red-600" : "bg-gray-200"
         }`}
       >
