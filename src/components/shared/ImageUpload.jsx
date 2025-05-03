@@ -1,0 +1,111 @@
+import { useState, useRef } from "react";
+import { Upload, X } from "lucide-react";
+import PrimaryButton from "./PrimaryButton";
+export default function ImageUpload({ label, file, setFile }) {
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeFile = () => {
+    setFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="w-full mx-auto mb-4">
+      {label && (
+        <label className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
+      <div
+        className={`relative border-2 border-dashed rounded-lg p-6 ${
+          isDragging ? "border-red-500 bg-red-50" : "border-red-300"
+        } transition-colors duration-200 flex flex-col items-center justify-center min-h-[200px]`}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {file ? (
+          <div className="w-full">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-gray-700">
+                {file.name}
+              </span>
+              <button
+                onClick={removeFile}
+                className="text-red-500 hover:text-red-700"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            {file.type.startsWith("image/") && (
+              <div className="relative aspect-video w-full overflow-hidden rounded-md">
+                <img
+                  src={URL.createObjectURL(file) || "/placeholder.svg"}
+                  alt="Preview"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )}
+          </div>
+        ) : (
+          <>
+            <div className="text-gray-400 mb-4">
+              <Upload className="h-12 w-12 mx-auto" />
+            </div>
+            <p className="text-center text-gray-600 mb-1">
+              Drag and drop your thumbnail here
+            </p>
+            <p className="text-center text-gray-500 text-sm mb-4">
+              16:9 ratio, 1280×720px recommended
+            </p>
+            <PrimaryButton
+              onClick={handleClick}
+              className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer"
+            >
+              Choose File
+            </PrimaryButton>
+          </>
+        )}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+      </div>
+    </div>
+  );
+}

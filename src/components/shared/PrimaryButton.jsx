@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { cn } from "../../utils/cn";
 
 export default function PrimaryButton({
   children,
@@ -8,7 +9,7 @@ export default function PrimaryButton({
 }) {
   return (
     <button
-      className={`text-white bg-primary rounded-lg px-4 py-2 ${className}`}
+      className={cn("text-white bg-primary rounded-lg px-4 py-2", className)}
       type={type}
       {...props}
     >

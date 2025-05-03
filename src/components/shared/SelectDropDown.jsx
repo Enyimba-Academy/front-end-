@@ -8,6 +8,7 @@ export default function SelectDropDown({
   className = "",
   id,
   name,
+  label,
 }) {
   const [selectedValue, setSelectedValue] = useState("");
 
@@ -17,7 +18,12 @@ export default function SelectDropDown({
   };
 
   return (
-    <div className="relative">
+    <div className="relative mb-4">
+      {label && (
+        <label className="block text-sm font-medium text-gray-700">
+          {label}
+        </label>
+      )}
       <select
         id={id}
         name={name}

@@ -28,22 +28,11 @@ const FormFooter = ({
 
   return (
     <>
-      <Divider margin="0.2rem 0" />
-      <ButtonWrapper>
-        <PrimaryButton
-          className={"bg-white border border-primary"}
-          type="button"
-          onClick={() => {
-            saveCurrentStep();
-            saveToDraft && saveToDraft(values);
-            saveToDraft && toast.success("Saved Successfully");
-          }}
-        >
-          Save to draft
-        </PrimaryButton>
-        <div>
+      <hr className="mt-4 border-gray-300" />
+      <div className="flex justify-between mt-4">
+        <div className="flex justify-between w-full">
           <PrimaryButton
-            className={"bg-white border border-primary"}
+            className={"bg-white text-primary border border-primary"}
             onClick={() => {
               setError(false);
               isFirst || onCancel ? onCancel() : prev();
@@ -75,7 +64,7 @@ const FormFooter = ({
             {lastText}
           </PrimaryButton>
         </div>
-      </ButtonWrapper>
+      </div>
     </>
   );
 };
