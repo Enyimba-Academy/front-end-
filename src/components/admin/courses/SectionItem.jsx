@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import {
@@ -10,8 +9,8 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import ContentTypeSelector from "./ContentTypeSelector";
 import ContentItem from "./ContentItem";
+import ContentTypeSelector from "./ContentTypeSelector";
 
 export default function SectionItem({ section, index, onUpdate, onDelete }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -35,6 +34,7 @@ export default function SectionItem({ section, index, onUpdate, onDelete }) {
       title: getDefaultTitle(contentType),
       // Add default data based on content type
       data: getDefaultData(contentType),
+      resources: [],
     };
 
     onUpdate({

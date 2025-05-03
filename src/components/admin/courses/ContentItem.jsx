@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import {
@@ -8,11 +9,13 @@ import {
   Pencil,
   Save,
   X,
-  Upload,
-  LinkIcon,
   Plus,
   GripVertical,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+
+import ResourceUploader from "./ResourceUploader";
 import QuizEditor from "./QuizEditor";
 import AssignmentEditor from "./AssignmentEditor";
 
@@ -20,6 +23,7 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(content.title);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showResources, setShowResources] = useState(false);
 
   const handleSave = () => {
     onUpdate({ ...content, title });
@@ -33,6 +37,13 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
 
   const handleContentDataUpdate = (newData) => {
     onUpdate({ ...content, data: newData });
+  };
+
+  const handleResourcesUpdate = (resources) => {
+    onUpdate({
+      ...content,
+      resources: resources,
+    });
   };
 
   const getIcon = (contentType) => {
@@ -55,18 +66,37 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
       case "video":
         return (
           <div className="flex gap-2">
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-              <LinkIcon className="w-4 h-4" /> Add URL
-            </button>
-            <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-              <Upload className="w-4 h-4" /> Upload
+            <button
+              onClick={() => setShowResources(!showResources)}
+              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+            >
+              {showResources ? (
+                <>
+                  <ChevronUp className="w-4 h-4" /> Hide Resources
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" /> Manage Resources
+                </>
+              )}
             </button>
           </div>
         );
       case "material":
         return (
-          <button className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-            <Upload className="w-4 h-4" /> Upload PDF
+          <button
+            onClick={() => setShowResources(!showResources)}
+            className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700"
+          >
+            {showResources ? (
+              <>
+                <ChevronUp className="w-4 h-4" /> Hide Resources
+              </>
+            ) : (
+              <>
+                <ChevronDown className="w-4 h-4" /> Manage Resources
+              </>
+            )}
           </button>
         );
       case "quiz":
@@ -95,7 +125,22 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
   };
 
   const renderContentEditor = () => {
-    if (!isExpanded) return null;
+    if (!isExpanded && !showResources) return null;
+
+    if (showResources) {
+      return (
+        <div className="mt-4  pt-4">
+          <h4 className="font-medium mb-3">
+            {content.type === "video" ? "Video Resources" : "Course Materials"}
+          </h4>
+          <ResourceUploader
+            type={content.type}
+            initialResources={content.resources || []}
+            onChange={handleResourcesUpdate}
+          />
+        </div>
+      );
+    }
 
     switch (content.type) {
       case "quiz":
@@ -117,13 +162,16 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
     }
   };
 
+  // Count resources for badge display
+  const resourceCount = (content.resources || []).length;
+
   return (
     <Draggable draggableId={content.id} index={index}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`p-4 border border-dashed rounded-lg ${
+          className={`p-4 border border-dashed border-gray-200 rounded-lg ${
             snapshot.isDragging ? "bg-white shadow-md" : "bg-white"
           }`}
         >
@@ -147,7 +195,14 @@ export default function ContentItem({ content, index, onUpdate, onDelete }) {
                   autoFocus
                 />
               ) : (
-                <span className="font-medium">{content.title}</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">{content.title}</span>
+                  {resourceCount > 0 && (
+                    <span className="inline-flex items-center justify-center w-5 h-5 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">
+                      {resourceCount}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
 

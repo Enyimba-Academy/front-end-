@@ -1,5 +1,9 @@
 "use client";
 import { Calendar, Upload, LinkIcon } from "lucide-react";
+import CustomTextArea from "../../shared/CustomTextArea";
+import CustomInput from "../../shared/CustomInput";
+import CustomDatePicker from "../../shared/CustomDatePicker";
+import PrimaryButton from "../../shared/PrimaryButton";
 
 export default function AssignmentEditor({ data = {}, onChange }) {
   // Initialize with default values if data is undefined or missing properties
@@ -30,92 +34,75 @@ export default function AssignmentEditor({ data = {}, onChange }) {
   };
 
   return (
-    <div className="mt-4 border-t pt-4">
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">
-          Assignment Description
-        </label>
-        <textarea
-          value={assignmentData.description}
-          onChange={(e) => handleChange("description", e.target.value)}
-          className="w-full px-3 py-2 border rounded-md"
-          rows={4}
-          placeholder="Provide detailed instructions for the assignment..."
+    <div className="mt-4 border-t border-gray-200 pt-4">
+      <CustomTextArea
+        label="Assignment Description"
+        value={assignmentData.description}
+        onChange={(e) => handleChange("description", e.target.value)}
+        rows={6}
+        placeholder="Provide detailed instructions for the assignment..."
+      />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <CustomDatePicker
+          label="Due Date"
+          value={assignmentData.dueDate}
+          onChange={(e) => handleChange("dueDate", e.target.value)}
+        />
+        <CustomInput
+          label="Total Points"
+          value={assignmentData.totalPoints}
+          onChange={(e) => handleChange("totalPoints", e.target.value)}
+          type="number"
+          min="0"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Due Date</label>
-          <div className="relative">
-            <input
-              type="date"
-              value={assignmentData.dueDate || ""}
-              onChange={(e) => handleChange("dueDate", e.target.value)}
-              className="w-full px-3 py-2 border rounded-md pl-10"
-            />
-            <Calendar className="absolute left-3 top-2.5 w-5 h-5 text-gray-400" />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-2">Total Points</label>
-          <input
-            type="number"
-            value={assignmentData.totalPoints}
-            onChange={(e) =>
-              handleChange("totalPoints", Number.parseInt(e.target.value) || 0)
-            }
-            className="w-full px-3 py-2 border rounded-md"
-            min="0"
-          />
-        </div>
-      </div>
-
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Submission Type
         </label>
         <div className="flex flex-wrap gap-3">
-          <button
+          <PrimaryButton
             type="button"
             onClick={() => handleSubmissionTypeChange("file")}
             className={`px-4 py-2 rounded-md flex items-center gap-2 ${
               assignmentData.submissionType === "file"
                 ? "bg-red-50 text-red-600 border border-red-200"
-                : "border border-gray-300 text-gray-700"
+                : "border border-gray-300 text-gray-700 bg-white"
             }`}
           >
             <Upload className="w-4 h-4" /> File Upload
-          </button>
-          <button
+          </PrimaryButton>
+          <PrimaryButton
             type="button"
             onClick={() => handleSubmissionTypeChange("text")}
             className={`px-4 py-2 rounded-md flex items-center gap-2 ${
               assignmentData.submissionType === "text"
                 ? "bg-red-50 text-red-600 border border-red-200"
-                : "border border-gray-300 text-gray-700"
+                : "border border-gray-300 text-gray-700 bg-white"
             }`}
           >
             <span className="font-mono">T</span> Text Entry
-          </button>
-          <button
+          </PrimaryButton>
+          <PrimaryButton
             type="button"
             onClick={() => handleSubmissionTypeChange("link")}
             className={`px-4 py-2 rounded-md flex items-center gap-2 ${
               assignmentData.submissionType === "link"
                 ? "bg-red-50 text-red-600 border border-red-200"
-                : "border border-gray-300 text-gray-700"
+                : "border border-gray-300 text-gray-700 bg-white"
             }`}
           >
             <LinkIcon className="w-4 h-4" /> URL Link
-          </button>
+          </PrimaryButton>
         </div>
       </div>
 
       {assignmentData.submissionType === "file" && (
         <>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Allowed File Types
             </label>
             <div className="flex flex-wrap gap-2">
@@ -131,28 +118,26 @@ export default function AssignmentEditor({ data = {}, onChange }) {
                 "xls",
                 "xlsx",
               ].map((type) => (
-                <button
+                <PrimaryButton
                   key={type}
                   type="button"
                   onClick={() => handleFileTypeToggle(type)}
                   className={`px-3 py-1 rounded-md text-sm ${
                     assignmentData.allowedFileTypes.includes(type)
                       ? "bg-red-50 text-red-600 border border-red-200"
-                      : "border border-gray-300 text-gray-700"
+                      : "border border-gray-300 text-gray-700 bg-white"
                   }`}
                 >
                   .{type}
-                </button>
+                </PrimaryButton>
               ))}
             </div>
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
-              Max File Size (MB)
-            </label>
-            <input
+            <CustomInput
               type="number"
+              label="Max File Size (MB)"
               value={assignmentData.maxFileSize}
               onChange={(e) =>
                 handleChange(
@@ -162,21 +147,18 @@ export default function AssignmentEditor({ data = {}, onChange }) {
               }
               className="w-full px-3 py-2 border rounded-md"
               min="1"
-              max="100"
+              maxLength="100"
             />
           </div>
         </>
       )}
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">
-          Grading Criteria
-        </label>
-        <textarea
+        <CustomTextArea
           value={assignmentData.gradingCriteria || ""}
           onChange={(e) => handleChange("gradingCriteria", e.target.value)}
-          className="w-full px-3 py-2 border rounded-md"
-          rows={3}
+          rows={6}
+          label="Grading Criteria"
           placeholder="Describe how this assignment will be graded..."
         />
       </div>

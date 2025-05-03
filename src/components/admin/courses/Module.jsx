@@ -1,10 +1,12 @@
+"use client";
 import { useState } from "react";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft, ArrowRight } from "lucide-react";
 import SectionItem from "./SectionItem";
 
 export default function SectionsForm({ formFooter }) {
+  // Start at step 2 (Sections)
   const [sections, setSections] = useState([
     {
       id: "section-1",
@@ -100,7 +102,7 @@ export default function SectionsForm({ formFooter }) {
 
   return (
     <div className="">
-      <div className="mb-8">
+      <div className="">
         <div className="flex justify-end items-center mb-6">
           <button
             onClick={handleAddSection}
@@ -133,7 +135,6 @@ export default function SectionsForm({ formFooter }) {
           </Droppable>
         </DragDropContext>
       </div>
-
       {formFooter}
     </div>
   );

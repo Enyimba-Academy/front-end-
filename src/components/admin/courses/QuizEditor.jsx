@@ -1,5 +1,7 @@
 "use client";
 import { Plus, Trash2, Check, X } from "lucide-react";
+import CustomInput from "../../shared/CustomInput";
+import SelectDropDown from "../../shared/SelectDropDown";
 
 // Add default values at the beginning of the component to handle undefined data
 export default function QuizEditor({ data = {}, onChange }) {
@@ -99,45 +101,32 @@ export default function QuizEditor({ data = {}, onChange }) {
   };
 
   return (
-    <div className="mt-4 border-t pt-4">
+    <div className="mt-4 border-t border-gray-200 pt-4">
       <div className="mb-4">
-        <h4 className="font-medium mb-2">Quiz Settings</h4>
+        <h4 className="font-medium mb-2 text-gray-700">Quiz Settings</h4>
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Time Limit (minutes)
-            </label>
-            <input
-              type="number"
-              value={quizData.timeLimit}
-              onChange={(e) =>
-                handleSettingChange(
-                  "timeLimit",
-                  Number.parseInt(e.target.value) || 0
-                )
-              }
-              className="w-full px-3 py-2 border rounded-md"
-              min="0"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-gray-600 mb-1">
-              Passing Score (%)
-            </label>
-            <input
-              type="number"
-              value={quizData.passingScore}
-              onChange={(e) =>
-                handleSettingChange(
-                  "passingScore",
-                  Number.parseInt(e.target.value) || 0
-                )
-              }
-              className="w-full px-3 py-2 border rounded-md"
-              min="0"
-              max="100"
-            />
-          </div>
+          <CustomInput
+            label="Time Limit (minutes)"
+            value={quizData.timeLimit}
+            onChange={(e) => handleSettingChange("timeLimit", e.target.value)}
+            type="number"
+            min="0"
+            maxLength="100"
+          />
+
+          <CustomInput
+            label="Passing Score (%)"
+            value={quizData.passingScore}
+            onChange={(e) =>
+              handleSettingChange(
+                "passingScore",
+                Number.parseInt(e.target.value) || 0
+              )
+            }
+            type="number"
+            min="0"
+            max="100"
+          />
         </div>
       </div>
 
@@ -146,7 +135,7 @@ export default function QuizEditor({ data = {}, onChange }) {
       {quizData.questions.map((question, qIndex) => (
         <div
           key={question.id}
-          className="mb-6 p-4 border rounded-md bg-gray-50"
+          className="mb-6 p-4 border border-gray-200 rounded-md "
         >
           <div className="flex items-center justify-between mb-2">
             <div className="font-medium">Question {qIndex + 1}</div>
@@ -159,34 +148,28 @@ export default function QuizEditor({ data = {}, onChange }) {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
-              Question Text
-            </label>
-            <input
-              type="text"
+            <CustomInput
+              label="Question Text"
               value={question.text}
               onChange={(e) =>
                 handleQuestionChange(question.id, "text", e.target.value)
               }
-              className="w-full px-3 py-2 border rounded-md"
             />
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
-              Question Type
-            </label>
-            <select
+            <SelectDropDown
+              label="Question Type"
               value={question.type}
               onChange={(e) =>
                 handleQuestionChange(question.id, "type", e.target.value)
               }
-              className="w-full px-3 py-2 border rounded-md"
-            >
-              <option value="multiple-choice">Multiple Choice</option>
-              <option value="true-false">True/False</option>
-              <option value="short-answer">Short Answer</option>
-            </select>
+              options={[
+                { label: "Multiple Choice", value: "multiple-choice" },
+                { label: "True/False", value: "true-false" },
+                { label: "Short Answer", value: "short-answer" },
+              ]}
+            />
           </div>
 
           {(question.type === "multiple-choice" ||
@@ -226,8 +209,8 @@ export default function QuizEditor({ data = {}, onChange }) {
                     )}
                   </button>
 
-                  <input
-                    type="text"
+                  <CustomInput
+                    label="Option Text"
                     value={option.text}
                     onChange={(e) =>
                       handleOptionChange(
