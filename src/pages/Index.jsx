@@ -1,9 +1,50 @@
 import { Trophy } from "lucide-react";
+import { broadcastingCourses } from "../constant/dummyData";
 import HeroSection from "../components/index/HeroSection";
 import ReviewCard from "../components/index/ReviewCard";
 import StudioShowCard from "../components/index/StudioShowCard";
+import { useState, useEffect } from "react";
 
 export default function Index() {
+  const { beginner, intermediate, advanced } = broadcastingCourses;
+  const [timeLeft, setTimeLeft] = useState({
+    days: 27,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        const newTime = { ...prevTime };
+
+        if (newTime.seconds > 0) {
+          newTime.seconds--;
+        } else {
+          newTime.seconds = 59;
+          if (newTime.minutes > 0) {
+            newTime.minutes--;
+          } else {
+            newTime.minutes = 59;
+            if (newTime.hours > 0) {
+              newTime.hours--;
+            } else {
+              newTime.hours = 23;
+              if (newTime.days > 0) {
+                newTime.days--;
+              }
+            }
+          }
+        }
+
+        return newTime;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <main className="flex flex-col min-h-screen w-full">
       <HeroSection />
@@ -14,133 +55,89 @@ export default function Index() {
           <h2 className="text-3xl font-bold text-center mb-12">Our Courses</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Course 1 */}
+            {/* Beginner Course */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <img
                 src="/pick.png"
-                alt="Professional Photography"
+                alt={beginner.title}
                 className="w-full h-48 object-cover"
               />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">
-                    Professional Photography
-                  </h3>
+                  <h3 className="font-bold text-xl">{beginner.title}</h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
-                  Master the art of professional photography with
-                  industry-standard equipment and techniques.
-                </p>
+                <p className="text-gray-600 mb-4">{beginner.goal}</p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline"
-                  >
-                    Learn more
-                  </a>
-                  <span className="text-sm text-gray-500">12 weeks</span>
+                  <span className="text-sm text-gray-500">
+                    {beginner.duration}
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  href={`/course/${beginner.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
 
-            {/* Course 2 */}
+            {/* Intermediate Course */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <img
                 src="/pick2.png"
-                alt="Cinematography"
+                alt={intermediate.title}
                 className="w-full h-48 object-cover"
               />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">Cinematography</h3>
+                  <h3 className="font-bold text-xl">{intermediate.title}</h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
-                  Learn the art of visual storytelling through motion
-                  picturesBroadcasting Certificate and advanced filming
-                  techniques.
-                </p>
+                <p className="text-gray-600 mb-4">{intermediate.goal}</p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline"
-                  >
-                    Learn more
-                  </a>
-                  <span className="text-sm text-gray-500">16 weeks</span>
+                  <span className="text-sm text-gray-500">
+                    {intermediate.duration}
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  href={`/course/${intermediate.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
 
-            {/* Course 3 */}
+            {/* Advanced Course */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <img
                 src="/pick3.jpg"
-                alt="Broadcasting Certificate"
+                alt={advanced.title}
                 className="w-full h-48 object-cover"
               />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">
-                    Broadcasting Certificate
-                  </h3>
+                  <h3 className="font-bold text-xl">{advanced.title}</h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
-                  Build practical broadcasting skills and media literacy for
-                  aspiring professionals and media enthusiasts.
-                </p>
+                <p className="text-gray-600 mb-4">{advanced.goal}</p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline"
-                  >
-                    Learn more
-                  </a>
-                  <span className="text-sm text-gray-500">1-4 months</span>
+                  <span className="text-sm text-gray-500">
+                    {advanced.duration}
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  href={`/course/${advanced.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
@@ -180,7 +177,7 @@ export default function Index() {
         </div>
       </section>
 
-      <section className="flex flex-col gap-8 py-8 px-4 md:px-8 lg:px-[150px] bg-secondary space-y-8">
+      {/* <section className="flex flex-col gap-8 py-8 px-4 md:px-8 lg:px-[150px] bg-secondary space-y-8">
         <h1 className="text-heading font-bold text-3xl md:text-4xl text-center">
           Our Alumni Success Stories
         </h1>
@@ -189,7 +186,7 @@ export default function Index() {
             <ReviewCard key={index} />
           ))}
         </div>
-      </section>
+      </section> */}
 
       <section className="px-4 md:px-8 lg:px-[150px] bg-primary-light space-y-11 py-10">
         <h1 className="text-heading font-bold text-3xl md:text-4xl">
@@ -201,32 +198,22 @@ export default function Index() {
       <section className="px-4 md:px-8 lg:px-[150px] bg-primary-light space-y-11 py-10">
         <div className="flex flex-col gap-4 rounded-2xl p-4 bg-gradient-to-r from-[#C80000] to-[#FF4500] py-10">
           <h1 className="text-white font-bold text-3xl md:text-4xl text-center">
-            Start Your Broadcasting Journey Today
+            Admission is Open
           </h1>
           <div className="flex gap-4 justify-center flex-wrap">
-            {Array.from({ length: 3 }).map((_, index) => (
+            {Object.entries(timeLeft).map(([unit, value]) => (
               <div
-                key={index}
-                className="flex justify-center items-center rounded-lg bg-white/70 px-4 md:px-8 py-4"
+                key={unit}
+                className="flex flex-col items-center justify-center rounded-lg bg-white/70 px-6 py-4 min-w-[100px] transform hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex flex-col">
-                  <p className="text-white font-bold text-xl md:text-2xl">27</p>
-                  <p className="text-white font-normal text-base md:text-lg">
-                    Day
-                  </p>
-                </div>
+                <p className="text-white font-bold text-3xl md:text-4xl animate-pulse">
+                  {value.toString().padStart(2, "0")}
+                </p>
+                <p className="text-white font-normal text-base md:text-lg capitalize">
+                  {unit}
+                </p>
               </div>
             ))}
-          </div>
-          <div className="flex flex-col gap-4 justify-center items-center">
-            <input
-              type="text"
-              placeholder="Enter your email"
-              className="w-full md:w-[440px] border-primary-extra-light border-2 p-4 rounded-full"
-            />
-            <button className="bg-white text-primary font-bold px-4 py-2 rounded-full w-full md:w-[440px]">
-              Enroll Now
-            </button>
           </div>
         </div>
       </section>

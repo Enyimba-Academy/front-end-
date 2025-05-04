@@ -54,7 +54,7 @@ function App() {
           }
         />
         <Route
-          path="/course"
+          path="/course/:id"
           element={
             //<RequireAuth>
             <Course />

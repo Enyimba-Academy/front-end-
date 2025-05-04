@@ -94,7 +94,7 @@ export default function NavBar() {
               to="/onboarding"
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
             >
-              Enroll Now
+              Apply Now
             </Link>
           </div>
         ) : (
@@ -166,7 +166,7 @@ export default function NavBar() {
                   className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
                   onClick={toggleMenu}
                 >
-                  Enroll Now
+                  Apply Now
                 </Link>
               </div>
             </div>

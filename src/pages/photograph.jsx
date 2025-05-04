@@ -1,4 +1,8 @@
+import { broadcastingCourses } from "../constant/dummyData";
+
 export default function PhotographySchool() {
+  const { beginner, intermediate, advanced } = broadcastingCourses;
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -47,9 +51,9 @@ export default function PhotographySchool() {
             <div className="relative w-full sm:w-auto">
               <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none w-full sm:w-auto">
                 <option>Duration</option>
-                <option>3 months</option>
-                <option>6 months</option>
-                <option>1 year</option>
+                <option>1 Month</option>
+                <option>2 Months</option>
+                <option>4 Months</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg
@@ -114,198 +118,111 @@ export default function PhotographySchool() {
       >
         <div className="container mx-auto px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
-            Programs
+            Broadcasting Certificate Programs
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Program 1 */}
+            {/* Beginner Program */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <div className="relative h-48">
                 <img
                   src="/pick.png"
-                  alt="Professional Photography"
+                  alt={beginner.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
-                    Professional Photography
+                    {beginner.title}
                   </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  Master the art of professional photography with
-                  industry-standard equipment and techniques.
+                  {beginner.goal}
                 </p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
-                  >
-                    Learn more
-                  </a>
                   <span className="text-xs sm:text-sm text-gray-500">
-                    12 weeks
+                    {beginner.duration}
                   </span>
                 </div>
               </div>
-              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+              <div className="p-4 sm:p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
+                  href={`/course/${beginner.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
 
-            {/* Program 2 */}
+            {/* Intermediate Program */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <div className="relative h-48">
                 <img
                   src="/pick2.png"
-                  alt="Cinematography"
+                  alt={intermediate.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
-                    Cinematography
+                    {intermediate.title}
                   </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  Learn the art of visual storytelling through motion pictures
-                  and advanced filming techniques.
+                  {intermediate.goal}
                 </p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
-                  >
-                    Learn more
-                  </a>
                   <span className="text-xs sm:text-sm text-gray-500">
-                    16 weeks
+                    {intermediate.duration}
                   </span>
                 </div>
               </div>
-              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+              <div className="p-4 sm:p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
+                  href={`/course/${intermediate.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
 
-            {/* Program 3 */}
+            {/* Advanced Program */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
               <div className="relative h-48">
                 <img
                   src="/pick3.jpg"
-                  alt="Digital Imaging"
+                  alt={advanced.title}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
-                    Digital Imaging
+                    {advanced.title}
                   </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
                 <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  Master digital post-production and image manipulation
-                  techniques.
+                  {advanced.goal}
                 </p>
                 <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
-                  >
-                    Learn more
-                  </a>
                   <span className="text-xs sm:text-sm text-gray-500">
-                    8 weeks
+                    {advanced.duration}
                   </span>
                 </div>
               </div>
-              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+              <div className="p-4 sm:p-6">
                 <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
+                  href={`/course/${advanced.slug}`}
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                 >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
-                >
-                  Download Syllabus
-                </a>
-              </div>
-            </div>
-
-            {/* Program 4 - Broadcasting */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-48">
-                <img
-                  src="/pick4.png"
-                  alt="Broadcasting Certificate"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4 sm:p-6 border-b">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-lg sm:text-xl">
-                    Broadcasting Certificate
-                  </h3>
-                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  Build practical broadcasting skills and media literacy for
-                  aspiring professionals and media enthusiasts.
-                </p>
-                <div className="flex justify-between items-center">
-                  <a
-                    href="/course"
-                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
-                  >
-                    Learn more
-                  </a>
-                  <span className="text-xs sm:text-sm text-gray-500">
-                    1-4 months
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
-                <a
-                  href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
-                >
-                  Enroll Now
-                </a>
-                <a
-                  href="/course"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
-                >
-                  Download Syllabus
+                  View Course
                 </a>
               </div>
             </div>
