@@ -7,12 +7,12 @@ export default function HeroComponent({
   onClick,
 }) {
   return (
-    <div className="relative w-full px-5" onClick={onClick}>
+    <div className="relative w-full " onClick={onClick}>
       <div className="w-full" style={{ height: `${height}px` }}>
         <img
           src={image_url}
           alt="team"
-          className="w-full h-full object-fill"
+          className="w-full h-full object-cover"
           style={{ height: `${height}px` }}
         />
       </div>
