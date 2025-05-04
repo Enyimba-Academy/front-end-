@@ -4,7 +4,7 @@ export default function PhotographySchool() {
       {/* Navigation */}
 
       {/* Hero Section */}
-      <section className="relative h-[500px]">
+      <section className="relative h-[300px] sm:h-[400px] md:h-[500px]">
         <div className="absolute inset-0 bg-gray-800">
           <img
             src="/camera.png"
@@ -13,27 +13,21 @@ export default function PhotographySchool() {
           />
         </div>
         <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            School of Photography & Cinematography
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
+            Enyimba TV & Radio Academy
           </h1>
-          <p className="text-xl text-white mb-8">
+          <p className="text-lg sm:text-xl text-white mb-8">
             Craft Visual Stories That Captivate the World
           </p>
-          <a
-            href="#programs"
-            className="bg-red-600 text-white px-6 py-3 rounded-md font-medium hover:bg-red-700"
-          >
-            Explore Programs
-          </a>
         </div>
       </section>
 
       {/* Filter Section */}
-      <section className="py-8 border-b px-[150px]">
-        <div className="container mx-auto px-4 flex flex-wrap justify-between items-center gap-4">
-          <div className="flex space-x-4">
-            <div className="relative">
-              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none">
+      <section className="py-8 border-b px-4 sm:px-8 md:px-[150px]">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row flex-wrap justify-between items-center gap-4">
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
+            <div className="relative w-full sm:w-auto">
+              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none w-full sm:w-auto">
                 <option>Program Type</option>
                 <option>Certificate</option>
                 <option>Diploma</option>
@@ -50,8 +44,8 @@ export default function PhotographySchool() {
               </div>
             </div>
 
-            <div className="relative">
-              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none">
+            <div className="relative w-full sm:w-auto">
+              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none w-full sm:w-auto">
                 <option>Duration</option>
                 <option>3 months</option>
                 <option>6 months</option>
@@ -68,8 +62,8 @@ export default function PhotographySchool() {
               </div>
             </div>
 
-            <div className="relative">
-              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none">
+            <div className="relative w-full sm:w-auto">
+              <select className="appearance-none bg-white border rounded-md px-4 py-2 pr-8 text-sm focus:outline-none w-full sm:w-auto">
                 <option>Level</option>
                 <option>Beginner</option>
                 <option>Intermediate</option>
@@ -87,11 +81,11 @@ export default function PhotographySchool() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative w-full sm:w-auto mt-4 sm:mt-0">
             <input
               type="text"
               placeholder="Search programs..."
-              className="w-full md:w-64 px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
+              className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-600 focus:border-transparent"
             />
             <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
               <svg
@@ -114,44 +108,51 @@ export default function PhotographySchool() {
       </section>
 
       {/* Programs Section */}
-      <section id="programs" className="py-16 bg-primary-light px-[150px]">
+      <section
+        id="programs"
+        className="py-16 bg-primary-light px-4 sm:px-8 md:px-[150px]"
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Programs</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
+            Programs
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Program 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="p-6 border-b">
+              <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">
+                  <h3 className="font-bold text-lg sm:text-xl">
                     Professional Photography
                   </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">
                   Master the art of professional photography with
                   industry-standard equipment and techniques.
                 </p>
                 <div className="flex justify-between items-center">
                   <a
-                    href="/schools/photography/professional"
-                    className="text-red-600 font-medium hover:underline"
+                    href="/course"
+                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
                   >
                     Learn more
                   </a>
-                  <span className="text-sm text-gray-500">12 weeks</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    12 weeks
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
                 <a
                   href="/course"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
                 >
                   Enroll Now
                 </a>
                 <a
-                  href="/download/syllabus/photography"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
+                  href="/course"
+                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
                 >
                   Download Syllabus
                 </a>
@@ -160,35 +161,39 @@ export default function PhotographySchool() {
 
             {/* Program 2 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="p-6 border-b">
+              <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">Cinematography</h3>
+                  <h3 className="font-bold text-lg sm:text-xl">
+                    Cinematography
+                  </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">
                   Learn the art of visual storytelling through motion pictures
                   and advanced filming techniques.
                 </p>
                 <div className="flex justify-between items-center">
                   <a
-                    href="/schools/photography/cinematography"
-                    className="text-red-600 font-medium hover:underline"
+                    href="/course"
+                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
                   >
                     Learn more
                   </a>
-                  <span className="text-sm text-gray-500">16 weeks</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    16 weeks
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
                 <a
-                  href="/enroll"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  href="/course"
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
                 >
                   Enroll Now
                 </a>
                 <a
-                  href="/download/syllabus/cinematography"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
+                  href="/course"
+                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
                 >
                   Download Syllabus
                 </a>
@@ -197,35 +202,80 @@ export default function PhotographySchool() {
 
             {/* Program 3 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="p-6 border-b">
+              <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-xl">Digital Imaging</h3>
+                  <h3 className="font-bold text-lg sm:text-xl">
+                    Digital Imaging
+                  </h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
-                <p className="text-gray-600 mb-4">
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">
                   Master digital post-production and image manipulation
                   techniques.
                 </p>
                 <div className="flex justify-between items-center">
                   <a
-                    href="/schools/photography/digital-imaging"
-                    className="text-red-600 font-medium hover:underline"
+                    href="/course"
+                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
                   >
                     Learn more
                   </a>
-                  <span className="text-sm text-gray-500">8 weeks</span>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    8 weeks
+                  </span>
                 </div>
               </div>
-              <div className="p-6 flex justify-between">
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
                 <a
-                  href="/enroll"
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700"
+                  href="/course"
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
                 >
                   Enroll Now
                 </a>
                 <a
-                  href="/download/syllabus/digital-imaging"
-                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50"
+                  href="/course"
+                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
+                >
+                  Download Syllabus
+                </a>
+              </div>
+            </div>
+
+            {/* Program 4 - Broadcasting */}
+            <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <div className="p-4 sm:p-6 border-b">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-lg sm:text-xl">
+                    Broadcasting Certificate
+                  </h3>
+                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
+                </div>
+                <p className="text-gray-600 mb-4 text-sm sm:text-base">
+                  Build practical broadcasting skills and media literacy for
+                  aspiring professionals and media enthusiasts.
+                </p>
+                <div className="flex justify-between items-center">
+                  <a
+                    href="/course"
+                    className="text-red-600 font-medium hover:underline text-sm sm:text-base"
+                  >
+                    Learn more
+                  </a>
+                  <span className="text-xs sm:text-sm text-gray-500">
+                    1-4 months
+                  </span>
+                </div>
+              </div>
+              <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between gap-2 sm:gap-0">
+                <a
+                  href="/course"
+                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center"
+                >
+                  Enroll Now
+                </a>
+                <a
+                  href="/course"
+                  className="text-gray-700 px-4 py-2 border rounded-md text-sm font-medium hover:bg-gray-50 text-center"
                 >
                   Download Syllabus
                 </a>
@@ -236,99 +286,6 @@ export default function PhotographySchool() {
       </section>
 
       {/* Explore Other Schools */}
-      <section className="py-16 px-[150px]">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Explore Other Schools
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* School 1 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md p-6">
-              <h3 className="font-bold text-xl mb-4">School of Fine Arts</h3>
-              <p className="text-gray-600 mb-6">
-                Discover the world of traditional and contemporary art forms.
-              </p>
-              <a
-                href="/schools/fine-arts"
-                className="text-red-600 font-medium hover:underline flex items-center"
-              >
-                Explore School
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </a>
-            </div>
-
-            {/* School 2 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md p-6">
-              <h3 className="font-bold text-xl mb-4">School of Digital Arts</h3>
-              <p className="text-gray-600 mb-6">
-                Master digital creation tools and techniques.
-              </p>
-              <a
-                href="/schools/digital-arts"
-                className="text-red-600 font-medium hover:underline flex items-center"
-              >
-                Explore School
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </a>
-            </div>
-
-            {/* School 3 */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md p-6">
-              <h3 className="font-bold text-xl mb-4">School of Film</h3>
-              <p className="text-gray-600 mb-6">
-                Learn the art of storytelling through motion pictures.
-              </p>
-              <a
-                href="/schools/film"
-                className="text-red-600 font-medium hover:underline flex items-center"
-              >
-                Explore School
-                <svg
-                  className="w-4 h-4 ml-1"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 5l7 7-7 7"
-                  ></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
