@@ -51,7 +51,7 @@ export default function NavBar() {
               }`
             }
           >
-            About
+            Home
           </NavLink>
           <NavLink
             to="/photography"
