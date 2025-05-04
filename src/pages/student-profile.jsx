@@ -96,24 +96,24 @@ function LoadingSkeleton() {
 }
 
 export default function StudentProfile() {
-  const { user, isLoadingUser } = useAuth();
+  // const { user, isLoadingUser } = useAuth();
   const [activeTab, setActiveTab] = useState("enrolled");
   const navigate = useNavigate();
 
-  if (isLoadingUser) {
-    return <LoadingSkeleton />;
-  }
-  if (!user.profile) {
-    return navigate("/onboarding");
-  }
+  // if (isLoadingUser) {
+  //   return <LoadingSkeleton />;
+  // }
+  // if (!user.profile) {
+  //   return navigate("/onboarding");
+  // }
   return (
     <div className="max-w-7xl mx-auto bg-white">
       {/* Header with blue top border */}
       <div className="">
         {/* Profile Header */}
-        <div className="px-4 py-8 md:px-8 flex flex-col md:flex-row items-center md:items-start gap-6">
+        <div className="px-4 py-6 sm:py-8 md:px-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
           {/* Profile Image */}
-          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gray-200">
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=100&width=100"
               alt="Amina Adeyemi"
@@ -122,34 +122,42 @@ export default function StudentProfile() {
           </div>
 
           {/* Profile Info */}
-          <div className="flex-1 text-center md:text-left">
-            <h1 className="text-2xl font-semibold text-gray-800">
-              {user.firstName} {user.lastName}
+          <div className="flex-1 text-center sm:text-left">
+            <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
+              {/* {user?.firstName} {user?.lastName} */}
             </h1>
-            <p className="text-gray-600 mb-6">
+            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
               School of Photography | Enrolled: Jan 2024
             </p>
 
             {/* Stats */}
-            <div className="flex flex-wrap justify-center md:justify-start gap-8 mb-6">
+            <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-8 mb-4 sm:mb-6">
               <div className="text-center">
-                <p className="text-gray-600 text-sm">Courses Completed</p>
-                <p className="text-red-600 font-bold text-xl">5/12</p>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  Courses Completed
+                </p>
+                <p className="text-red-600 font-bold text-lg sm:text-xl">
+                  5/12
+                </p>
               </div>
               <div className="text-center">
-                <p className="text-gray-600 text-sm">Certificates Earned</p>
-                <p className="text-red-600 font-bold text-xl">2</p>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  Certificates Earned
+                </p>
+                <p className="text-red-600 font-bold text-lg sm:text-xl">2</p>
               </div>
               <div className="text-center">
-                <p className="text-gray-600 text-sm">Projects Published</p>
-                <p className="text-red-600 font-bold text-xl">8</p>
+                <p className="text-gray-600 text-xs sm:text-sm">
+                  Projects Published
+                </p>
+                <p className="text-red-600 font-bold text-lg sm:text-xl">8</p>
               </div>
             </div>
 
             {/* Edit Profile Button */}
             <Link
               to="/edit-profile"
-              className="border border-red-600 text-red-600 px-4 py-2 rounded hover:bg-red-50 transition-colors"
+              className="inline-block border border-red-600 text-red-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded text-sm sm:text-base hover:bg-red-50 transition-colors"
             >
               Edit Profile
             </Link>
@@ -157,19 +165,16 @@ export default function StudentProfile() {
         </div>
       </div>
 
-      {/* Bottom border */}
-      <div className=""></div>
-
       {/* Main Content */}
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col lg:flex-row">
         {/* Left Content */}
         <div className="flex-1 border-r border-gray-200">
           {/* Tabs */}
-          <div className="border-b border-gray-200">
-            <div className="flex">
+          <div className="border-b border-gray-200 overflow-x-auto">
+            <div className="flex min-w-max">
               <button
                 onClick={() => setActiveTab("enrolled")}
-                className={`px-6 py-4 font-medium text-sm ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "enrolled"
                     ? "text-red-600 border-b-2 border-red-600"
                     : "text-gray-600 hover:text-gray-800"
@@ -179,7 +184,7 @@ export default function StudentProfile() {
               </button>
               <button
                 onClick={() => setActiveTab("certificates")}
-                className={`px-6 py-4 font-medium text-sm ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "certificates"
                     ? "text-red-600 border-b-2 border-red-600"
                     : "text-gray-600 hover:text-gray-800"
@@ -189,7 +194,7 @@ export default function StudentProfile() {
               </button>
               <button
                 onClick={() => setActiveTab("settings")}
-                className={`px-6 py-4 font-medium text-sm ${
+                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
                   activeTab === "settings"
                     ? "text-red-600 border-b-2 border-red-600"
                     : "text-gray-600 hover:text-gray-800"
@@ -201,43 +206,49 @@ export default function StudentProfile() {
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6">
             {/* Enrolled Courses Tab */}
             {activeTab === "enrolled" && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
                   Enrolled Courses
                 </h2>
-                <div className="border border-gray-200 rounded-lg overflow-hidden mb-6">
-                  <div className="aspect-video w-full bg-gray-100">
-                    <img
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=240&width=400"
-                      alt="Photography class"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-gray-800 mb-2">
-                      Professional Certificate in Photography
-                    </h3>
-                    <p className="text-sm text-gray-600 mb-4">
-                      12 Modules • Next Lesson: Lighting Techniques
-                    </p>
-                    <button className="text-red-600 font-medium text-sm flex items-center">
-                      Continue
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4 ml-1"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {/* Course Card */}
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="aspect-video w-full bg-gray-100">
+                      <img
+                        src="/pick.png"
+                        alt="Photography class"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-3 sm:p-4">
+                      <h3 className="font-medium text-sm sm:text-base text-gray-800 mb-1 sm:mb-2">
+                        Professional Certificate in Photography
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
+                        12 Modules • Next Lesson: Lighting Techniques
+                      </p>
+                      <button
+                        className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
+                        onClick={() => navigate("/video-lesson")}
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </button>
+                        Continue
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 sm:h-4 sm:w-4 ml-1"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -246,39 +257,49 @@ export default function StudentProfile() {
             {/* Certificates Tab */}
             {activeTab === "certificates" && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
                   Certificates
                 </h2>
-                <div className="border border-gray-200 rounded-lg overflow-hidden mb-6 max-w-md">
-                  <div className="p-4">
-                    <img
-                      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=300&width=400"
-                      alt="Certificate"
-                      className="w-full h-auto object-contain border border-gray-200"
-                    />
-                    <div className="flex justify-between items-center mt-3">
-                      <div className="flex items-center text-green-600">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 mr-1"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                        <span className="text-sm font-medium">Verified</span>
-                      </div>
-                      <div className="flex gap-2">
-                        <button className="text-red-600">
-                          <Download size={18} />
-                        </button>
-                        <button className="text-red-600">
-                          <Share2 size={18} />
-                        </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  <div className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="p-3 sm:p-4">
+                      <img
+                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=300&width=400"
+                        alt="Certificate"
+                        className="w-full h-auto object-contain border border-gray-200"
+                      />
+                      <div className="flex justify-between items-center mt-2 sm:mt-3">
+                        <div className="flex items-center text-green-600">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 sm:h-5 sm:w-5 mr-1"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                          <span className="text-xs sm:text-sm font-medium">
+                            Verified
+                          </span>
+                        </div>
+                        <div className="flex gap-2">
+                          <button className="text-red-600">
+                            <Download
+                              size={16}
+                              className="sm:w-5 sm:h-5 w-4 h-4"
+                            />
+                          </button>
+                          <button className="text-red-600">
+                            <Share2
+                              size={16}
+                              className="sm:w-5 sm:h-5 w-4 h-4"
+                            />
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -289,10 +310,10 @@ export default function StudentProfile() {
             {/* Settings Tab */}
             {activeTab === "settings" && (
               <div>
-                <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
                   Settings
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-sm sm:text-base text-gray-600">
                   Account settings and preferences
                 </p>
               </div>
@@ -301,37 +322,37 @@ export default function StudentProfile() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-full md:w-80 p-6 bg-gray-50">
+        <div className="w-full lg:w-80 p-4 sm:p-6 bg-gray-50">
           {/* Quick Actions */}
-          <div className="mb-8">
-            <h3 className="text-lg font-medium text-gray-800 mb-4">
+          <div className="mb-6 sm:mb-8">
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-3 sm:mb-4">
               Quick Actions
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2 sm:space-y-3">
               <li>
                 <a
                   href="#"
-                  className="flex items-center text-gray-700 hover:text-red-600"
+                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
                 >
-                  <Edit className="w-5 h-5 mr-3" />
+                  <Edit className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   <span>Edit Profile</span>
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="flex items-center text-gray-700 hover:text-red-600"
+                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
                 >
-                  <Download className="w-5 h-5 mr-3" />
+                  <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   <span>Download All Certificates</span>
                 </a>
               </li>
               <li>
                 <a
                   href="#"
-                  className="flex items-center text-gray-700 hover:text-red-600"
+                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
                 >
-                  <Lock className="w-5 h-5 mr-3" />
+                  <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
                   <span>Privacy Settings</span>
                 </a>
               </li>
@@ -340,15 +361,15 @@ export default function StudentProfile() {
 
           {/* Achievements */}
           <div>
-            <h3 className="text-lg font-medium text-gray-800 mb-4">
+            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-3 sm:mb-4">
               Achievements
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-3 sm:space-y-4">
               <li className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-1">
+                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-0.5 sm:mt-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -359,18 +380,20 @@ export default function StudentProfile() {
                     />
                   </svg>
                 </div>
-                <div className="ml-3">
-                  <p className="font-medium text-gray-800">Top 10% Student</p>
-                  <p className="text-sm text-gray-600">
+                <div className="ml-2 sm:ml-3">
+                  <p className="font-medium text-sm sm:text-base text-gray-800">
+                    Top 10% Student
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-600">
                     Photography Excellence
                   </p>
                 </div>
               </li>
               <li className="flex items-start">
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-1">
+                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-0.5 sm:mt-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-4 w-4"
+                    className="h-3 w-3 sm:h-4 sm:w-4"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                   >
@@ -381,11 +404,13 @@ export default function StudentProfile() {
                     />
                   </svg>
                 </div>
-                <div className="ml-3">
-                  <p className="font-medium text-gray-800">
+                <div className="ml-2 sm:ml-3">
+                  <p className="font-medium text-sm sm:text-base text-gray-800">
                     7-Day Learning Streak
                   </p>
-                  <p className="text-sm text-gray-600">Keep it up!</p>
+                  <p className="text-xs sm:text-sm text-gray-600">
+                    Keep it up!
+                  </p>
                 </div>
               </li>
             </ul>

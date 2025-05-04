@@ -97,9 +97,9 @@ function App() {
       <Route
         path="/student-profile"
         element={
-          <RequireAuth>
-            <StudentProfile />
-          </RequireAuth>
+          // <RequireAuth>
+          <StudentProfile />
+          // </RequireAuth>
         }
       />
       <Route path="/admin" element={<Dashboard />}>

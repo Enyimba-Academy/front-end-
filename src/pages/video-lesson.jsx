@@ -54,9 +54,9 @@ export default function VideoLessonPage() {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
         {/* Left Sidebar - Course Navigation */}
-        <div className="hidden md:block w-64 border-r border-gray-200 overflow-y-auto bg-white">
+        <div className="hidden lg:block w-64 border-r border-gray-200 overflow-y-auto bg-white">
           <div className="p-4">
             <div className="relative">
               <input
@@ -190,45 +190,53 @@ export default function VideoLessonPage() {
         {/* Center - Video Player and Content */}
         <div className="flex-1 flex flex-col overflow-y-auto">
           {/* Video Player */}
-          <div className="relative bg-black aspect-video">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=600"
-              alt="Video thumbnail"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="w-20 h-20 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
-              >
-                <Play size={40} className="text-white ml-1" />
-              </button>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 flex items-center">
-              <button onClick={() => setIsPlaying(!isPlaying)} className="mr-2">
-                {isPlaying ? <Pause size={16} /> : <Play size={16} />}
-              </button>
-              <span className="text-sm mr-2">14:23 / 32:10</span>
-              <div className="flex-1 mx-2 h-1 bg-gray-600 rounded-full">
-                <div className="w-[45%] h-full bg-red-600 rounded-full"></div>
+          <div className="relative w-full">
+            <div className="relative bg-black aspect-video">
+              <img
+                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=600"
+                alt="Video thumbnail"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-black bg-opacity-50 rounded-full flex items-center justify-center"
+                >
+                  <Play
+                    size={24}
+                    className="text-white ml-1 sm:size-8 md:size-10"
+                  />
+                </button>
               </div>
-              <div className="flex items-center space-x-3">
-                <button>
-                  <Settings size={16} />
+              <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 flex items-center">
+                <button
+                  onClick={() => setIsPlaying(!isPlaying)}
+                  className="mr-2"
+                >
+                  {isPlaying ? <Pause size={16} /> : <Play size={16} />}
                 </button>
-                <button>
-                  <Maximize size={16} />
-                </button>
+                <span className="text-xs sm:text-sm mr-2">14:23 / 32:10</span>
+                <div className="flex-1 mx-2 h-1 bg-gray-600 rounded-full">
+                  <div className="w-[45%] h-full bg-red-600 rounded-full"></div>
+                </div>
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <button>
+                    <Settings size={14} className="sm:size-4" />
+                  </button>
+                  <button>
+                    <Maximize size={14} className="sm:size-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Lesson Content */}
-          <div className="p-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-3">
+          <div className="p-4 sm:p-6">
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
               Natural Light Techniques
             </h2>
-            <p className="text-gray-700 mb-8">
+            <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
               Learn how to harness natural light for stunning photography. This
               lesson covers different types of natural light, optimal shooting
               times, and techniques for managing challenging lighting
@@ -236,16 +244,16 @@ export default function VideoLessonPage() {
             </p>
 
             {/* Navigation */}
-            <div className="flex items-center justify-between mt-8">
-              <button className="flex items-center text-gray-600 hover:text-gray-900">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mt-6 sm:mt-8">
+              <button className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center">
                 <ArrowLeft size={16} className="mr-1" />
                 <span>Previous Lesson</span>
               </button>
-              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center">
+              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
                 <CheckCircle size={16} className="mr-1" />
                 <span>Mark Complete</span>
               </button>
-              <button className="flex items-center text-gray-600 hover:text-gray-900">
+              <button className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center">
                 <span>Next Lesson</span>
                 <ArrowLeft size={16} className="ml-1 transform rotate-180" />
               </button>
@@ -254,7 +262,7 @@ export default function VideoLessonPage() {
         </div>
 
         {/* Right Sidebar - Notes and Resources */}
-        <div className="hidden lg:block w-72 border-l border-gray-200 overflow-y-auto bg-gray-50">
+        <div className="hidden xl:block w-72 border-l border-gray-200 overflow-y-auto bg-gray-50">
           <div className="p-4">
             <h3 className="font-medium text-gray-900 mb-3">Lesson Notes</h3>
             <textarea

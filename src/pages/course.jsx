@@ -101,15 +101,13 @@ export default function Course() {
           <div className="relative">
             <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
               <img
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=600"
+                src="/pick4.png"
                 alt="Broadcasting course"
                 className="w-full h-full object-cover opacity-80"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                  Broadcasting
-                </h2>
-                <h3 className="text-2xl md:text-3xl font-bold">CERTIFICATE</h3>
+                <h2 className="text-3xl md:text-4xl font-bold mb-2"></h2>
+                <h3 className="text-2xl md:text-3xl font-bold"></h3>
               </div>
             </div>
             <a

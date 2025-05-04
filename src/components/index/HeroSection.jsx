@@ -13,7 +13,7 @@ export default function HeroSection() {
           <br className="hidden md:block" /> Radio Presenters & Media
           Professionals
         </p>
-        <PrimaryLink to="/photograph">Explore Programs</PrimaryLink>
+        <PrimaryLink to="/photography">Explore Programs</PrimaryLink>
       </div>
     </HeroComponent>
   );

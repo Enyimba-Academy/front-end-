@@ -16,6 +16,11 @@ export default function Index() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Course 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <img
+                src="/pick.png"
+                alt="Professional Photography"
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-xl">
@@ -55,14 +60,20 @@ export default function Index() {
 
             {/* Course 2 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <img
+                src="/pick2.png"
+                alt="Cinematography"
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-xl">Cinematography</h3>
                   <div className="w-3 h-3 rounded-full bg-red-600"></div>
                 </div>
                 <p className="text-gray-600 mb-4">
-                  Learn the art of visual storytelling through motion pictures
-                  and advanced filming techniques.
+                  Learn the art of visual storytelling through motion
+                  picturesBroadcasting Certificate and advanced filming
+                  techniques.
                 </p>
                 <div className="flex justify-between items-center">
                   <a
@@ -92,6 +103,11 @@ export default function Index() {
 
             {/* Course 3 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <img
+                src="/pick3.jpg"
+                alt="Broadcasting Certificate"
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-xl">

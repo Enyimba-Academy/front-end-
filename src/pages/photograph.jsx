@@ -4,12 +4,12 @@ export default function PhotographySchool() {
       {/* Navigation */}
 
       {/* Hero Section */}
-      <section className="relative h-[300px] sm:h-[400px] md:h-[500px]">
+      <section className="relative h-[400px] sm:h-[500px] md:h-[600px]">
         <div className="absolute inset-0 bg-gray-800">
           <img
-            src="/camera.png"
+            src="/pick.png"
             alt="Photography"
-            className="w-full h-full object-cover opacity-50"
+            className="w-full h-full object-cover"
           />
         </div>
         <div className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center">
@@ -120,6 +120,13 @@ export default function PhotographySchool() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Program 1 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <div className="relative h-48">
+                <img
+                  src="/pick.png"
+                  alt="Professional Photography"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
@@ -161,6 +168,13 @@ export default function PhotographySchool() {
 
             {/* Program 2 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <div className="relative h-48">
+                <img
+                  src="/pick2.png"
+                  alt="Cinematography"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
@@ -202,6 +216,13 @@ export default function PhotographySchool() {
 
             {/* Program 3 */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <div className="relative h-48">
+                <img
+                  src="/pick3.jpg"
+                  alt="Digital Imaging"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
@@ -243,6 +264,13 @@ export default function PhotographySchool() {
 
             {/* Program 4 - Broadcasting */}
             <div className="bg-white rounded-lg overflow-hidden shadow-md">
+              <div className="relative h-48">
+                <img
+                  src="/pick4.png"
+                  alt="Broadcasting Certificate"
+                  className="w-full h-full object-cover"
+                />
+              </div>
               <div className="p-4 sm:p-6 border-b">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-bold text-lg sm:text-xl">
