@@ -9,7 +9,7 @@ const FormFooter = ({
   validation,
   setError,
   isSubmitting,
-  setSubmitting,
+
   saveToDraft,
   values,
 }) => {
@@ -37,12 +37,13 @@ const FormFooter = ({
 
   const handleNext = () => {
     if (!isSubmitting) {
+      console.log("Form values:", values);
       const isValid = validation();
-      console.log("isValid", isValid);
+      console.log("Validation result:", isValid);
       if (isValid) {
         setError(false);
         if (isLast) {
-          setSubmitting(true);
+          console.log("Submitting form...");
           setLastText("Submitting...");
           handleSubmit && handleSubmit();
         } else {
@@ -51,6 +52,7 @@ const FormFooter = ({
           saveToDraft && saveToDraft(values);
         }
       } else {
+        console.log("Validation failed");
         setError(true);
       }
     }

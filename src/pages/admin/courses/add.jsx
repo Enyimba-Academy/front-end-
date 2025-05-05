@@ -14,9 +14,10 @@ import { Bell } from "lucide-react";
 import SectionsForm from "../../../components/admin/courses/Module";
 import FinalStep from "../../../components/admin/courses/FinalStep";
 import { addSchoolSchema } from "../../../schema/add-school.schema";
+import { useCreateCourse } from "../../../hooks/admin/course.hook";
 
 export default function AdminCoursesForm() {
-  const [file, setFile] = useState(null);
+  const { mutate: createCourse, isPending } = useCreateCourse();
   const { prev } = useSteps();
   const [showError, setShowError] = useState(false);
 
@@ -82,22 +83,12 @@ export default function AdminCoursesForm() {
         }}
         validationSchema={addSchoolSchema}
         onSubmit={(values) => {
-          console.log(values);
+          createCourse(values);
         }}
         enableReinitialize
         validateOnMount
       >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          isSubmitting,
-          setSubmitting,
-
-          validateField,
-        }) => {
+        {({ values, errors, touched, handleSubmit }) => {
           console.log("Formik - Errors:", errors);
           console.log("Formik - Touched:", touched);
           console.log("Formik - Values:", values);
@@ -130,6 +121,7 @@ export default function AdminCoursesForm() {
                     <FormFooter
                       onCancel={prev}
                       values={values}
+                      setError={(bool) => setShowError(bool)}
                       validation={() => {
                         return secondValidation(errors, values, touched);
                       }}
@@ -148,6 +140,9 @@ export default function AdminCoursesForm() {
                     <FormFooter
                       onCancel={prev}
                       values={values}
+                      setError={(bool) => setShowError(bool)}
+                      isSubmitting={isPending}
+                      handleSubmit={handleSubmit}
                       validation={() => {
                         return thirdValidation(errors, values, touched);
                       }}

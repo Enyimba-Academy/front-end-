@@ -4,24 +4,10 @@ import SelectDropDown from "@/components/shared/SelectDropDown";
 import ImageUpload from "@/components/shared/ImageUpload";
 import ErrorMessage from "@/components/shared/ErrorMessage";
 import { useFormikContext } from "formik";
-import { useGetSchools } from "../../../hooks/admin/school.hook";
-import { useMemo } from "react";
 
 export default function BasicInformation({ showError, footerButtons }) {
   const { values, handleChange, errors, touched, handleBlur, setFieldValue } =
     useFormikContext();
-  const { schools, isLoading } = useGetSchools({
-    filters: true,
-  });
-  const schoolOptions = useMemo(() => {
-    return schools?.data?.map((school) => ({
-      label: school?.name,
-      value: school?.id,
-    }));
-  }, [schools]);
-  if (isLoading) return <h1>Loading...</h1>;
-
-  console.log("schools", schools);
 
   return (
     <div className="space-y-6">
@@ -54,20 +40,6 @@ export default function BasicInformation({ showError, footerButtons }) {
         />
         {errors?.description && (
           <ErrorMessage>{errors.description}</ErrorMessage>
-        )}
-      </div>
-
-      <div>
-        <SelectDropDown
-          label="School"
-          name="school"
-          options={schoolOptions}
-          onChange={(value) => setFieldValue("school", value)}
-          onBlur={handleBlur}
-          required
-        />
-        {showError && errors?.school && touched?.school && (
-          <ErrorMessage>{errors.school}</ErrorMessage>
         )}
       </div>
 

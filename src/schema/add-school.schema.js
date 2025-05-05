@@ -8,7 +8,7 @@ export const addSchoolSchema = Yup.object().shape({
     .required("Course description is required")
     .max(500, "Course description must be less than 500 characters"),
   image: Yup.string().required("Course image is required"),
-  school: Yup.string().required("School selection is required"),
+
   sections: Yup.array()
     .min(1, "At least one section is required")
     .of(
@@ -19,6 +19,28 @@ export const addSchoolSchema = Yup.object().shape({
           .max(100, "Section title must be less than 100 characters"),
         contents: Yup.array()
           .min(1, "Each section must have at least one content item")
+          .test(
+            "one-quiz-per-section",
+            "Each section can only have one quiz",
+            function (contents) {
+              if (!contents) return true;
+              const quizCount = contents.filter(
+                (content) => content.type === "quiz"
+              ).length;
+              return quizCount <= 1;
+            }
+          )
+          .test(
+            "one-assignment-per-section",
+            "Each section can only have one assignment",
+            function (contents) {
+              if (!contents) return true;
+              const assignmentCount = contents.filter(
+                (content) => content.type === "assignment"
+              ).length;
+              return assignmentCount <= 1;
+            }
+          )
           .of(
             Yup.object().shape({
               id: Yup.string().required(),
