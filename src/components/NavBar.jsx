@@ -7,7 +7,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import PrimaryLink from "./shared/PrimaryLink";
 import { useAuth } from "../hooks/useAuth";
 
@@ -43,22 +43,40 @@ export default function NavBar() {
 
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-4 text-heading font-semibold text-xl">
-          <Link to="/" className="hover:text-primary transition-colors">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `hover:text-primary transition-colors ${
+                isActive ? "text-primary" : ""
+              }`
+            }
+          >
             About
-          </Link>
-          <Link to="/schools" className="hover:text-primary transition-colors">
-            Schools
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
+            to="/photography"
+            className={({ isActive }) =>
+              `hover:text-primary transition-colors ${
+                isActive ? "text-primary" : ""
+              }`
+            }
+          >
+            Courses
+          </NavLink>
+          <NavLink
             to="/contact-us"
-            className="hover:text-primary transition-colors"
+            className={({ isActive }) =>
+              `hover:text-primary transition-colors ${
+                isActive ? "text-primary" : ""
+              }`
+            }
           >
             Contact
-          </Link>
+          </NavLink>
         </div>
 
         {/* Desktop Action Buttons */}
-        {isAuthenticated ? (
+        {!isAuthenticated ? (
           <div className="hidden lg:flex items-center gap-4">
             <Link
               to="/login"
@@ -94,27 +112,39 @@ export default function NavBar() {
         {isMenuOpen && (
           <div className="fixed inset-0 bg-white z-10 lg:hidden pt-20 px-4">
             <div className="flex flex-col items-center gap-6 text-heading font-semibold text-xl">
-              <Link
+              <NavLink
                 to="/"
-                className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+                className={({ isActive }) =>
+                  `w-full text-center py-3 hover:bg-gray-100 rounded-md ${
+                    isActive ? "text-primary bg-gray-100" : ""
+                  }`
+                }
                 onClick={toggleMenu}
               >
                 Home
-              </Link>
-              <Link
-                to="/about-us"
-                className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+              </NavLink>
+              <NavLink
+                to="/photography"
+                className={({ isActive }) =>
+                  `w-full text-center py-3 hover:bg-gray-100 rounded-md ${
+                    isActive ? "text-primary bg-gray-100" : ""
+                  }`
+                }
                 onClick={toggleMenu}
               >
-                About
-              </Link>
-              <Link
-                to="/contact"
-                className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+                Courses
+              </NavLink>
+              <NavLink
+                to="/contact-us"
+                className={({ isActive }) =>
+                  `w-full text-center py-3 hover:bg-gray-100 rounded-md ${
+                    isActive ? "text-primary bg-gray-100" : ""
+                  }`
+                }
                 onClick={toggleMenu}
               >
                 Contact
-              </Link>
+              </NavLink>
               <div className="w-full h-px bg-gray-200 my-2"></div>
               <Link
                 to="/login"

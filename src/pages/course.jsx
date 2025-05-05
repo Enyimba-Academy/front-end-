@@ -2,12 +2,12 @@ export default function Course() {
   return (
     <div className="bg-white">
       {/* Course Header Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12 md:py-16 lg:py-20">
+      <section className="lg:px-[150px] mx-auto px-4 py-12 md:py-16 lg:py-20 bg-primary-light/50">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left Column - Course Info */}
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              Professional Certificate in Photography
+              Beginner Certificate in Broadcasting
             </h1>
 
             <div className="space-y-4 mb-8">
@@ -23,7 +23,9 @@ export default function Course() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-gray-700">3 Months Duration</span>
+                <span className="text-gray-700">
+                  1 Month Duration • 6 Credit Hours
+                </span>
               </div>
 
               <div className="flex items-center">
@@ -38,7 +40,7 @@ export default function Course() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-gray-700">Red-sealed Certificate</span>
+                <span className="text-gray-700">Entry-Level Certificate</span>
               </div>
 
               <div className="flex items-center">
@@ -53,7 +55,9 @@ export default function Course() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-gray-700">Online + Live Workshops</span>
+                <span className="text-gray-700">
+                  Online + Practical Workshops
+                </span>
               </div>
 
               <div className="flex items-center">
@@ -65,16 +69,16 @@ export default function Course() {
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
                 </svg>
                 <span className="text-gray-700">
-                  Taught by Jane Doe
+                  Taught by Industry Experts
                   <br />
-                  Award Winning Photographer
+                  Experienced Broadcast Professionals
                 </span>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-4">
               <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md transition-colors">
-                Enroll Now
+                Apply Now
               </button>
               <button className="flex items-center text-gray-700 hover:text-gray-900">
                 <svg
@@ -98,14 +102,14 @@ export default function Course() {
             <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
               <img
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=600"
-                alt="Photography course"
+                alt="Broadcasting course"
                 className="w-full h-full object-cover opacity-80"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
                 <h2 className="text-3xl md:text-4xl font-bold mb-2">
-                  Photography
+                  Broadcasting
                 </h2>
-                <h3 className="text-2xl md:text-3xl font-bold">COURSE</h3>
+                <h3 className="text-2xl md:text-3xl font-bold">CERTIFICATE</h3>
               </div>
             </div>
             <a
@@ -148,10 +152,10 @@ export default function Course() {
               </svg>
             </div>
             <h3 className="font-semibold text-lg mb-2">
-              Portfolio Development
+              Broadcasting Fundamentals
             </h3>
             <p className="text-gray-600 text-sm">
-              Curate 20+ professional-grade photos.
+              Master basic workflows and ethical guidelines in broadcasting.
             </p>
           </div>
 
@@ -170,9 +174,9 @@ export default function Course() {
                 />
               </svg>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Software Skills</h3>
+            <h3 className="font-semibold text-lg mb-2">Scriptwriting Skills</h3>
             <p className="text-gray-600 text-sm">
-              Master Lightroom & Photoshop.
+              Write and present engaging scripts for various formats.
             </p>
           </div>
 
@@ -191,9 +195,9 @@ export default function Course() {
                 />
               </svg>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Industry Prep</h3>
+            <h3 className="font-semibold text-lg mb-2">Studio Operations</h3>
             <p className="text-gray-600 text-sm">
-              Build client-ready contracts & pricing.
+              Learn to operate basic studio equipment and tools.
             </p>
           </div>
 
@@ -212,8 +216,10 @@ export default function Course() {
                 />
               </svg>
             </div>
-            <h3 className="font-semibold text-lg mb-2">Live Feedback</h3>
-            <p className="text-gray-600 text-sm">Weekly 1:1 mentor sessions.</p>
+            <h3 className="font-semibold text-lg mb-2">Production Skills</h3>
+            <p className="text-gray-600 text-sm">
+              Create your own radio/TV segments with professional guidance.
+            </p>
           </div>
         </div>
       </section>
@@ -225,65 +231,523 @@ export default function Course() {
             Course Curriculum
           </h2>
 
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
-            <div className="p-4 border-b border-gray-100 flex justify-between items-center">
-              <div className="flex items-center">
-                <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
-                  <span className="text-white text-xs font-bold">1</span>
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            {/* Week 1 */}
+            <details className="border-b border-gray-100">
+              <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white text-xs font-bold">1</span>
+                  </div>
+                  <h3 className="font-semibold">
+                    Week 1: Introduction to Broadcasting
+                  </h3>
                 </div>
-                <h3 className="font-semibold">
-                  Module 1: Foundations of Photography
-                </h3>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-4">
+                    1.5 Credit Hours
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </summary>
+              <div className="p-4 bg-gray-50">
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>What is Broadcasting? (Radio, TV, Digital)</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Key Milestones: Radio to Streaming</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Roles in Broadcasting: Producers, Presenters, Engineers
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Programming Types: News, Talk Shows, Drama</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Functions of Radio & TV</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Introduction to Digital Broadcasting</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Ethical Guidelines in Media (Truth, Responsibility)
+                    </span>
+                  </li>
+                </ul>
+                <div className="text-sm text-gray-600">
+                  <strong>Assessment:</strong> Quiz + Group discussion: 'Which
+                  broadcast platform appeals most to you and why?'
+                </div>
               </div>
-              <div className="text-sm text-gray-500">
-                5 Lessons • 2h 15m • 1 Quiz
+            </details>
+
+            {/* Week 2 */}
+            <details className="border-b border-gray-100">
+              <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white text-xs font-bold">2</span>
+                  </div>
+                  <h3 className="font-semibold">
+                    Week 2: Broadcast Communication & Scriptwriting Skills
+                  </h3>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-4">
+                    1.5 Credit Hours
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </summary>
+              <div className="p-4 bg-gray-50">
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Voice Training: Tone, Articulation, Breathing</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Public Speaking & On-Air Presence</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Scriptwriting Basics: Headlines, Copywriting</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Interviewing 101: Open-Ended Questions & Listening
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Audience Engagement: Who's Watching/Listening and Why
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Cultural Sensitivity & Audience Diversity</span>
+                  </li>
+                </ul>
+                <div className="text-sm text-gray-600">
+                  <strong>Assessment:</strong> Record a 90-second bulletin +
+                  Class listening critique
+                </div>
               </div>
-            </div>
+            </details>
 
-            <div className="p-4 hover:bg-gray-50 flex items-center">
-              <svg
-                className="w-4 h-4 text-red-600 mr-3"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="flex-1">Intro to Camera Settings</span>
-              <span className="text-sm text-gray-500">15 min</span>
-            </div>
-          </div>
-        </div>
-      </section>
+            {/* Week 3 */}
+            <details className="border-b border-gray-100">
+              <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white text-xs font-bold">3</span>
+                  </div>
+                  <h3 className="font-semibold">
+                    Week 3: Introduction to Equipment & Ethics in Media
+                  </h3>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-4">
+                    1.5 Credit Hours
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </summary>
+              <div className="p-4 bg-gray-50">
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Studio Tools: Microphones, Cameras, Mixers</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Filming with Smartphones: Framing, Lighting</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Audio Recording: Audacity or Anchor</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Simple Video Editing: iMovie, CapCut Basics</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Studio Safety & Workspace Setup</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Intro to Media Ethics: Fairness, Privacy, Accuracy
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Communicating Across Cultures</span>
+                  </li>
+                </ul>
+                <div className="text-sm text-gray-600">
+                  <strong>Assessment:</strong> Submit a 1-minute edited audio or
+                  video clip + short ethics quiz
+                </div>
+              </div>
+            </details>
 
-      {/* Instructor Section */}
-      <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-          <div className="w-48 h-48 rounded-lg overflow-hidden">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=200&width=200"
-              alt="Jane Doe"
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div>
-            <p className="text-red-600 font-medium mb-1">
-              Meet your Instructor
-            </p>
-            <h3 className="text-2xl font-bold mb-2">Jane Doe</h3>
-            <p className="text-gray-700 mb-4">
-              Award-winning National Geographic photographer with over 15 years
-              of experience.
-            </p>
-            <a href="#" className="text-blue-600 hover:text-blue-800">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-              </svg>
-            </a>
+            {/* Week 4 */}
+            <details className="border-b border-gray-100">
+              <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+                <div className="flex items-center">
+                  <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                    <span className="text-white text-xs font-bold">4</span>
+                  </div>
+                  <h3 className="font-semibold">
+                    Week 4: Mini Production Project & Final Assessment
+                  </h3>
+                </div>
+                <div className="flex items-center">
+                  <span className="text-sm text-gray-500 mr-4">
+                    1.5 Credit Hours
+                  </span>
+                  <svg
+                    className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </summary>
+              <div className="p-4 bg-gray-50">
+                <ul className="space-y-2 mb-4">
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Ideating a Show: Format, Audience, Content</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Structuring a Script: Intro, Core Message, Outro
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>
+                      Guided Studio Practice: Record a 3-minute segment
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Peer Review & Feedback Techniques</span>
+                  </li>
+                  <li className="flex items-start">
+                    <svg
+                      className="w-4 h-4 text-red-600 mr-2 mt-1"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    <span>Preparing for a Live or Recorded Presentation</span>
+                  </li>
+                </ul>
+                <div className="text-sm text-gray-600">
+                  <strong>Assessment:</strong> Final Project: Produce a 2–3 min
+                  talk show or news segment • Voice Demo Submission • Wrap-up
+                  Quiz & Instructor Evaluation
+                </div>
+              </div>
+            </details>
           </div>
         </div>
       </section>
@@ -292,13 +756,11 @@ export default function Course() {
       <section className="max-w-[670px] mx-auto px-4 py-12">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 text-center">
-            <h3 className="text-3xl font-bold text-gray-900 mb-2">N400,000</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-2">N150,000</h3>
             <p className="text-gray-600 mb-6">
-              6-Month Access • Certificate • Community Access
+              1-Month Access • Certificate • Studio Access
             </p>
-            <button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-md transition-colors mb-4">
-              Enroll Now
-            </button>
+
             <p className="text-sm text-gray-600">30-Day Money-Back Guarantee</p>
           </div>
         </div>
@@ -313,7 +775,9 @@ export default function Course() {
         <div className="border-t border-gray-200">
           <details className="py-4 border-b border-gray-200">
             <summary className="flex justify-between items-center cursor-pointer">
-              <span className="font-medium">Can I download the videos?</span>
+              <span className="font-medium">
+                Do I need any prior experience?
+              </span>
               <svg
                 className="w-5 h-5 text-gray-500"
                 fill="currentColor"
@@ -327,7 +791,53 @@ export default function Course() {
               </svg>
             </summary>
             <p className="mt-2 text-gray-600 pl-4">
-              Yes! All content is downloadable.
+              No prior experience is required. This course is designed for
+              absolute beginners who want to start their journey in
+              broadcasting.
+            </p>
+          </details>
+
+          <details className="py-4 border-b border-gray-200">
+            <summary className="flex justify-between items-center cursor-pointer">
+              <span className="font-medium">What equipment do I need?</span>
+              <svg
+                className="w-5 h-5 text-gray-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </summary>
+            <p className="mt-2 text-gray-600 pl-4">
+              You'll need a computer with internet access. For practical
+              exercises, a smartphone with a camera and microphone will be
+              sufficient. We'll provide access to professional equipment during
+              studio sessions.
+            </p>
+          </details>
+
+          <details className="py-4 border-b border-gray-200">
+            <summary className="flex justify-between items-center cursor-pointer">
+              <span className="font-medium">Will I get a certificate?</span>
+              <svg
+                className="w-5 h-5 text-gray-500"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </summary>
+            <p className="mt-2 text-gray-600 pl-4">
+              Yes, upon successful completion of the course and all assessments,
+              you'll receive a Beginner Certificate in Broadcasting.
             </p>
           </details>
         </div>
@@ -337,10 +847,10 @@ export default function Course() {
       <section className="bg-gray-50 py-12 md:py-16 text-center">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
-            Join 2,300+ students transforming their skills
+            Start Your Broadcasting Journey Today
           </h2>
           <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md transition-colors inline-flex items-center">
-            Enroll Now
+            Apply Now
             <svg
               className="w-4 h-4 ml-2"
               fill="currentColor"
