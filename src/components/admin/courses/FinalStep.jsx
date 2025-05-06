@@ -123,7 +123,13 @@ export default function FinalStep({ formFooter, errors, touched }) {
         <p className="text-[#1F2937] text-lg font-semibold">Course Preview</p>
         <div className="flex gap-2 border border-[#E5E7EB] bg-[#F9FAFB] rounded-md p-4  items-center">
           <div className="flex gap-2 ">
-            <div className="w-24 h-24 bg-red-500 rounded-lg"></div>
+            <div className="w-24 h-24 bg-red-500 rounded-lg">
+              <img
+                src={`http://localhost:4000${values.image}`}
+                alt="Course Cover"
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
             <div className="flex flex-col gap-2 items-start">
               <p className="text-[#1F2937] text-lg font-semibold">
                 {values.name || "Course Title"}
