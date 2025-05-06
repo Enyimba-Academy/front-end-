@@ -85,14 +85,9 @@ export default function NavBar({ user }) {
             >
               Login
             </Link>
+
             <Link
               to="/register"
-              className="text-heading font-semibold text-xl hover:text-primary transition-colors"
-            >
-              Sign up
-            </Link>
-            <Link
-              to="/photography"
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
             >
               Apply Now
@@ -148,21 +143,21 @@ export default function NavBar({ user }) {
               >
                 Login
               </Link>
-              <Link
-                to="/register"
-                className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
-                onClick={toggleMenu}
-              >
-                Sign up
-              </Link>
+
               <div className="w-full pt-4">
-                <Link
-                  to="/photography"
-                  className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
-                  onClick={toggleMenu}
-                >
-                  Apply Now
-                </Link>
+                {user && user?.role === ROLES.STUDENT ? (
+                  <PrimaryLink to="/student-profile">
+                    Student Dashboard
+                  </PrimaryLink>
+                ) : (
+                  <Link
+                    to="/register"
+                    className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
+                    onClick={toggleMenu}
+                  >
+                    Apply Now
+                  </Link>
+                )}
               </div>
             </div>
           </div>

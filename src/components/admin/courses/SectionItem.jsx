@@ -28,6 +28,31 @@ export default function SectionItem({ section, index, onUpdate, onDelete }) {
   };
 
   const handleAddContent = (contentType) => {
+    // Check if trying to add quiz or assignment when one already exists
+    if (contentType === "quiz") {
+      const existingQuiz = section.contents?.find(
+        (content) => content.type === "quiz"
+      );
+      if (existingQuiz) {
+        alert(
+          "A quiz already exists in this section. Only one quiz is allowed per section."
+        );
+        return;
+      }
+    }
+
+    if (contentType === "assignment") {
+      const existingAssignment = section.contents?.find(
+        (content) => content.type === "assignment"
+      );
+      if (existingAssignment) {
+        alert(
+          "An assignment already exists in this section. Only one assignment is allowed per section."
+        );
+        return;
+      }
+    }
+
     const newContent = {
       id: `content-${Date.now()}`,
       type: contentType,
@@ -224,7 +249,10 @@ export default function SectionItem({ section, index, onUpdate, onDelete }) {
               </Droppable>
 
               <div className="mt-4">
-                <ContentTypeSelector onSelect={handleAddContent} />
+                <ContentTypeSelector
+                  onSelect={handleAddContent}
+                  section={section}
+                />
               </div>
             </div>
           )}

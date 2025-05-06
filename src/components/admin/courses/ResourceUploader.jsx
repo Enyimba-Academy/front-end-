@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Upload,
   X,
@@ -7,6 +7,7 @@ import {
   LinkIcon,
   ExternalLink,
 } from "lucide-react";
+import { useUploadVideo, useUploadImage } from "../../../hooks/image";
 
 export default function ResourceUploader({
   type = "material",
@@ -17,8 +18,11 @@ export default function ResourceUploader({
   const [isAddingLink, setIsAddingLink] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [linkTitle, setLinkTitle] = useState("");
+  const { mutate: uploadVideo, progress: videoProgress } = useUploadVideo();
+  const { mutate: uploadFile, progress: fileProgress } = useUploadImage();
 
   const handleFileChange = (e) => {
+    console.log("called onChnage");
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
@@ -28,52 +32,102 @@ export default function ResourceUploader({
       type: "file",
       name: file.name,
       file: file,
-      // Create a temporary URL for preview
-      url: URL.createObjectURL(file),
       fileType: file.type,
       fileSize: file.size,
       uploadProgress: 0,
       status: "uploading",
     }));
 
-    // Simulate upload progress
+    // Add new resources to the list immediately
     const updatedResources = [...resources, ...newResources];
     setResources(updatedResources);
     onChange(updatedResources);
 
-    // Simulate upload completion after a delay
-    newResources.forEach((resource) => {
-      simulateUpload(resource.id);
+    // Upload each file
+    files.forEach((file, index) => {
+      const resourceId = newResources[index].id;
+
+      if (type === "video") {
+        uploadVideo(
+          { video: file, folder: "videos" },
+          {
+            onSuccess: (data) => {
+              setResources((current) => {
+                const updated = current.map((r) =>
+                  r.id === resourceId
+                    ? {
+                        ...r,
+                        status: "completed",
+                        uploadProgress: 100,
+                        url: data.file.path,
+                      }
+                    : r
+                );
+                onChange(updated);
+                return updated;
+              });
+            },
+            onError: (error) => {
+              console.error("Video upload error:", error);
+              setResources((current) => {
+                const updated = current.map((r) =>
+                  r.id === resourceId ? { ...r, status: "error" } : r
+                );
+                onChange(updated);
+                return updated;
+              });
+            },
+          }
+        );
+      } else {
+        uploadFile(
+          { file: file, folder: "files" },
+          {
+            onSuccess: (data) => {
+              setResources((current) => {
+                const updated = current.map((r) =>
+                  r.id === resourceId
+                    ? {
+                        ...r,
+                        status: "completed",
+                        uploadProgress: 100,
+                        url: data.file.path,
+                      }
+                    : r
+                );
+                onChange(updated);
+                return updated;
+              });
+            },
+            onError: (error) => {
+              console.error("File upload error:", error);
+              setResources((current) => {
+                const updated = current.map((r) =>
+                  r.id === resourceId ? { ...r, status: "error" } : r
+                );
+                onChange(updated);
+                return updated;
+              });
+            },
+          }
+        );
+      }
     });
   };
 
-  const simulateUpload = (resourceId) => {
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 10;
-      if (progress <= 100) {
-        setResources((current) =>
-          current.map((r) =>
-            r.id === resourceId ? { ...r, uploadProgress: progress } : r
-          )
+  // Update progress for all uploading resources
+  useEffect(() => {
+    const progress = type === "video" ? videoProgress : fileProgress;
+    if (progress) {
+      setResources((current) => {
+        const updated = current.map((r) =>
+          r.status === "uploading" ? { ...r, uploadProgress: progress } : r
         );
-      } else {
-        clearInterval(interval);
-        setResources((current) =>
-          current.map((r) =>
-            r.id === resourceId
-              ? { ...r, status: "completed", uploadProgress: 100 }
-              : r
-          )
-        );
-        // Update parent component
-        setResources((current) => {
-          onChange(current);
-          return current;
-        });
-      }
-    }, 300);
-  };
+        onChange(updated);
+        return updated;
+      });
+    }
+  }, [videoProgress, fileProgress, type, onChange]);
 
   const handleAddLink = () => {
     if (!linkUrl.trim()) return;
@@ -220,6 +274,10 @@ export default function ResourceUploader({
                       style={{ width: `${resource.uploadProgress}%` }}
                     ></div>
                   </div>
+                )}
+
+                {resource.status === "error" && (
+                  <span className="text-red-500 text-sm">Upload failed</span>
                 )}
 
                 {resource.type === "link" && (

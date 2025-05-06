@@ -17,4 +17,20 @@ export const imageService = {
     });
     return response.data;
   },
+  videoUpload: async ({ video, onProgress, folder }) => {
+    const formData = new FormData();
+    formData.append("video", video);
+
+    const response = await api.post(`/upload/video/${folder}`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress) {
+          onProgress(progressEvent);
+        }
+      },
+    });
+    return response.data;
+  },
 };

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export default function SelectDropDown({
@@ -11,14 +10,8 @@ export default function SelectDropDown({
   name,
   label,
   required,
+  value,
 }) {
-  const [selectedValue, setSelectedValue] = useState("");
-
-  const handleChange = (e) => {
-    setSelectedValue(e.target.value);
-    onChange?.(e.target.value);
-  };
-
   return (
     <div className="relative mb-4">
       {label && (
@@ -29,8 +22,8 @@ export default function SelectDropDown({
       <select
         id={id}
         name={name}
-        value={selectedValue}
-        onChange={handleChange}
+        value={value}
+        onChange={(e) => onChange?.(e)}
         onBlur={onBlur}
         required={required}
         className={`appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500 sm:text-sm ${className}`}
