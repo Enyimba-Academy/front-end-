@@ -4,9 +4,10 @@ import HeroSection from "../components/index/HeroSection";
 import ReviewCard from "../components/index/ReviewCard";
 import StudioShowCard from "../components/index/StudioShowCard";
 import { useState, useEffect } from "react";
-
+import { useAuth } from "../hooks/useAuth";
 export default function Index() {
   const { beginner, intermediate, advanced } = broadcastingCourses;
+  const { user } = useAuth();
   const [timeLeft, setTimeLeft] = useState({
     days: 27,
     hours: 0,

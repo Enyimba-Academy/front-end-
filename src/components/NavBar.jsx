@@ -9,11 +9,12 @@ import {
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import PrimaryLink from "./shared/PrimaryLink";
-import { useAuth } from "../hooks/useAuth";
 
-export default function NavBar() {
+import { ROLES } from "../constant/role";
+
+export default function NavBar({ user }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, isAuthenticated } = useAuth();
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -76,7 +77,7 @@ export default function NavBar() {
         </div>
 
         {/* Desktop Action Buttons */}
-        {!isAuthenticated ? (
+        {!user ? (
           <div className="hidden lg:flex items-center gap-4">
             <Link
               to="/login"
@@ -91,22 +92,16 @@ export default function NavBar() {
               Sign up
             </Link>
             <Link
-              to="/onboarding"
+              to="/photography"
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
             >
               Apply Now
             </Link>
           </div>
+        ) : user?.role === ROLES.STUDENT ? (
+          <PrimaryLink to="/student-profile">Student Dashboard</PrimaryLink>
         ) : (
-          <div className="hidden lg:flex items-center gap-4">
-            <Settings className="h-6 w-6 text-heading cursor-pointer" />
-            <img
-              class="inline-block size-10 rounded-full ring-2 ring-white"
-              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt=""
-            />
-            <MoveDown className="h-6 w-6 text-heading cursor-pointer" />
-          </div>
+          <PrimaryLink to="/admin/dashboard">Admin Dashboard</PrimaryLink>
         )}
         {/* Mobile Menu */}
         {isMenuOpen && (
@@ -162,7 +157,7 @@ export default function NavBar() {
               </Link>
               <div className="w-full pt-4">
                 <Link
-                  to="/onboarding"
+                  to="/photography"
                   className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
                   onClick={toggleMenu}
                 >
