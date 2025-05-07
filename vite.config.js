@@ -14,4 +14,13 @@ export default defineConfig({
   define: {
     "process.env": process.env,
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "https://24.199.124.67:4000",
+        changeOrigin: true,
+        secure: false, // This will ignore SSL certificate errors in development
+      },
+    },
+  },
 });
