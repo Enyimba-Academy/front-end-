@@ -8,7 +8,8 @@ import {
 
 export const useCreateEnrollment = () => {
   const queryClient = useQueryClient();
-  return useMutation(createEnrollment, {
+  return useMutation({
+    mutationFn: createEnrollment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enrollments"] });
     },

@@ -1,9 +1,11 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { ROLES } from "../constant/role";
 import PrimaryButton from "../components/shared/PrimaryButton";
 import PrimaryLink from "../components/shared/PrimaryLink";
 import { useCourseById } from "../hooks/usePublic.hook";
+import { useCreateEnrollment } from "../hooks/useEnrollment.hook";
+import { toast } from "react-toastify";
 
 export default function Course() {
   const { id } = useParams();
@@ -328,7 +330,9 @@ export default function Course() {
           {user && user?.role === ROLES.STUDENT ? (
             <LinkToShow enrollments={user?.enrollments} course={course} />
           ) : (
-            <PrimaryLink to="/register">Apply Now</PrimaryLink>
+            <PrimaryLink to={`/register?courseId=${course.id}`}>
+              Apply Now
+            </PrimaryLink>
           )}
         </div>
       </section>
@@ -337,12 +341,31 @@ export default function Course() {
 }
 
 function LinkToShow({ enrollments, course }) {
+  const { mutate: enroll, isPending } = useCreateEnrollment();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const existingEnrollment = enrollments?.find(
     (enrollment) => enrollment.courseId === course.id
   );
 
   if (existingEnrollment) {
-    return <PrimaryLink to="/enrollment">View Course</PrimaryLink>;
+    return <PrimaryLink to="/student-profile">View Course</PrimaryLink>;
   }
-  return <PrimaryButton>Enroll</PrimaryButton>;
+  return (
+    <PrimaryButton
+      onClick={() =>
+        enroll(
+          { courseId: course.id },
+          {
+            onSuccess: () => {
+              toast.success("Enrolled successfully");
+              navigate("/student-profile");
+            },
+          }
+        )
+      }
+    >
+      {isPending ? "Enrolling..." : "Enroll"}
+    </PrimaryButton>
+  );
 }
