@@ -11,18 +11,12 @@ export const adminRoutes = [
   },
 
   {
-    name: "Instructors",
-    path: "instructors",
-    icon: "GraduationCap",
-  },
-
-  {
     name: "Lms",
     path: "courses",
     icon: "FileText",
   },
   {
-    name: "Enrollment & Payments",
+    name: "Enrollment",
     path: "enrollment-payments",
     icon: "CreditCard",
   },

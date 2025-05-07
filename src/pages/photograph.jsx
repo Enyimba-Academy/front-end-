@@ -1,7 +1,15 @@
-import { broadcastingCourses } from "../constant/dummyData";
+import { useCourses } from "../hooks/usePublic.hook";
 
 export default function PhotographySchool() {
-  const { beginner, intermediate, advanced } = broadcastingCourses;
+  const { data: courses, isLoading } = useCourses();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -122,110 +130,47 @@ export default function PhotographySchool() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Beginner Program */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-48">
-                <img
-                  src="/pick.png"
-                  alt={beginner.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4 sm:p-6 border-b">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-lg sm:text-xl">
-                    {beginner.title}
-                  </h3>
-                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
+            {courses?.courses?.map((course) => (
+              <div
+                key={course.id}
+                className="bg-white rounded-lg overflow-hidden shadow-md"
+              >
+                <div className="relative h-48">
+                  <img
+                    src={course.image || "/pick.png"}
+                    alt={course.title}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  {beginner.goal}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm text-gray-500">
-                    {beginner.duration}
-                  </span>
+                <div className="p-4 sm:p-6 border-b">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-bold text-lg sm:text-xl">
+                      {course.title}
+                    </h3>
+                    <div className="w-3 h-3 rounded-full bg-red-600"></div>
+                  </div>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base">
+                    {course.description}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm text-gray-500">
+                      {course.duration}
+                    </span>
+                    <span className="text-sm font-semibold text-red-600">
+                      ₦{course.price.toLocaleString()}
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div className="p-4 sm:p-6">
-                <a
-                  href={`/course/${beginner.slug}`}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
-                >
-                  View Course
-                </a>
-              </div>
-            </div>
-
-            {/* Intermediate Program */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-48">
-                <img
-                  src="/pick2.png"
-                  alt={intermediate.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4 sm:p-6 border-b">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-lg sm:text-xl">
-                    {intermediate.title}
-                  </h3>
-                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  {intermediate.goal}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm text-gray-500">
-                    {intermediate.duration}
-                  </span>
+                <div className="p-4 sm:p-6">
+                  <a
+                    href={`/course/${course.id}`}
+                    className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
+                  >
+                    View Course
+                  </a>
                 </div>
               </div>
-              <div className="p-4 sm:p-6">
-                <a
-                  href={`/course/${intermediate.slug}`}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
-                >
-                  View Course
-                </a>
-              </div>
-            </div>
-
-            {/* Advanced Program */}
-            <div className="bg-white rounded-lg overflow-hidden shadow-md">
-              <div className="relative h-48">
-                <img
-                  src="/pick3.jpg"
-                  alt={advanced.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-4 sm:p-6 border-b">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-lg sm:text-xl">
-                    {advanced.title}
-                  </h3>
-                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
-                </div>
-                <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                  {advanced.goal}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm text-gray-500">
-                    {advanced.duration}
-                  </span>
-                </div>
-              </div>
-              <div className="p-4 sm:p-6">
-                <a
-                  href={`/course/${advanced.slug}`}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
-                >
-                  View Course
-                </a>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>

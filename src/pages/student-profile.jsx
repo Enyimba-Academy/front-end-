@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Download, Edit, Lock, Share2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { useGetEnrollment } from "../hooks/useEnrollment.hook";
+import { EnrollmentStatus } from "../constant/enrollmentEnum";
+import StatusBadge from "../components/shared/StatusBadge";
+import PrimaryLink from "../components/shared/PrimaryLink";
 
 function LoadingSkeleton() {
   return (
@@ -96,16 +100,14 @@ function LoadingSkeleton() {
 }
 
 export default function StudentProfile() {
-  // const { user, isLoadingUser } = useAuth();
   const [activeTab, setActiveTab] = useState("enrolled");
   const navigate = useNavigate();
+  const { data, isLoading } = useGetEnrollment();
+  const enrollments = data?.enrollments;
+  if (isLoading) {
+    return <LoadingSkeleton />;
+  }
 
-  // if (isLoadingUser) {
-  //   return <LoadingSkeleton />;
-  // }
-  // if (!user.profile) {
-  //   return navigate("/onboarding");
-  // }
   return (
     <div className="max-w-7xl mx-auto bg-white">
       {/* Header with blue top border */}
@@ -116,7 +118,7 @@ export default function StudentProfile() {
           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gray-200">
             <img
               src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=100&width=100"
-              alt="Amina Adeyemi"
+              alt="Profile"
               className="w-full h-full object-cover"
             />
           </div>
@@ -124,33 +126,41 @@ export default function StudentProfile() {
           {/* Profile Info */}
           <div className="flex-1 text-center sm:text-left">
             <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
-              {/* {user?.firstName} {user?.lastName} */}
+              Student Profile
             </h1>
             <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-              School of Photography | Enrolled: Jan 2024
+              {enrollments?.[0]?.course?.level || "No Level"} | Enrolled:{" "}
+              {new Date(enrollments?.[0]?.createdAt).toLocaleDateString()}
             </p>
 
             {/* Stats */}
             <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-8 mb-4 sm:mb-6">
               <div className="text-center">
                 <p className="text-gray-600 text-xs sm:text-sm">
-                  Courses Completed
+                  Courses Enrolled
                 </p>
                 <p className="text-red-600 font-bold text-lg sm:text-xl">
-                  5/12
+                  {enrollments?.length || 0}
                 </p>
               </div>
               <div className="text-center">
-                <p className="text-gray-600 text-xs sm:text-sm">
-                  Certificates Earned
+                <p className="text-gray-600 text-xs sm:text-sm">Progress</p>
+                <p className="text-red-600 font-bold text-lg sm:text-xl">
+                  {enrollments?.[0]?.progress || 0}%
                 </p>
-                <p className="text-red-600 font-bold text-lg sm:text-xl">2</p>
               </div>
-              <div className="text-center">
+              <div className="text-center flex flex-col items-center">
                 <p className="text-gray-600 text-xs sm:text-sm">
-                  Projects Published
+                  Account Status
                 </p>
-                <p className="text-red-600 font-bold text-lg sm:text-xl">8</p>
+
+                <StatusBadge
+                  status={
+                    enrollments?.[0]?.user?.is_blocked
+                      ? EnrollmentStatus.INACTIVE
+                      : EnrollmentStatus.ACTIVE
+                  }
+                />
               </div>
             </div>
 
@@ -214,42 +224,35 @@ export default function StudentProfile() {
                   Enrolled Courses
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {/* Course Card */}
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="aspect-video w-full bg-gray-100">
-                      <img
-                        src="/pick.png"
-                        alt="Photography class"
-                        className="w-full h-full object-cover"
-                      />
+                  {enrollments?.map((enrollment) => (
+                    <div
+                      key={enrollment.id}
+                      className="border border-gray-200 rounded-lg overflow-hidden"
+                    >
+                      <div className="aspect-video w-full bg-gray-100">
+                        <img
+                          src={enrollment.course.image || "/pick.png"}
+                          alt={enrollment.course.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-3 sm:p-4">
+                        <h3 className="font-medium text-sm sm:text-base text-gray-800 mb-1 sm:mb-2">
+                          {enrollment.course.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
+                          {enrollment.course._count.sections} Modules •{" "}
+                          {enrollment.course.duration}
+                        </p>
+                        <div className="flex justify-between items-center">
+                          <div className="text-xs text-gray-600">
+                            Progress: {enrollment.progress}%
+                          </div>
+                          <LinkOrButtonToShow status={enrollment.status} />
+                        </div>
+                      </div>
                     </div>
-                    <div className="p-3 sm:p-4">
-                      <h3 className="font-medium text-sm sm:text-base text-gray-800 mb-1 sm:mb-2">
-                        Professional Certificate in Photography
-                      </h3>
-                      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-                        12 Modules • Next Lesson: Lighting Techniques
-                      </p>
-                      <button
-                        className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
-                        onClick={() => navigate("/video-lesson")}
-                      >
-                        Continue
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-3 w-3 sm:h-4 sm:w-4 ml-1"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -418,5 +421,38 @@ export default function StudentProfile() {
         </div>
       </div>
     </div>
+  );
+}
+
+function LinkOrButtonToShow({ status }) {
+  console.log(status);
+  if (status === EnrollmentStatus.PENDING) {
+    return <StatusBadge status={status} />;
+  }
+  if (status === EnrollmentStatus.APPROVED) {
+    return <PrimaryButton>Pay Now</PrimaryButton>;
+  }
+  if (status === EnrollmentStatus.REJECTED) {
+    return <StatusBadge status={status} />;
+  }
+  return (
+    <PrimaryLink
+      to="/video-lesson"
+      className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
+    >
+      Continue
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-3 w-3 sm:h-4 sm:w-4 ml-1"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fillRule="evenodd"
+          d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </PrimaryLink>
   );
 }

@@ -1,26 +1,24 @@
 import { useParams } from "react-router-dom";
-import { broadcastingCourses } from "../constant/dummyData";
 import { useAuth } from "../hooks/useAuth";
 import { ROLES } from "../constant/role";
 import PrimaryButton from "../components/shared/PrimaryButton";
 import PrimaryLink from "../components/shared/PrimaryLink";
+import { useCourseById } from "../hooks/usePublic.hook";
+
 export default function Course() {
   const { id } = useParams();
   const { user } = useAuth();
+  const { data, isLoading } = useCourseById(id);
+  const course = data?.course;
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+      </div>
+    );
+  }
 
-  // Find the course data based on the id
-  const courseData = Object.values(broadcastingCourses)
-    .filter(
-      (value) =>
-        typeof value === "object" &&
-        value.slug &&
-        ["beginner", "intermediate", "advanced"].includes(
-          value.slug.split("-")[0]
-        )
-    )
-    .find((value) => value.slug === id);
-
-  if (!courseData) {
+  if (!course) {
     return <div>Course not found</div>;
   }
 
@@ -32,7 +30,7 @@ export default function Course() {
           {/* Left Column - Course Info */}
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
-              {courseData.title}
+              {course.title}
             </h1>
 
             <div className="space-y-4 mb-8">
@@ -49,7 +47,7 @@ export default function Course() {
                   />
                 </svg>
                 <span className="text-gray-700">
-                  {courseData.duration} • {courseData.credit_hours} Credit Hours
+                  {course.duration} • {course.level}
                 </span>
               </div>
 
@@ -65,7 +63,7 @@ export default function Course() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-gray-700">{courseData.level}</span>
+                <span className="text-gray-700">{course.level}</span>
               </div>
 
               <div className="flex items-center">
@@ -103,9 +101,11 @@ export default function Course() {
 
             <div className="flex flex-wrap gap-4">
               {user && user?.role === ROLES.STUDENT ? (
-                <PrimaryButton>Enroll</PrimaryButton>
+                <LinkToShow enrollments={user?.enrollments} course={course} />
               ) : (
-                <PrimaryLink to="/register">Apply Now</PrimaryLink>
+                <PrimaryLink to={`/register?courseId=${course.id}`}>
+                  Apply Now
+                </PrimaryLink>
               )}
               <button className="flex items-center text-gray-700 hover:text-gray-900">
                 <svg
@@ -128,8 +128,8 @@ export default function Course() {
           <div className="relative">
             <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
               <img
-                src="/pick4.png"
-                alt={courseData.title}
+                src={course.image || "/pick4.png"}
+                alt={course.title}
                 className="w-full h-full object-cover opacity-80"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
@@ -158,195 +158,84 @@ export default function Course() {
         </div>
       </section>
 
-      {/* What You'll Learn Section */}
+      {/* Course Description */}
       <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
         <h2 className="text-2xl md:text-3xl font-bold text-center text-gray-900 mb-12">
-          What You'll Learn
+          Course Overview
         </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {courseData.expected_outcomes &&
-            courseData.expected_outcomes.map((outcome, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-lg">
-                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mb-4">
-                  <svg
-                    className="w-6 h-6 text-red-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
-                  </svg>
-                </div>
-                <h3 className="font-semibold text-lg mb-2">{outcome}</h3>
-              </div>
-            ))}
-        </div>
+        <p className="text-gray-600 text-center max-w-3xl mx-auto">
+          {course.description}
+        </p>
       </section>
 
       {/* Course Curriculum Section */}
-      {courseData.weeks && (
-        <section className="bg-gray-50 py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
-              Course Curriculum
-            </h2>
+      <section className="bg-gray-50 py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
+            Course Curriculum
+          </h2>
 
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {courseData.weeks.map((week, weekIndex) => (
-                <details key={weekIndex} className="border-b border-gray-100">
-                  <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-                    <div className="flex items-center">
-                      <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
-                        <span className="text-white text-xs font-bold">
-                          {weekIndex + 1}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold">
-                        Week {week.week}: {week.title}
-                      </h3>
+          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+            {course.sections.map((section, sectionIndex) => (
+              <details key={section.id} className="border-b border-gray-100">
+                <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+                  <div className="flex items-center">
+                    <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
+                      <span className="text-white text-xs font-bold">
+                        {sectionIndex + 1}
+                      </span>
                     </div>
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  </summary>
-                  <div className="p-4 bg-gray-50">
-                    <div className="mb-4">
-                      <p className="text-gray-600 mb-2">{week.overview}</p>
-                      <p className="text-sm text-gray-500">
-                        Credit Hours: {week.credit_hours}
-                      </p>
-                    </div>
-                    <ul className="space-y-2 mb-4">
-                      {week.modules &&
-                        week.modules.map((module, moduleIndex) => (
-                          <li key={moduleIndex} className="flex items-start">
-                            <svg
-                              className="w-4 h-4 text-red-600 mr-2 mt-1"
-                              fill="currentColor"
-                              viewBox="0 0 20 20"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            <span>{module}</span>
-                          </li>
-                        ))}
-                    </ul>
-                    <div className="text-sm text-gray-600">
-                      <strong>Assessment:</strong> {week.assessment}
-                    </div>
+                    <h3 className="font-semibold">{section.title}</h3>
                   </div>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {courseData.months && (
-        <section className="bg-gray-50 py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-12">
-              Course Curriculum
-            </h2>
-
-            <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-              {courseData.months.map((month, monthIndex) => (
-                <details key={monthIndex} className="border-b border-gray-100">
-                  <summary className="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-                    <div className="flex items-center">
-                      <div className="w-6 h-6 bg-red-600 rounded-full flex items-center justify-center mr-3">
-                        <span className="text-white text-xs font-bold">
-                          {monthIndex + 1}
-                        </span>
-                      </div>
-                      <h3 className="font-semibold">
-                        Month {month.month}: {month.focus}
-                      </h3>
-                    </div>
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                    </div>
-                  </summary>
-                  <div className="p-4 bg-gray-50">
-                    <p className="text-sm text-gray-500 mb-4">
-                      Credit Hours: {month.credit_hours}
-                    </p>
-                    {month.weeks &&
-                      month.weeks.map((week, weekIndex) => (
-                        <div key={weekIndex} className="mb-6 last:mb-0">
-                          <h4 className="font-semibold text-lg mb-2">
-                            Week {week.week}: {week.title}
-                          </h4>
-                          <p className="text-gray-600 mb-2">{week.overview}</p>
-                          <p className="text-sm text-gray-500 mb-2">
-                            Credit Hours: {week.credit_hours}
-                          </p>
-                          <ul className="space-y-2 mb-2">
-                            {week.modules &&
-                              week.modules.map((module, moduleIndex) => (
-                                <li
-                                  key={moduleIndex}
-                                  className="flex items-start"
-                                >
-                                  <svg
-                                    className="w-4 h-4 text-red-600 mr-2 mt-1"
-                                    fill="currentColor"
-                                    viewBox="0 0 20 20"
-                                  >
-                                    <path
-                                      fillRule="evenodd"
-                                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                                      clipRule="evenodd"
-                                    />
-                                  </svg>
-                                  <span>{module}</span>
-                                </li>
-                              ))}
-                          </ul>
-                          <div className="text-sm text-gray-600">
-                            <strong>Assessment:</strong> {week.assessment}
-                          </div>
-                        </div>
-                      ))}
+                  <div className="flex items-center">
+                    <svg
+                      className="w-5 h-5 text-gray-500 transform transition-transform duration-200"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
                   </div>
-                </details>
-              ))}
-            </div>
+                </summary>
+                <div className="p-4 bg-gray-50">
+                  <ul className="space-y-2">
+                    {section.contents.map((content) => (
+                      <li key={content.id} className="flex items-start">
+                        <svg
+                          className="w-4 h-4 text-red-600 mr-2 mt-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>{content.title}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </details>
+            ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* Pricing Section */}
       <section className="max-w-[670px] mx-auto px-4 py-12">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 text-center">
-            <h3 className="text-3xl font-bold text-gray-900 mb-2">N150,000</h3>
+            <h3 className="text-3xl font-bold text-gray-900 mb-2">
+              N{course.price.toLocaleString()}
+            </h3>
             <p className="text-gray-600 mb-6">
-              {courseData.duration} Access • Certificate • Studio Access
+              {course.duration} Access • Certificate • Studio Access
             </p>
 
             <p className="text-sm text-gray-600">30-Day Money-Back Guarantee</p>
@@ -379,7 +268,8 @@ export default function Course() {
               </svg>
             </summary>
             <p className="mt-2 text-gray-600 pl-4">
-              {courseData.target_audience}
+              This course is designed for beginners with no prior experience in
+              broadcasting. We'll teach you everything from the ground up.
             </p>
           </details>
 
@@ -423,7 +313,7 @@ export default function Course() {
             </summary>
             <p className="mt-2 text-gray-600 pl-4">
               Yes, upon successful completion of the course and all assessments,
-              you'll receive a {courseData.title}.
+              you'll receive a {course.title} certificate.
             </p>
           </details>
         </div>
@@ -436,20 +326,7 @@ export default function Course() {
             Start Your Broadcasting Journey Today
           </h2>
           {user && user?.role === ROLES.STUDENT ? (
-            <PrimaryButton className="flex items-center">
-              Enroll
-              <svg
-                className="w-4 h-4 ml-2"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </PrimaryButton>
+            <LinkToShow enrollments={user?.enrollments} course={course} />
           ) : (
             <PrimaryLink to="/register">Apply Now</PrimaryLink>
           )}
@@ -457,4 +334,15 @@ export default function Course() {
       </section>
     </div>
   );
+}
+
+function LinkToShow({ enrollments, course }) {
+  const existingEnrollment = enrollments?.find(
+    (enrollment) => enrollment.courseId === course.id
+  );
+
+  if (existingEnrollment) {
+    return <PrimaryLink to="/enrollment">View Course</PrimaryLink>;
+  }
+  return <PrimaryButton>Enroll</PrimaryButton>;
 }

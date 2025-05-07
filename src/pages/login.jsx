@@ -20,24 +20,23 @@ export default function LoginPage() {
   console.log(loginError);
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      navigate("/student-profile");
-      // await login(
-      //   { email: values.email, password: values.password },
-      //   {
-      //     onSuccess: (data) => {
-      //       const user = data.data.user;
-      //       console.log(user);
-      //       toast.success("Login successful");
-      //       if (user.role === ROLES.ADMIN) {
-      //         navigate("/admin/dashboard");
-      //       } else {
-      //         navigate("/");
-      //       }
-      //       // const from = location.state?.from?.pathname || "/";
-      //       //   navigate(from, { replace: true });
-      //     },
-      //   }
-      // );
+      await login(
+        { email: values.email, password: values.password },
+        {
+          onSuccess: (data) => {
+            const user = data.data.user;
+            console.log(user);
+            toast.success("Login successful");
+            if (user.role === ROLES.ADMIN) {
+              navigate("/admin/dashboard");
+            } else {
+              navigate("/");
+            }
+            const from = location.state?.from?.pathname || "/";
+            navigate(from, { replace: true });
+          },
+        }
+      );
     } finally {
       setSubmitting(false);
     }

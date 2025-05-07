@@ -291,9 +291,7 @@ function StyledTable({
                     <ResponsiveImage
                       height={emptyState?.imageHeight || "100px"}
                       width={emptyState?.imageWidth || "210px"}
-                      src={
-                        emptyState?.imageSrc || "/emptyStateAvatar/feedback.svg"
-                      }
+                      src={emptyState?.imageSrc || "/emptystate.jpg"}
                     />
                   }
                 />

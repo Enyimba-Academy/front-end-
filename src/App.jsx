@@ -11,7 +11,7 @@ import PhotographySchool from "@/pages/photograph";
 import Schools from "@/pages/schools";
 import ContactUs from "@/pages/contact-us";
 import Login from "@/pages/login";
-import Register from "@/pages/register";
+import RegisterPage from "@/pages/register";
 import OnboardingFlow from "@/pages/onboarding";
 import RequireAuth from "@/components/RequireAuth";
 import Dashboard from "@/components/admin/SideBar";
@@ -33,7 +33,7 @@ function App() {
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         {/* Protected Routes */}
         <Route

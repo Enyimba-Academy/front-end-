@@ -145,24 +145,29 @@ export default function NavBar({ user }) {
               </Link>
 
               <div className="w-full pt-4">
-                {user && user?.role === ROLES.STUDENT ? (
-                  <PrimaryLink to="/student-profile">
-                    Student Dashboard
-                  </PrimaryLink>
-                ) : (
-                  <Link
-                    to="/register"
-                    className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
-                    onClick={toggleMenu}
-                  >
-                    Apply Now
-                  </Link>
-                )}
+                {user && ButtonToRender(user?.role)}
               </div>
             </div>
           </div>
         )}
       </div>
     </nav>
+  );
+}
+
+function ButtonToRender(role) {
+  if (role === ROLES.STUDENT) {
+    return <PrimaryLink to="/student-profile">Student Dashboard</PrimaryLink>;
+  }
+  if (role === ROLES.ADMIN) {
+    return <PrimaryLink to="/admin/dashboard">Admin Dashboard</PrimaryLink>;
+  }
+  return (
+    <Link
+      to="/register"
+      className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
+    >
+      Apply Now
+    </Link>
   );
 }
