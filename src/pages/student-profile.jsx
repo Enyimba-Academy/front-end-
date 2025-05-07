@@ -7,6 +7,7 @@ import { EnrollmentStatus } from "../constant/enrollmentEnum";
 import StatusBadge from "../components/shared/StatusBadge";
 import PrimaryLink from "../components/shared/PrimaryLink";
 import StudentNavBar from "../components/StudentNavBar";
+import PrimaryButton from "../components/shared/PrimaryButton";
 
 function LoadingSkeleton() {
   return (
