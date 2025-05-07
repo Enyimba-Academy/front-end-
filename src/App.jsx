@@ -25,6 +25,7 @@ import AdminCourses from "@/pages/admin/courses";
 import AdminSchoolForm from "@/pages/admin/school/add";
 import School from "@/pages/admin/school";
 import AdminCoursesForm from "@/pages/admin/courses/add";
+import StudentNavBar from "./components/StudentNavBar";
 function App() {
   return (
     <Routes>
@@ -97,9 +98,10 @@ function App() {
       <Route
         path="/student-profile"
         element={
-          // <RequireAuth>
-          <StudentProfile />
-          // </RequireAuth>
+          <RequireAuth>
+            <StudentNavBar />
+            <StudentProfile />
+          </RequireAuth>
         }
       />
       <Route path="/admin" element={<Dashboard />}>

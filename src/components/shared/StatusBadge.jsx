@@ -26,7 +26,12 @@ export default function StatusBadge({ status }) {
           Approved
         </div>
       );
-
+    case EnrollmentStatus.REJECTED:
+      return (
+        <div className="bg-red-500 text-red-50 px-2 py-1 rounded-full text-sm w-fit">
+          Rejected
+        </div>
+      );
     default:
       return (
         <div className="bg-gray-500 text-gray-50 px-2 py-1 rounded-full text-sm w-fit">

@@ -1,5 +1,5 @@
 import { Bell } from "lucide-react";
-import { Outlet, NavLink } from "react-router-dom";
+import { Outlet, NavLink, Link } from "react-router-dom";
 import { adminRoutes } from "../../constant/route";
 import Icon from "../icons/Icon";
 
@@ -10,7 +10,9 @@ export default function Dashboard() {
       <div className="w-64 bg-[#4D4D4D] text-white">
         <div className="p-6 flex items-center justify-center">
           <div className="w-12 h-12  rounded-md flex items-center justify-center text-white font-bold">
-            <img src="/logo.png" alt="logo" className="w-full h-full" />
+            <Link to="/">
+              <img src="/logo.png" alt="logo" className="w-full h-full" />
+            </Link>
           </div>
         </div>
         <nav className="mt-6">

@@ -6,6 +6,7 @@ import { useGetEnrollment } from "../hooks/useEnrollment.hook";
 import { EnrollmentStatus } from "../constant/enrollmentEnum";
 import StatusBadge from "../components/shared/StatusBadge";
 import PrimaryLink from "../components/shared/PrimaryLink";
+import StudentNavBar from "../components/StudentNavBar";
 
 function LoadingSkeleton() {
   return (
@@ -101,6 +102,7 @@ function LoadingSkeleton() {
 
 export default function StudentProfile() {
   const [activeTab, setActiveTab] = useState("enrolled");
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { data, isLoading } = useGetEnrollment();
   const enrollments = data?.enrollments;
@@ -125,8 +127,8 @@ export default function StudentProfile() {
 
           {/* Profile Info */}
           <div className="flex-1 text-center sm:text-left">
-            <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">
-              Student Profile
+            <h1 className="text-2xl font-semibold text-gray-800">
+              {user.firstName} {user.lastName}
             </h1>
             <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
               {enrollments?.[0]?.course?.level || "No Level"} | Enrolled:{" "}

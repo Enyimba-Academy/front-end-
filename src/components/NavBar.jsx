@@ -6,14 +6,25 @@ import {
   MoveDown,
   Settings,
   X,
+  User,
+  LogOut,
 } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import PrimaryLink from "./shared/PrimaryLink";
 
 import { ROLES } from "../constant/role";
+import { useAuth } from "../hooks/useAuth";
 
-export default function NavBar({ user }) {
+export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/");
+    window.location.reload();
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -93,11 +104,35 @@ export default function NavBar({ user }) {
               Apply Now
             </Link>
           </div>
-        ) : user?.role === ROLES.STUDENT ? (
-          <PrimaryLink to="/student-profile">Student Dashboard</PrimaryLink>
         ) : (
-          <PrimaryLink to="/admin/dashboard">Admin Dashboard</PrimaryLink>
+          <div className="hidden lg:flex items-center gap-4">
+            {user?.role === ROLES.STUDENT ? (
+              <PrimaryLink
+                to="/student-profile"
+                className="flex items-center gap-2"
+              >
+                <User size={20} />
+                Student Dashboard
+              </PrimaryLink>
+            ) : (
+              <PrimaryLink
+                to="/admin/dashboard"
+                className="flex items-center gap-2"
+              >
+                <User size={20} />
+                Admin Dashboard
+              </PrimaryLink>
+            )}
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer flex items-center gap-2 text-red-600 hover:text-red-700 font-semibold transition-colors"
+            >
+              <LogOut size={20} />
+              Logout
+            </button>
+          </div>
         )}
+
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="fixed inset-0 bg-white z-10 lg:hidden pt-20 px-4">
@@ -136,38 +171,57 @@ export default function NavBar({ user }) {
                 Contact
               </NavLink>
               <div className="w-full h-px bg-gray-200 my-2"></div>
-              <Link
-                to="/login"
-                className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
-                onClick={toggleMenu}
-              >
-                Login
-              </Link>
-
-              <div className="w-full pt-4">
-                {user && ButtonToRender(user?.role)}
-              </div>
+              {!user ? (
+                <>
+                  <Link
+                    to="/login"
+                    className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="w-full text-center py-3 bg-red-600 text-white hover:bg-red-700 rounded-md"
+                    onClick={toggleMenu}
+                  >
+                    Apply Now
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {user?.role === ROLES.STUDENT ? (
+                    <PrimaryLink
+                      to="/student-profile"
+                      className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+                      onClick={toggleMenu}
+                    >
+                      Student Dashboard
+                    </PrimaryLink>
+                  ) : (
+                    <PrimaryLink
+                      to="/admin/dashboard"
+                      className="w-full text-center py-3 hover:bg-gray-100 rounded-md"
+                      onClick={toggleMenu}
+                    >
+                      Admin Dashboard
+                    </PrimaryLink>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      toggleMenu();
+                    }}
+                    className="w-full text-center py-3 text-red-600 hover:bg-red-50 rounded-md font-semibold"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
       </div>
     </nav>
-  );
-}
-
-function ButtonToRender(role) {
-  if (role === ROLES.STUDENT) {
-    return <PrimaryLink to="/student-profile">Student Dashboard</PrimaryLink>;
-  }
-  if (role === ROLES.ADMIN) {
-    return <PrimaryLink to="/admin/dashboard">Admin Dashboard</PrimaryLink>;
-  }
-  return (
-    <Link
-      to="/register"
-      className="block w-full text-center bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-md font-semibold transition-colors"
-    >
-      Apply Now
-    </Link>
   );
 }
