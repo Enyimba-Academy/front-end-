@@ -7,7 +7,7 @@ import StudentProfile from "@/pages/student-profile";
 import CertificatePage from "@/pages/certficate-page";
 import Course from "@/pages/course";
 import VideoLessonPage from "@/pages/video-lesson";
-import PhotographySchool from "@/pages/photograph";
+import Courses from "@/pages/courses";
 import Schools from "@/pages/schools";
 import ContactUs from "@/pages/contact-us";
 import Login from "@/pages/login";
@@ -63,10 +63,10 @@ function App() {
           }
         />
         <Route
-          path="/photography"
+          path="/courses/:id"
           element={
             //<RequireAuth>
-            <PhotographySchool />
+            <Courses />
             // </RequireAuth>
           }
         />

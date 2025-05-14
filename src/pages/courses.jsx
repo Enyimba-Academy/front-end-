@@ -1,7 +1,8 @@
 import { useCourses } from "../hooks/usePublic.hook";
-
-export default function PhotographySchool() {
-  const { data: courses, isLoading } = useCourses();
+import { useParams } from "react-router-dom";
+export default function Courses() {
+  const { id } = useParams();
+  const { data: courses, isLoading } = useCourses(id);
 
   if (isLoading) {
     return (

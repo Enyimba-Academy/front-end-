@@ -5,6 +5,7 @@ import StudioShowCard from "../components/index/StudioShowCard";
 import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useCourses, useSchools } from "../hooks/usePublic.hook";
+import SCHOOLS from "../constant/school";
 
 export default function Index() {
   const { data: courses, isLoading } = useCourses();
@@ -15,6 +16,8 @@ export default function Index() {
     minutes: 0,
     seconds: 0,
   });
+
+  console.log(schools);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -62,40 +65,31 @@ export default function Index() {
       {/* Programs Section */}
       <section className="py-16 bg-primary-light px-4 md:px-8 lg:px-[150px]">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Our Courses</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Our Schools</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {courses?.courses?.map((course) => (
+            {schools?.map((school, index) => (
               <div
-                key={course.id}
+                key={index}
                 className="bg-white rounded-lg overflow-hidden shadow-md"
               >
                 <img
-                  src={course.image || "/pick.png"}
-                  alt={course.title}
-                  className="w-full h-48 object-cover"
+                  src={SCHOOLS[index]}
+                  alt={school?.name}
+                  className="w-full h-60 "
                 />
                 <div className="p-6 border-b">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-xl">{course.title}</h3>
-                    <div className="w-3 h-3 rounded-full bg-red-600"></div>
+                    <h3 className="font-bold text-xl">{school?.name}</h3>
                   </div>
-                  <p className="text-gray-600 mb-4">{course.description}</p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">
-                      {course.duration}
-                    </span>
-                    <span className="text-sm font-semibold text-red-600">
-                      ₦{course.price?.toLocaleString()}
-                    </span>
-                  </div>
+                  <p className="text-gray-600 mb-4">{school?.description}</p>
                 </div>
                 <div className="p-6">
                   <a
-                    href={`/course/${course.id}`}
+                    href={`/courses/${school?.slug}`}
                     className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                   >
-                    View Course
+                    View Courses
                   </a>
                 </div>
               </div>

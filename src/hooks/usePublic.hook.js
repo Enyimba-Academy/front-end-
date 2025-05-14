@@ -1,8 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { getCourses, getCourseById, getSchools } from "../api/publicService";
 
-export const useCourses = () => {
-  return useQuery({ queryKey: ["courses"], queryFn: getCourses });
+export const useCourses = (id) => {
+  return useQuery({
+    queryKey: ["courses", id],
+    queryFn: () => getCourses(id),
+    enabled: !!id,
+  });
 };
 
 export const useCourseById = (id) => {

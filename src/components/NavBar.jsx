@@ -66,14 +66,14 @@ export default function NavBar() {
             Home
           </NavLink>
           <NavLink
-            to="/photography"
+            to="/schools"
             className={({ isActive }) =>
               `hover:text-primary transition-colors ${
                 isActive ? "text-primary" : ""
               }`
             }
           >
-            Courses
+            Schools
           </NavLink>
           <NavLink
             to="/contact-us"
@@ -149,7 +149,7 @@ export default function NavBar() {
                 Home
               </NavLink>
               <NavLink
-                to="/photography"
+                to="/schools"
                 className={({ isActive }) =>
                   `w-full text-center py-3 hover:bg-gray-100 rounded-md ${
                     isActive ? "text-primary bg-gray-100" : ""
@@ -157,7 +157,7 @@ export default function NavBar() {
                 }
                 onClick={toggleMenu}
               >
-                Courses
+                Schools
               </NavLink>
               <NavLink
                 to="/contact-us"
