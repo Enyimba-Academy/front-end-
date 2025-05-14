@@ -127,7 +127,7 @@ export default function Schools() {
       >
         <div className="container mx-auto px-4">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12">
-            Broadcasting Certificate Programs
+            All Schools
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
@@ -144,11 +144,13 @@ export default function Schools() {
                   />
                 </div>
                 <div className="p-4 sm:p-6 border-b">
-                  <div className="p-6 border-b">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="font-bold text-xl">{school?.name}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-4">{school?.description}</p>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-bold text-lg sm:text-xl">
+                      {school.name}
+                    </h3>
+                    <p className="text-gray-600 mb-4 text-sm sm:text-base">
+                      {school.description}
+                    </p>
                   </div>
                 </div>
                 <div className="p-4 sm:p-6">
