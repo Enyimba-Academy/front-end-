@@ -4,11 +4,11 @@ import HeroSection from "../components/index/HeroSection";
 import StudioShowCard from "../components/index/StudioShowCard";
 import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useCourses } from "../hooks/usePublic.hook";
+import { useCourses, useSchools } from "../hooks/usePublic.hook";
 
 export default function Index() {
   const { data: courses, isLoading } = useCourses();
-
+  const { data: schools, isLoading: isSchoolsLoading } = useSchools();
   const [timeLeft, setTimeLeft] = useState({
     days: 27,
     hours: 0,

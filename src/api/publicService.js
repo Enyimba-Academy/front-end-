@@ -9,3 +9,8 @@ export const getCourseById = async (id) => {
   const response = await api.get(`${BASE_URL}/courses/${id}`);
   return response.data;
 };
+
+export const getSchools = async () => {
+  const response = await api.get(`${BASE_URL}/schools`);
+  return response.data;
+};
