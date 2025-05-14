@@ -76,7 +76,7 @@ export default function Index() {
                 <img
                   src={SCHOOLS[index]}
                   alt={school?.name}
-                  className="w-full h-60 "
+                  className="w-full h-48  "
                 />
                 <div className="p-6 border-b">
                   <div className="flex items-center justify-between mb-4">
