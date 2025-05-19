@@ -3,12 +3,14 @@ import { EnrollmentStatus } from "../../constant/enrollmentEnum";
 export default function StatusBadge({ status }) {
   switch (status) {
     case EnrollmentStatus.ACTIVE:
+    case "Active":
       return (
-        <div className="bg-green-100 text-green-500 px-2 py-1 rounded-full  w-fit">
+        <div className="bg-green-100 text-green-500 px-2 py-1 rounded-full w-fit">
           Active
         </div>
       );
     case EnrollmentStatus.INACTIVE:
+    case "Inactive":
       return (
         <div className="bg-red-500 text-red-50 px-2 py-1 rounded-full text-sm w-fit">
           Inactive
@@ -30,6 +32,27 @@ export default function StatusBadge({ status }) {
       return (
         <div className="bg-red-500 text-red-50 px-2 py-1 rounded-full text-sm w-fit">
           Rejected
+        </div>
+      );
+    case EnrollmentStatus.DRAFT:
+    case "DRAFT":
+      return (
+        <div className="bg-amber-100 text-amber-600 px-2 py-1 rounded-full text-sm w-fit">
+          Draft
+        </div>
+      );
+    case EnrollmentStatus.PUBLISHED:
+    case "PUBLISHED":
+      return (
+        <div className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-sm w-fit">
+          Published
+        </div>
+      );
+    case EnrollmentStatus.ARCHIVED:
+    case "ARCHIVED":
+      return (
+        <div className="bg-gray-200 text-gray-600 px-2 py-1 rounded-full text-sm w-fit">
+          Archived
         </div>
       );
     default:

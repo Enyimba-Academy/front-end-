@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import Proptypes from "prop-types";
 
-import { OverflowWrapper } from "@components/performance/reviews/Reviews";
-import { ResponsiveTableLoader } from "@components/shared/SkeletonLoader";
-import Divider from "@components/shared/Divider";
-import EmptyState from "@components/shared/EmptyState";
-import ResponsiveImage from "@components/shared/ResponsiveImage";
-import Pagination from "@components/shared/table/Pagination";
 import {
   ChevronDown,
   ChevronUp,
@@ -16,7 +10,6 @@ import {
   Eye,
 } from "lucide-react";
 import HandleClickEvent from "../click/HandleClickEvent";
-import DropDown from "@components/shared/DropDown";
 
 const CustomCheckBox = ({ checked, onClick }) => {
   return (
@@ -134,148 +127,143 @@ function StyledTable({
         </div>
         {!isCollapsed && (
           <>
-            <Divider />
-            <OverflowWrapper minWidth={minWidth}>
-              <table
-                className={`w-full ${hasCheckBoxAction ? "pl-10" : ""}`}
-                style={{ maxWidth }}
-              >
-                <thead className="bg-gray-100 text-sm text-gray-500 border-t border-b border-gray-200">
-                  <tr className="relative">
-                    {hasCheckBoxAction && !hasNoSelectAll && (
-                      <CustomCheckBox
-                        checked={
-                          bodyRows?.length === selectedRows?.length &&
-                          selectedRows?.length !== 0
-                        }
-                        onClick={handleSelectAll}
-                      />
-                    )}
+            <table
+              className={`w-full ${hasCheckBoxAction ? "pl-10" : ""}`}
+              style={{ maxWidth }}
+            >
+              <thead className="bg-gray-100 text-sm text-gray-500 border-t border-b border-gray-200">
+                <tr className="relative">
+                  {hasCheckBoxAction && !hasNoSelectAll && (
+                    <CustomCheckBox
+                      checked={
+                        bodyRows?.length === selectedRows?.length &&
+                        selectedRows?.length !== 0
+                      }
+                      onClick={handleSelectAll}
+                    />
+                  )}
 
-                    {labels?.map((label, index) => (
-                      <th
-                        key={index}
-                        className="p-4 font-semibold text-left"
-                        style={{
-                          paddingLeft: hasCheckBoxAction ? "2.5rem" : "1rem",
-                        }}
-                      >
-                        {label}
-                      </th>
-                    ))}
+                  {labels?.map((label, index) => (
+                    <th
+                      key={index}
+                      className="p-4 font-semibold text-left"
+                      style={{
+                        paddingLeft: hasCheckBoxAction ? "2.5rem" : "1rem",
+                      }}
+                    >
+                      {label}
+                    </th>
+                  ))}
 
-                    {(onDelete ||
-                      onEdit ||
-                      onView ||
-                      subActions?.length > 0) && (
-                      <th className="text-left">
-                        {actionLabel ? actionLabel : ""}
-                      </th>
-                    )}
-                  </tr>
-                </thead>
-                {!isTableLoading && bodyRows && (
-                  <tbody className="border-b border-gray-200">
-                    {bodyRows?.map((row, index) => (
-                      <tr
-                        key={index}
-                        onClick={() => onRowClick && onRowClick(row)}
-                        className={`transition-colors duration-300 hover:bg-gray-50 ${
-                          onRowClick ? "cursor-pointer" : "cursor-default"
-                        } relative`}
-                      >
-                        {hasCheckBoxAction && (
-                          <CustomCheckBox
-                            checked={selectedRows.includes(row)}
-                            onClick={(e) => handleRowSelect(e, row)}
-                          />
-                        )}
+                  {(onDelete || onEdit || onView || subActions?.length > 0) && (
+                    <th className="text-left">
+                      {actionLabel ? actionLabel : ""}
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              {!isTableLoading && bodyRows && (
+                <tbody className="border-b border-gray-200">
+                  {bodyRows?.map((row, index) => (
+                    <tr
+                      key={index}
+                      onClick={() => onRowClick && onRowClick(row)}
+                      className={`transition-colors duration-300 hover:bg-gray-50 ${
+                        onRowClick ? "cursor-pointer" : "cursor-default"
+                      } relative`}
+                    >
+                      {hasCheckBoxAction && (
+                        <CustomCheckBox
+                          checked={selectedRows.includes(row)}
+                          onClick={(e) => handleRowSelect(e, row)}
+                        />
+                      )}
 
-                        {Object.keys(row).map((key, i) =>
-                          (onRowClick && key === "onRowClickData") ||
-                          key.startsWith("hide") ? null : (
-                            <td
-                              key={i}
-                              className="p-4 text-sm align-middle"
-                              style={{
-                                paddingLeft: hasCheckBoxAction
-                                  ? "2.5rem"
-                                  : "1rem",
-                                maxWidth: maxWidth || "none",
-                              }}
-                            >
-                              {row[key]}
-                            </td>
-                          )
-                        )}
-
-                        {(onView ||
-                          onEdit ||
-                          onDelete ||
-                          subActions?.length > 0) && (
-                          <td>
-                            <div className="flex items-center gap-5">
-                              {subActions && (
-                                <div>
-                                  <MoreVertical
-                                    size={15}
-                                    color="#667085"
-                                    className="cursor-pointer"
-                                    onClick={() =>
-                                      toggleDropDown(row.onRowClickData)
-                                    }
-                                  />
-                                  {dropDown === row.onRowClickData && (
-                                    <HandleClickEvent
-                                      show={true}
-                                      onClickOutside={() => setDropDown(false)}
-                                    >
-                                      <DropDown
-                                        right="0"
-                                        position="fixed"
-                                        items={subActions[index]}
-                                      />
-                                    </HandleClickEvent>
-                                  )}
-                                </div>
-                              )}
-                              {onDelete && (
-                                <button
-                                  onClick={() => onDelete(row?.onRowClickData)}
-                                  className="bg-inherit cursor-pointer"
-                                >
-                                  <Trash2 size={14} color="#667085" />
-                                </button>
-                              )}
-                              {onEdit && (
-                                <button
-                                  onClick={() => {
-                                    onEdit(row?.onRowClickData);
-                                  }}
-                                  className="bg-inherit cursor-pointer"
-                                >
-                                  <Edit2 size={13} color="#667085" />
-                                </button>
-                              )}
-                              {onView && (
-                                <button
-                                  onClick={() => {
-                                    onView(row?.onRowClickData);
-                                  }}
-                                  className="bg-inherit cursor-pointer    "
-                                >
-                                  <Eye size={15} color="#667085" />
-                                </button>
-                              )}
-                            </div>
+                      {Object.keys(row).map((key, i) =>
+                        (onRowClick && key === "onRowClickData") ||
+                        key.startsWith("hide") ? null : (
+                          <td
+                            key={i}
+                            className="p-4 text-sm align-middle"
+                            style={{
+                              paddingLeft: hasCheckBoxAction
+                                ? "2.5rem"
+                                : "1rem",
+                              maxWidth: maxWidth || "none",
+                            }}
+                          >
+                            {row[key]}
                           </td>
-                        )}
-                      </tr>
-                    ))}
-                  </tbody>
-                )}
-              </table>
-            </OverflowWrapper>
+                        )
+                      )}
+
+                      {(onView ||
+                        onEdit ||
+                        onDelete ||
+                        subActions?.length > 0) && (
+                        <td>
+                          <div className="flex items-center gap-5">
+                            {subActions && (
+                              <div>
+                                <MoreVertical
+                                  size={15}
+                                  color="#667085"
+                                  className="cursor-pointer"
+                                  onClick={() =>
+                                    toggleDropDown(row.onRowClickData)
+                                  }
+                                />
+                                {dropDown === row.onRowClickData && (
+                                  <HandleClickEvent
+                                    show={true}
+                                    onClickOutside={() => setDropDown(false)}
+                                  >
+                                    <DropDown
+                                      right="0"
+                                      position="fixed"
+                                      items={subActions[index]}
+                                    />
+                                  </HandleClickEvent>
+                                )}
+                              </div>
+                            )}
+                            {onDelete && (
+                              <button
+                                onClick={() => onDelete(row?.onRowClickData)}
+                                className="bg-inherit cursor-pointer"
+                              >
+                                <Trash2 size={14} color="#667085" />
+                              </button>
+                            )}
+                            {onEdit && (
+                              <button
+                                onClick={() => {
+                                  onEdit(row?.onRowClickData);
+                                }}
+                                className="bg-inherit cursor-pointer"
+                              >
+                                <Edit2 size={13} color="#667085" />
+                              </button>
+                            )}
+                            {onView && (
+                              <button
+                                onClick={() => {
+                                  onView(row?.onRowClickData);
+                                }}
+                                className="bg-inherit cursor-pointer    "
+                              >
+                                <Eye size={15} color="#667085" />
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              )}
+            </table>
+
             {!isTableLoading && bodyRows?.length === 0 && (
               <div className="flex justify-center items-center mt-6">
                 <EmptyState

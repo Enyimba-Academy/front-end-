@@ -3,7 +3,7 @@ import useAuthStore from "@/store/authStore";
 const baseURL = "https://api.etracademy.com/api";
 const devBaseURL = "http://localhost:4000/api";
 const api = axios.create({
-  baseURL: baseURL,
+  baseURL: devBaseURL,
 });
 
 api.interceptors.request.use(

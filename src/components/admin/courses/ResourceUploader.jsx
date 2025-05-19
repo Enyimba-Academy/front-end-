@@ -21,8 +21,12 @@ export default function ResourceUploader({
   const { mutate: uploadVideo, progress: videoProgress } = useUploadVideo();
   const { mutate: uploadFile, progress: fileProgress } = useUploadImage();
 
+  const updateResources = (newResources) => {
+    setResources(newResources);
+    onChange(newResources);
+  };
+
   const handleFileChange = (e) => {
-    console.log("called onChnage");
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
@@ -38,10 +42,8 @@ export default function ResourceUploader({
       status: "uploading",
     }));
 
-    // Add new resources to the list immediately
     const updatedResources = [...resources, ...newResources];
-    setResources(updatedResources);
-    onChange(updatedResources);
+    updateResources(updatedResources);
 
     // Upload each file
     files.forEach((file, index) => {
@@ -68,7 +70,6 @@ export default function ResourceUploader({
               });
             },
             onError: (error) => {
-              console.error("Video upload error:", error);
               setResources((current) => {
                 const updated = current.map((r) =>
                   r.id === resourceId ? { ...r, status: "error" } : r
@@ -100,10 +101,9 @@ export default function ResourceUploader({
               });
             },
             onError: (error) => {
-              console.error("File upload error:", error);
               setResources((current) => {
                 const updated = current.map((r) =>
-                  r.id === resourceId ? { ...r, status: "error" } : r
+                  r.id === resourceId ? { ...r, status: "error" } :
                 );
                 onChange(updated);
                 return updated;
@@ -118,15 +118,13 @@ export default function ResourceUploader({
   // Update progress for all uploading resources
   useEffect(() => {
     const progress = type === "video" ? videoProgress : fileProgress;
-    if (progress) {
-      setResources((current) => {
-        const updated = current.map((r) =>
-          r.status === "uploading" ? { ...r, uploadProgress: progress } : r
-        );
-        onChange(updated);
-        return updated;
-      });
-    }
+    setResources((current) => {
+      const updated = current.map((r) =>
+        r.status === "uploading" ? { ...r, uploadProgress: progress } : r
+      );
+      onChange(updated);
+      return updated;
+    });
   }, [videoProgress, fileProgress, type, onChange]);
 
   const handleAddLink = () => {
@@ -139,10 +137,8 @@ export default function ResourceUploader({
       url: linkUrl.startsWith("http") ? linkUrl : `https://${linkUrl}`,
       status: "completed",
     };
-
     const updatedResources = [...resources, newResource];
-    setResources(updatedResources);
-    onChange(updatedResources);
+    updateResources(updatedResources);
     setLinkUrl("");
     setLinkTitle("");
     setIsAddingLink(false);
@@ -150,8 +146,7 @@ export default function ResourceUploader({
 
   const handleRemoveResource = (id) => {
     const updatedResources = resources.filter((r) => r.id !== id);
-    setResources(updatedResources);
-    onChange(updatedResources);
+    updateResources(updatedResources);
   };
 
   const getFileIcon = (fileType) => {

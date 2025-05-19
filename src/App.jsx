@@ -116,6 +116,7 @@ function App() {
         <Route path="my-school" element={<School />} />
         <Route path="add-school/:id" element={<AdminSchoolForm />} />
         <Route path="add-course" element={<AdminCoursesForm />} />
+        <Route path="add-course/:id" element={<AdminCoursesForm />} />
       </Route>
     </Routes>
   );
