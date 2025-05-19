@@ -39,6 +39,14 @@ export function useAuth() {
     },
   });
 
+  const requestPasswordResetMutation = useMutation({
+    mutationFn: authService.requestPasswordReset,
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: authService.resetPassword,
+  });
+
   return {
     user,
     isLoadingUser,
@@ -50,5 +58,11 @@ export function useAuth() {
     register: registerMutation.mutate,
     isRegistering: registerMutation.isPending,
     registerError: registerMutation.error,
+    requestPasswordReset: requestPasswordResetMutation.mutate,
+    isRequestingPasswordReset: requestPasswordResetMutation.isPending,
+    requestPasswordResetError: requestPasswordResetMutation.error,
+    resetPassword: resetPasswordMutation.mutate,
+    isResettingPassword: resetPasswordMutation.isPending,
+    resetPasswordError: resetPasswordMutation.error,
   };
 }

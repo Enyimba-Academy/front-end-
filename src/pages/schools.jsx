@@ -133,29 +133,23 @@ export default function Schools() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {schools?.map((school, index) => (
               <div
-                key={school.id}
+                key={index}
                 className="bg-white rounded-lg overflow-hidden shadow-md"
               >
-                <div className="relative h-48">
-                  <img
-                    src={SCHOOLS[index]}
-                    alt={school.name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4 sm:p-6 border-b">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-lg sm:text-xl">
-                      {school.name}
-                    </h3>
-                    <p className="text-gray-600 mb-4 text-sm sm:text-base">
-                      {school.description}
-                    </p>
+                <img
+                  src={SCHOOLS[index]}
+                  alt={school?.name}
+                  className="w-full h-48 "
+                />
+                <div className="p-6 border-b">
+                  <div className="flex items-center justify-between mb-4 flex-col">
+                    <h3 className="font-bold text-xl">{school?.name}</h3>
                   </div>
+                  <p className="text-gray-600 mb-4">{school?.description}</p>
                 </div>
-                <div className="p-4 sm:p-6">
+                <div className="p-6">
                   <a
-                    href={`/courses/${school.slug}`}
+                    href={`/courses/${school?.slug}`}
                     className="bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-red-700 text-center block w-full"
                   >
                     View Courses

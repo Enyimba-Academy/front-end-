@@ -12,6 +12,8 @@ import Schools from "@/pages/schools";
 import ContactUs from "@/pages/contact-us";
 import Login from "@/pages/login";
 import RegisterPage from "@/pages/register";
+import ForgotPassword from "@/pages/forgot-password";
+import ResetPassword from "@/pages/reset-password";
 import OnboardingFlow from "@/pages/onboarding";
 import RequireAuth from "@/components/RequireAuth";
 import Dashboard from "@/components/admin/SideBar";
@@ -35,6 +37,8 @@ function App() {
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
 
         {/* Protected Routes */}
         <Route

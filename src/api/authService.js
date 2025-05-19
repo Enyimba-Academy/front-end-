@@ -21,4 +21,17 @@ export const authService = {
     const response = await api.post("/auth/register", credentials);
     return response.data;
   },
+
+  requestPasswordReset: async (email) => {
+    const response = await api.post("/auth/forgot-password", { email });
+    return response.data;
+  },
+
+  resetPassword: async (data) => {
+    const { token, password } = data;
+    const response = await api.post(`/auth/reset-password/${token}`, {
+      password,
+    });
+    return response.data;
+  },
 };

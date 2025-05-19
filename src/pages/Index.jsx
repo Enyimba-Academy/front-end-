@@ -79,10 +79,10 @@ export default function Index() {
                   className="w-full h-48 "
                 />
                 <div className="p-6 border-b">
-                  <div className="flex items-center justify-between mb-4 flex-col gap-4">
+                  <div className="flex items-center justify-between mb-4 flex-col">
                     <h3 className="font-bold text-xl">{school?.name}</h3>
-                    <p className="text-gray-600 mb-4">{school?.description}</p>
                   </div>
+                  <p className="text-gray-600 mb-4">{school?.description}</p>
                 </div>
                 <div className="p-6">
                   <a
