@@ -8,7 +8,7 @@ import { useFormikContext } from "formik";
 export default function ImageUpload({ label }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
-  const { mutate: uploadImage } = useUploadImage();
+  const { mutate: uploadImage, progress } = useUploadImage();
   const { setFieldValue, values } = useFormikContext();
 
   const handleDragOver = (e) => {
@@ -124,6 +124,21 @@ export default function ImageUpload({ label }) {
               Choose File
             </PrimaryButton>
           </>
+        )}
+        {progress > 0 && progress < 100 && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="w-3/4 bg-white rounded-lg p-4">
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="bg-red-600 h-2.5 rounded-full transition-all duration-300"
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+              <p className="text-center text-gray-700 mt-2">
+                {Math.round(progress)}% Uploaded
+              </p>
+            </div>
+          </div>
         )}
         <input
           ref={fileInputRef}

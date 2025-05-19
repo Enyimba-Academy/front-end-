@@ -1,21 +1,28 @@
 import { Bell, Plus, Eye, Trash2, Edit2 } from "lucide-react";
 import PrimaryButton from "../../../components/shared/PrimaryButton";
-import StyledTable from "../../../components/shared/Table";
 import SearchButton from "../../../components/shared/SearchInput";
 import SelectDropDown from "../../../components/shared/SelectDropDown";
 import { Link, useNavigate } from "react-router";
 import { useGetSchools } from "../../../hooks/admin/school.hook";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import RightModal from "../../../components/shared/RightModal";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "../../../components/ui/table";
+
 export default function School() {
   const [filters, setFilters] = useState(true);
-  const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
   const { schools, isLoading } = useGetSchools({
     filters,
-    page,
+    page: 1,
     search,
   });
   const [selectedSchool, setSelectedSchool] = useState(null);
@@ -23,50 +30,15 @@ export default function School() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
-  const tableData = useMemo(() => {
-    return schools?.data?.map((school) => ({
-      name: school?.name,
-      status: (
-        <StatusBadge status={school?.is_active ? "Active" : "Inactive"} />
-      ),
-      noOfCourse: school?.courses?.length,
-      noOfCertificates: school?.certificates?.length,
-      action: (
-        <div className="flex items-center gap-2">
-          <Link to={`/admin/add-school/${school?.id}`}>
-            <Edit2 size={18} color="#667085" className="cursor-pointer" />
-          </Link>
-
-          <Trash2
-            size={18}
-            color="#667085"
-            className="cursor-pointer"
-            onClick={() => setSelectedSchool(school)}
-          />
-          <Eye
-            size={18}
-            color="#667085"
-            className="cursor-pointer"
-            onClick={() => {
-              setSelectedSchool(school);
-              setIsViewModalOpen(true);
-            }}
-          />
-        </div>
-      ),
-    }));
-  }, [schools]);
+  console.log(schools?.schools);
   const handleApplyFilters = (activeFilters) => {
-    console.log(activeFilters);
     setFilters(activeFilters);
   };
 
   const navigate = useNavigate();
 
-  console.log(schools);
   return (
     <div>
-      {" "}
       <header className="bg-white shadow-sm">
         <div className="flex justify-between items-center px-6 py-4">
           <div>
@@ -77,14 +49,8 @@ export default function School() {
             <button className="text-gray-500 hover:text-gray-700">
               <Bell className="h-5 w-5" />
             </button>
-            <div className="h-8 w-8 rounded-full bg-gray-300 overflow-hidden">
-              <img
-                src="/placeholder.svg?height=32&width=32"
-                alt="Profile"
-                width={32}
-                height={32}
-                className="h-full w-full object-cover"
-              />
+            <div className="h-8 w-8 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center">
+              <span className="text-gray-600 text-sm font-medium">A</span>
             </div>
           </div>
         </div>
@@ -102,32 +68,113 @@ export default function School() {
         </div>
       </header>
       <div className="p-6">
-        <StyledTable
-          labels={[
-            "Name",
-            "Status",
-            "No of Course",
-            "No of Certificates",
-            "Action",
-          ]}
-          title={`Schools (${schools?.data?.length || 0})`}
-          bodyRows={tableData}
-          isTableLoading={isLoading}
-          rightItem={
-            <div className="flex items-center gap-2 justify-end">
+        <div className="bg-white rounded-md shadow">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-semibold">
+              Schools ({schools?.data?.length || 0})
+            </h2>
+            <div className="flex items-center gap-2">
               <SearchButton onSearch={setSearch} />
               <SelectDropDown
                 className="w-fit"
                 options={[
                   { value: true, label: "Active" },
-                  { value: false, label: "InActive" },
+                  { value: false, label: "Inactive" },
                 ]}
                 onChange={handleApplyFilters}
               />
             </div>
-          }
-        />
+          </div>
+
+          <div className="p-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>No of Course</TableHead>
+                  <TableHead>No of Certificates</TableHead>
+                  <TableHead>Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-6">
+                      Loading...
+                    </TableCell>
+                  </TableRow>
+                ) : !schools?.schools?.length ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center py-6">
+                      No schools found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  schools?.schools?.map((school) => (
+                    <TableRow key={school.id}>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded bg-gray-200 mr-3 overflow-hidden flex items-center justify-center">
+                            {school?.logo ? (
+                              <img
+                                src={`http://localhost:4000${
+                                  school?.logo?.startsWith("/") ? "" : "/"
+                                }${school?.logo}`}
+                                alt={school.name}
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <span className="text-gray-600 text-lg font-medium">
+                                {school?.name?.charAt(0)?.toUpperCase()}
+                              </span>
+                            )}
+                          </div>
+                          <span>{school?.name}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <StatusBadge
+                          status={school?.is_deleted ? "Inactive" : "Active"}
+                        />
+                      </TableCell>
+                      <TableCell>{school?.courses?.length || 0}</TableCell>
+                      <TableCell>{school?.certificates?.length || 0}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Link to={`/admin/add-school/${school?.id}`}>
+                            <Edit2
+                              size={18}
+                              color="#667085"
+                              className="cursor-pointer"
+                            />
+                          </Link>
+                          <Trash2
+                            size={18}
+                            color="#667085"
+                            className="cursor-pointer"
+                            onClick={() => setSelectedSchool(school)}
+                          />
+                          <Eye
+                            size={18}
+                            color="#667085"
+                            className="cursor-pointer"
+                            onClick={() => {
+                              setSelectedSchool(school);
+                              setIsViewModalOpen(true);
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
+
       {isEditModalOpen && (
         <RightModal
           toggleModal={() => setIsEditModalOpen(false)}
@@ -138,6 +185,7 @@ export default function School() {
           </div>
         </RightModal>
       )}
+
       {isDeleteModalOpen && (
         <RightModal
           toggleModal={() => setIsDeleteModalOpen(false)}
@@ -148,6 +196,7 @@ export default function School() {
           </div>
         </RightModal>
       )}
+
       {isViewModalOpen && (
         <RightModal
           toggleModal={() => setIsViewModalOpen(false)}
@@ -171,13 +220,21 @@ export default function School() {
                     Logo
                   </h3>
                   <div className="w-32 h-32 border rounded-lg overflow-hidden">
-                    <img
-                      src={`http://localhost:4000${
-                        selectedSchool?.logo?.startsWith("/") ? "" : "/"
-                      }${selectedSchool?.logo}`}
-                      alt="School Logo"
-                      className="w-full h-full object-cover"
-                    />
+                    {selectedSchool?.logo ? (
+                      <img
+                        src={`http://localhost:4000${
+                          selectedSchool?.logo?.startsWith("/") ? "" : "/"
+                        }${selectedSchool?.logo}`}
+                        alt="School Logo"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-600 text-2xl font-medium">
+                          {selectedSchool?.name?.charAt(0)?.toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div>
@@ -185,13 +242,21 @@ export default function School() {
                     Cover Image
                   </h3>
                   <div className="w-full h-32 border rounded-lg overflow-hidden">
-                    <img
-                      src={`http://localhost:4000${
-                        selectedSchool?.coverImage?.startsWith("/") ? "" : "/"
-                      }${selectedSchool?.coverImage}`}
-                      alt="School Cover"
-                      className="w-full h-full object-cover"
-                    />
+                    {selectedSchool?.coverImage ? (
+                      <img
+                        src={`http://localhost:4000${
+                          selectedSchool?.coverImage?.startsWith("/") ? "" : "/"
+                        }${selectedSchool?.coverImage}`}
+                        alt="School Cover"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">
+                          No cover image available
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
