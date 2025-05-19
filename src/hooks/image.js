@@ -63,3 +63,34 @@ export const useUploadVideo = () => {
     progress,
   };
 };
+
+export const useUploadFile = () => {
+  const [progress, setProgress] = useState(0);
+
+  return {
+    ...useMutation({
+      mutationFn: ({ file, folder }) =>
+        imageService.fileUpload({
+          file,
+          onProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          },
+          folder,
+        }),
+      onSuccess: (data) => {
+        console.log(data);
+        setProgress(0); // Reset progress after successful upload
+        toast.success("File uploaded successfully");
+      },
+      onError: (error) => {
+        console.log(error);
+        setProgress(0); // Reset progress on error
+        toast.error("Failed to upload file");
+      },
+    }),
+    progress,
+  };
+};

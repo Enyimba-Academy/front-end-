@@ -53,10 +53,10 @@ export const addSchoolSchema = Yup.object().shape({
               title: Yup.string()
                 .required("Content title is required")
                 .max(100, "Content title must be less than 100 characters"),
-              data: Yup.object()
-                .when("type", {
-                  is: (type) => type === "quiz",
-                  then: Yup.object().shape({
+              data: Yup.object().when("type", {
+                is: "quiz",
+                then: () =>
+                  Yup.object().shape({
                     questions: Yup.array()
                       .min(1, "Quiz must have at least one question")
                       .of(
@@ -72,33 +72,34 @@ export const addSchoolSchema = Yup.object().shape({
                               "Invalid question type"
                             ),
                           options: Yup.array().when("type", {
-                            is: (type) => type === "multiple-choice",
-                            then: Yup.array()
-                              .min(
-                                2,
-                                "Multiple choice questions must have at least 2 options"
-                              )
-                              .of(
-                                Yup.object().shape({
-                                  id: Yup.string().required(),
-                                  text: Yup.string().required(
-                                    "Option text is required"
-                                  ),
-                                  isCorrect: Yup.boolean().required(
-                                    "Must specify if option is correct"
-                                  ),
-                                })
-                              )
-                              .test(
-                                "has-correct-answer",
-                                "Must have exactly one correct answer",
-                                (options) => {
-                                  return (
-                                    options?.filter((opt) => opt.isCorrect)
-                                      .length === 1
-                                  );
-                                }
-                              ),
+                            is: "multiple-choice",
+                            then: () =>
+                              Yup.array()
+                                .min(
+                                  2,
+                                  "Multiple choice questions must have at least 2 options"
+                                )
+                                .of(
+                                  Yup.object().shape({
+                                    id: Yup.string().required(),
+                                    text: Yup.string().required(
+                                      "Option text is required"
+                                    ),
+                                    isCorrect: Yup.boolean().required(
+                                      "Must specify if option is correct"
+                                    ),
+                                  })
+                                )
+                                .test(
+                                  "has-correct-answer",
+                                  "Must have exactly one correct answer",
+                                  (options) => {
+                                    return (
+                                      options?.filter((opt) => opt.isCorrect)
+                                        .length === 1
+                                    );
+                                  }
+                                ),
                           }),
                         })
                       ),
@@ -111,10 +112,11 @@ export const addSchoolSchema = Yup.object().shape({
                       .min(0, "Passing score must be at least 0")
                       .max(100, "Passing score cannot exceed 100"),
                   }),
-                })
-                .when("type", {
-                  is: (type) => type === "assignment",
-                  then: Yup.object().shape({
+              }),
+              data: Yup.object().when("type", {
+                is: "assignment",
+                then: () =>
+                  Yup.object().shape({
                     description: Yup.string().required(
                       "Assignment description is required"
                     ),
@@ -129,45 +131,59 @@ export const addSchoolSchema = Yup.object().shape({
                         "Invalid submission type"
                       ),
                     allowedFileTypes: Yup.array().when("submissionType", {
-                      is: (type) => type === "file",
-                      then: Yup.array()
-                        .min(1, "At least one file type must be allowed")
-                        .of(
-                          Yup.string().oneOf(
-                            ["pdf", "doc", "docx", "txt", "zip"],
-                            "Invalid file type"
-                          )
-                        ),
+                      is: "file",
+                      then: () =>
+                        Yup.array()
+                          .min(1, "At least one file type must be allowed")
+                          .of(
+                            Yup.string().oneOf(
+                              ["pdf", "doc", "docx", "txt", "zip"],
+                              "Invalid file type"
+                            )
+                          ),
                     }),
                     maxFileSize: Yup.number().when("submissionType", {
-                      is: (type) => type === "file",
-                      then: Yup.number()
-                        .required("Maximum file size is required")
-                        .min(1, "Maximum file size must be at least 1MB")
-                        .max(100, "Maximum file size cannot exceed 100MB"),
+                      is: "file",
+                      then: () =>
+                        Yup.number()
+                          .required("Maximum file size is required")
+                          .min(1, "Maximum file size must be at least 1MB")
+                          .max(100, "Maximum file size cannot exceed 100MB"),
                     }),
                   }),
-                }),
-              resources: Yup.array().of(
-                Yup.object().shape({
-                  id: Yup.string().required(),
-                  name: Yup.string().required("Resource name is required"),
-                  type: Yup.string().required("Resource type is required"),
-                  url: Yup.string().required("Resource URL is required"),
-                })
-              ),
+              }),
+              resources: Yup.array().when("type", {
+                is: (type) => ["video", "material"].includes(type),
+                then: () =>
+                  Yup.array()
+                    .min(1, "At least one resource is required")
+                    .of(
+                      Yup.object().shape({
+                        id: Yup.string().required(),
+                        name: Yup.string().required(
+                          "Resource name is required"
+                        ),
+                        type: Yup.string().required(
+                          "Resource type is required"
+                        ),
+                        url: Yup.string().required("Resource URL is required"),
+                      })
+                    ),
+                otherwise: () => Yup.array().notRequired(),
+              }),
             })
           ),
       })
     ),
   price: Yup.number().when("isPaid", {
     is: true,
-    then: (schema) =>
-      schema
+    then: () =>
+      Yup.number()
         .required("Price is required for paid courses")
         .min(0, "Price must be greater than or equal to 0"),
-    otherwise: (schema) => schema.notRequired(),
+    otherwise: () => Yup.number().notRequired(),
   }),
+  isPaid: Yup.boolean().required("Please specify if this is a paid course"),
   visibility: Yup.string()
     .required("Visibility setting is required")
     .oneOf(["draft", "published", "unlisted"], "Invalid visibility option"),
