@@ -49,3 +49,19 @@ export const useUpdateCourse = (id) => {
     },
   });
 };
+
+export const useDeleteCourse = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id) => coursesService.deleteCourse(id),
+    onSuccess: (data) => {
+      console.log("Course deleted successfully:", data);
+      toast.success("Course deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["courses"] });
+    },
+    onError: (error) => {
+      console.error("Error deleting course:", error);
+      toast.error("Failed to delete course. Please try again.");
+    },
+  });
+};

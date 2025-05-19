@@ -1,7 +1,10 @@
 import { Bell, Plus, Eye, Trash2, Edit2 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import PrimaryButton from "../../../components/shared/PrimaryButton";
-import { useGetCourses } from "../../../hooks/admin/course.hook";
+import {
+  useGetCourses,
+  useDeleteCourse,
+} from "../../../hooks/admin/course.hook";
 import SearchButton from "../../../components/shared/SearchInput";
 import SelectDropDown from "../../../components/shared/SelectDropDown";
 import { useState } from "react";
@@ -15,13 +18,15 @@ import {
   TableBody,
   TableCell,
 } from "../../../components/ui/table";
+import RejectionModal from "@/components/shared/RejectionModal";
 
 export default function AdminCourses() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState(true);
   const [page] = useState(1);
   const [search, setSearch] = useState("");
-
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const { mutate: deleteCourse, isPending: isDeleting } = useDeleteCourse();
   const { data: courses, isLoading } = useGetCourses({
     filters,
     page,
@@ -167,7 +172,8 @@ export default function AdminCourses() {
                             color="#667085"
                             className="cursor-pointer"
                             onClick={() => {
-                              // Handle delete
+                              setShowDeleteModal(true);
+                              setSelectedCourse(course);
                             }}
                           />
                           <Eye
@@ -311,6 +317,23 @@ export default function AdminCourses() {
             </div>
           </div>
         </RightModal>
+      )}
+      {showDeleteModal && selectedCourse && (
+        <RejectionModal
+          isOpen={showDeleteModal}
+          toggleModal={() => setShowDeleteModal(false)}
+          handleReject={() =>
+            deleteCourse(selectedCourse?.id, {
+              onSuccess: () => {
+                setShowDeleteModal(false);
+              },
+            })
+          }
+          handleCancel={() => setShowDeleteModal(false)}
+          title="Confirm Delete"
+          message="Are you sure you want to delete this course?"
+          isLoading={isDeleting}
+        />
       )}
     </div>
   );

@@ -8,10 +8,9 @@ import {
   useGetSchoolById,
 } from "../../../hooks/admin/school.hook";
 
-import { useParams } from "react-router";
 import ImageUpload from "@/components/shared/ImageUpload";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("School name is required"),
   description: Yup.string().required("School description is required"),
@@ -26,12 +25,12 @@ export default function AdminSchoolForm() {
   const navigate = useNavigate();
   const { addSchool, isLoading } = useAddSchool();
   const { school, isLoading: isLoadingSchool } = useGetSchoolById(id);
-
+  console.log(school?.data);
   const initialValues = {
-    name: school?.name || "",
-    description: school?.description || "",
-    image: school?.coverImage || "",
-    is_deleted: school?.is_deleted || false,
+    name: school?.data?.name || "",
+    description: school?.data?.description || "",
+    image: school?.data?.coverImage || "",
+    is_deleted: school?.data?.is_deleted || false,
   };
 
   const handleSubmit = async (values) => {

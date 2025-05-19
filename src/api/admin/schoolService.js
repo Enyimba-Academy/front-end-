@@ -14,4 +14,12 @@ export const schoolService = {
     const response = await api.get(`${ADMIN_BASE_URL}/schools/${id}`);
     return response.data;
   },
+  updateSchool: async (id, school) => {
+    const response = await api.put(`${ADMIN_BASE_URL}/schools/${id}`, school);
+    return response.data;
+  },
+  deleteSchool: async (id) => {
+    const response = await api.delete(`${ADMIN_BASE_URL}/schools/${id}`);
+    return response.data;
+  },
 };

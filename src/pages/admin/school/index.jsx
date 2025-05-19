@@ -2,8 +2,11 @@ import { Bell, Plus, Eye, Trash2, Edit2 } from "lucide-react";
 import PrimaryButton from "../../../components/shared/PrimaryButton";
 import SearchButton from "../../../components/shared/SearchInput";
 import SelectDropDown from "../../../components/shared/SelectDropDown";
-import { Link, useNavigate } from "react-router";
-import { useGetSchools } from "../../../hooks/admin/school.hook";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  useGetSchools,
+  useDeleteSchool,
+} from "../../../hooks/admin/school.hook";
 import { useState } from "react";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import RightModal from "../../../components/shared/RightModal";
@@ -15,7 +18,7 @@ import {
   TableBody,
   TableCell,
 } from "../../../components/ui/table";
-
+import RejectionModal from "../../../components/shared/RejectionModal";
 export default function School() {
   const [filters, setFilters] = useState(true);
   const [search, setSearch] = useState("");
@@ -29,8 +32,8 @@ export default function School() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const { deleteSchool, isLoading: isDeleting } = useDeleteSchool();
 
-  console.log(schools?.schools);
   const handleApplyFilters = (activeFilters) => {
     setFilters(activeFilters);
   };
@@ -153,7 +156,10 @@ export default function School() {
                             size={18}
                             color="#667085"
                             className="cursor-pointer"
-                            onClick={() => setSelectedSchool(school)}
+                            onClick={() => {
+                              setSelectedSchool(school);
+                              setIsDeleteModalOpen(true);
+                            }}
                           />
                           <Eye
                             size={18}
@@ -186,15 +192,22 @@ export default function School() {
         </RightModal>
       )}
 
-      {isDeleteModalOpen && (
-        <RightModal
-          toggleModal={() => setIsDeleteModalOpen(false)}
+      {isDeleteModalOpen && selectedSchool && (
+        <RejectionModal
           isOpen={isDeleteModalOpen}
-        >
-          <div>
-            <h1>Delete School</h1>
-          </div>
-        </RightModal>
+          toggleModal={() => setIsDeleteModalOpen(false)}
+          handleReject={() =>
+            deleteSchool(selectedSchool?.id, {
+              onSuccess: () => {
+                setIsDeleteModalOpen(false);
+              },
+            })
+          }
+          handleCancel={() => setIsDeleteModalOpen(false)}
+          title="Delete School"
+          message="Are you sure you want to delete this school?"
+          isLoading={isDeleting}
+        />
       )}
 
       {isViewModalOpen && (

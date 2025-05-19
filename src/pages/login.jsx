@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Formik, Form, Field } from "formik";
 import { loginSchema } from "@/schema/login.schema";
 import { toast } from "react-toastify";
-import { useNavigate, useLocation } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ROLES } from "@/constant/role";
 export default function LoginPage() {
   const { login, isLoggingIn, loginError } = useAuth();

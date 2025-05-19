@@ -48,3 +48,36 @@ export const useGetSchoolById = (id) => {
     error,
   };
 };
+
+export const useUpdateSchool = () => {
+  const queryClient = useQueryClient();
+  const { mutate: updateSchool, isLoading } = useMutation({
+    mutationFn: (id, school) => schoolService.updateSchool(id, school),
+    onSuccess: () => {
+      toast.success("School updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["schools"] });
+    },
+    onError: () => {
+      toast.error("Failed to update school");
+    },
+  });
+
+  return { updateSchool, isLoading };
+};
+
+export const useDeleteSchool = () => {
+  const queryClient = useQueryClient();
+  const { mutate: deleteSchool, isLoading } = useMutation({
+    mutationFn: (id) => schoolService.deleteSchool(id),
+    onSuccess: () => {
+      toast.success("School deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["schools"] });
+    },
+    onError: (error) => {
+      toast.error("Failed to delete school");
+      console.error("Error deleting school:", error);
+    },
+  });
+
+  return { deleteSchool, isLoading };
+};
