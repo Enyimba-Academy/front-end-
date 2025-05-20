@@ -9,7 +9,7 @@ export const imageService = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-      withCredentials: true,
+
       onUploadProgress: (progressEvent) => {
         if (onProgress) {
           onProgress(progressEvent);

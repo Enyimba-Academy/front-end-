@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, Plus, X, FileText, ExternalLink } from "lucide-react";
 import { useUploadVideo } from "@/hooks/image";
 import { Progress } from "@/components/ui/progress";
-
+import { ImageUrl } from "@/api/api";
 export function VideoContent({ sectionIndex, contentIndex, content }) {
   const { setFieldValue } = useFormikContext();
   const [videoPreview, setVideoPreview] = useState(
@@ -91,7 +91,7 @@ export function VideoContent({ sectionIndex, contentIndex, content }) {
           <Label>Video Preview</Label>
           <div className="mt-2 border rounded-md overflow-hidden">
             <video
-              src={`http://localhost:4000${videoPreview}`}
+              src={`${ImageUrl}${videoPreview}`}
               controls
               className="w-full h-auto"
               style={{ maxHeight: "200px" }}
