@@ -5,6 +5,7 @@ const devBaseURL = "http://localhost:4000/api";
 const Status = "Prod";
 const api = axios.create({
   baseURL: Status === "Prod" ? baseURL : devBaseURL,
+  withCredentials: true,
 });
 
 const prodImageBaseURL = "https://api.etracademy.com";

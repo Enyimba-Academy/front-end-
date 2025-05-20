@@ -17,7 +17,7 @@ import {
   useGetCourseById,
 } from "@/hooks/admin/course.hook";
 import { DraftStatus } from "@/constant/draftstatus";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate } from "react-router-dom";
 // Validation schema
 const CourseSchema = Yup.object().shape({
   name: Yup.string().required("Course name is required"),
