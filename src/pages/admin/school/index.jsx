@@ -238,9 +238,7 @@ export default function School() {
                   <div className="w-32 h-32 border rounded-lg overflow-hidden">
                     {selectedSchool?.logo ? (
                       <img
-                        src={`http://localhost:4000${
-                          selectedSchool?.logo?.startsWith("/") ? "" : "/"
-                        }${selectedSchool?.logo}`}
+                        src={`${ImageUrl}${selectedSchool?.logo}`}
                         alt="School Logo"
                         className="w-full h-full object-cover"
                       />
@@ -260,9 +258,7 @@ export default function School() {
                   <div className="w-full h-32 border rounded-lg overflow-hidden">
                     {selectedSchool?.coverImage ? (
                       <img
-                        src={`http://localhost:4000${
-                          selectedSchool?.coverImage?.startsWith("/") ? "" : "/"
-                        }${selectedSchool?.coverImage}`}
+                        src={`${ImageUrl}${selectedSchool?.coverImage}`}
                         alt="School Cover"
                         className="w-full h-full object-cover"
                       />
