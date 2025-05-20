@@ -192,17 +192,23 @@ export default function AdminSchoolForm() {
               {currentStep > 1 && (
                 <button
                   type="button"
-                  onClick={prevStep}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    prevStep();
+                  }}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   <ArrowLeft className="w-4 h-4 inline mr-2" />
                   Previous
                 </button>
               )}
-              {currentStep < 3 ? (
+              {currentStep < 2 ? (
                 <button
                   type="button"
-                  onClick={nextStep}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    nextStep();
+                  }}
                   className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                 >
                   Next
