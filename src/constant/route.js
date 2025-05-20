@@ -7,18 +7,22 @@ export const adminRoutes = [
   {
     name: "Students",
     path: "students",
-    icon: "Users",
+    icon: "GraduationCap",
   },
   {
     name: "School",
     path: "my-school",
-    icon: "Users",
+    icon: "BookOpen",
   },
-
   {
     name: "Lms",
     path: "courses",
     icon: "FileText",
+  },
+  {
+    name: "Certificates",
+    path: "certificates",
+    icon: "BookOpen",
   },
   {
     name: "Enrollment",

@@ -27,6 +27,8 @@ import AdminCourses from "@/pages/admin/courses";
 import AdminSchoolForm from "@/pages/admin/school/add";
 import School from "@/pages/admin/school";
 import AdminCoursesForm from "@/pages/admin/courses/add";
+import Certificates from "@/pages/admin/certificates";
+import AddCertificate from "@/pages/admin/certificates/add";
 import StudentNavBar from "./components/StudentNavBar";
 function App() {
   return (
@@ -121,6 +123,9 @@ function App() {
         <Route path="add-school/:id" element={<AdminSchoolForm />} />
         <Route path="add-course" element={<AdminCoursesForm />} />
         <Route path="add-course/:id" element={<AdminCoursesForm />} />
+        <Route path="certificates" element={<Certificates />} />
+        <Route path="certificates/add" element={<AddCertificate />} />
+        <Route path="certificates/edit/:id" element={<AddCertificate />} />
       </Route>
     </Routes>
   );
