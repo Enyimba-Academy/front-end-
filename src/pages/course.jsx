@@ -131,7 +131,7 @@ export default function Course() {
           <div className="relative">
             <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
               <img
-                src={`${ImageUrl}${course.image}` || "/pick4.png"}
+                src={course.image ? `${ImageUrl}${course.image}` : "/pick4.png"}
                 alt={course.title}
                 className="w-full h-full object-cover opacity-80"
               />

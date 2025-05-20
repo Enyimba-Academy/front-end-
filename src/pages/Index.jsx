@@ -75,7 +75,11 @@ export default function Index() {
                 className="bg-white rounded-lg overflow-hidden shadow-md"
               >
                 <img
-                  src={SCHOOLS[index] || `${ImageUrl}${school?.image}`}
+                  src={
+                    school?.image
+                      ? `${ImageUrl}${school?.image}`
+                      : SCHOOLS[index]
+                  }
                   alt={school?.name}
                   className="w-full h-48 "
                 />
