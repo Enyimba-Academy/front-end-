@@ -1,5 +1,6 @@
 import { useCourses } from "../hooks/usePublic.hook";
 import { useParams } from "react-router-dom";
+import { ImageUrl } from "@/api/api";
 export default function Courses() {
   const { id } = useParams();
   const { data: courses, isLoading } = useCourses(id);
@@ -138,7 +139,7 @@ export default function Courses() {
               >
                 <div className="relative h-48">
                   <img
-                    src={course.image || "/pick.png"}
+                    src={`${ImageUrl}${course.image}` || "/pick.png"}
                     alt={course.title}
                     className="w-full h-full object-cover"
                   />

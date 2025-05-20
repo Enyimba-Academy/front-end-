@@ -10,7 +10,7 @@ import {
   FileSpreadsheet,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
+import { ImageUrl } from "@/api/api";
 export default function CoursePreview({
   values,
   onSubmit,
@@ -59,7 +59,7 @@ export default function CoursePreview({
       <div className="relative rounded-lg overflow-hidden">
         {values.image ? (
           <img
-            src={`http://localhost:4000${values.image}`}
+            src={`${ImageUrl}${values.image}`}
             alt={values.name}
             className="w-full h-64 object-cover"
           />

@@ -4,7 +4,7 @@ import PrimaryButton from "./PrimaryButton";
 import { useUploadImage } from "../../hooks/image";
 import { toast } from "react-toastify";
 import { useFormikContext } from "formik";
-
+import { ImageUrl } from "@/api/api";
 export default function ImageUpload({ label }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
@@ -100,7 +100,7 @@ export default function ImageUpload({ label }) {
 
             <div className="relative aspect-video w-full overflow-hidden rounded-md">
               <img
-                src={`http://localhost:4000${values.image}`}
+                src={`${ImageUrl}${values.image}`}
                 alt="Preview"
                 className="object-cover w-full h-full"
               />

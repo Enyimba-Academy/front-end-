@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useCourses, useSchools } from "../hooks/usePublic.hook";
 import SCHOOLS from "../constant/school";
+import { ImageUrl } from "@/api/api";
 
 export default function Index() {
   const { data: courses, isLoading } = useCourses();
@@ -74,7 +75,7 @@ export default function Index() {
                 className="bg-white rounded-lg overflow-hidden shadow-md"
               >
                 <img
-                  src={SCHOOLS[index]}
+                  src={SCHOOLS[index] || `${ImageUrl}${school?.image}`}
                   alt={school?.name}
                   className="w-full h-48 "
                 />

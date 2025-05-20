@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { useCourseById } from "../hooks/usePublic.hook";
-
+import { ImageUrl } from "@/api/api";
 const nigerianStates = [
   "Abia",
   "Adamawa",
@@ -565,7 +565,9 @@ export default function RegisterPage() {
               <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
                 <div className="aspect-video bg-gray-800">
                   <img
-                    src="/pick4.png"
+                    src={
+                      course.image ? `${ImageUrl}${course.image}` : "/pick4.png"
+                    }
                     alt={course.title}
                     className="w-full h-full object-cover opacity-80"
                   />

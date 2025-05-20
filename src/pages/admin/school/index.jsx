@@ -19,6 +19,7 @@ import {
   TableCell,
 } from "../../../components/ui/table";
 import RejectionModal from "../../../components/shared/RejectionModal";
+import { ImageUrl } from "@/api/api";
 export default function School() {
   const [filters, setFilters] = useState(true);
   const [search, setSearch] = useState("");
@@ -121,9 +122,11 @@ export default function School() {
                           <div className="h-10 w-10 rounded bg-gray-200 mr-3 overflow-hidden flex items-center justify-center">
                             {school?.logo ? (
                               <img
-                                src={`http://localhost:4000${
-                                  school?.logo?.startsWith("/") ? "" : "/"
-                                }${school?.logo}`}
+                                src={
+                                  school?.logo
+                                    ? `${ImageUrl}${school?.logo}`
+                                    : "/pick4.png"
+                                }
                                 alt={school.name}
                                 className="h-full w-full object-cover"
                               />

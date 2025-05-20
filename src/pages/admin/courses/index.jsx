@@ -19,7 +19,7 @@ import {
   TableCell,
 } from "../../../components/ui/table";
 import RejectionModal from "@/components/shared/RejectionModal";
-
+import { ImageUrl } from "@/api/api";
 export default function AdminCourses() {
   const navigate = useNavigate();
   const [filters, setFilters] = useState(true);
@@ -139,7 +139,7 @@ export default function AdminCourses() {
                           <div className="h-10 w-10 rounded bg-gray-200 mr-3 overflow-hidden">
                             {course?.image ? (
                               <img
-                                src={`http://localhost:4000${course?.image}`}
+                                src={`${ImageUrl}${course?.image}`}
                                 alt={course?.title}
                                 className="h-full w-full object-cover"
                               />

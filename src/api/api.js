@@ -2,9 +2,15 @@ import axios from "axios";
 import useAuthStore from "@/store/authStore";
 const baseURL = "https://api.etracademy.com/api";
 const devBaseURL = "http://localhost:4000/api";
+const Status = "Prod";
 const api = axios.create({
-  baseURL: devBaseURL,
+  baseURL: Status === "Prod" ? baseURL : devBaseURL,
 });
+
+const prodImageBaseURL = "https://api.etracademy.com";
+const devImageBaseURL = "http://localhost:4000";
+
+export const ImageUrl = Status === "Prod" ? prodImageBaseURL : devImageBaseURL;
 
 api.interceptors.request.use(
   (config) => {

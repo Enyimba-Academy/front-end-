@@ -6,6 +6,7 @@ import PrimaryLink from "../components/shared/PrimaryLink";
 import { useCourseById } from "../hooks/usePublic.hook";
 import { useCreateEnrollment } from "../hooks/useEnrollment.hook";
 import { toast } from "react-toastify";
+import { ImageUrl } from "@/api/api";
 
 export default function Course() {
   const { id } = useParams();
@@ -130,7 +131,7 @@ export default function Course() {
           <div className="relative">
             <div className="aspect-video bg-gray-800 rounded-lg overflow-hidden">
               <img
-                src={course.image || "/pick4.png"}
+                src={`${ImageUrl}${course.image}` || "/pick4.png"}
                 alt={course.title}
                 className="w-full h-full object-cover opacity-80"
               />

@@ -19,11 +19,11 @@ export const adminRoutes = [
     path: "courses",
     icon: "FileText",
   },
-  {
-    name: "Certificates",
-    path: "certificates",
-    icon: "BookOpen",
-  },
+  // {
+  //   name: "Certificates",
+  //   path: "certificates",
+  //   icon: "BookOpen",
+  // },
   {
     name: "Enrollment",
     path: "enrollment-payments",
