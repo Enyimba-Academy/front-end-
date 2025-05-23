@@ -9,9 +9,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Link } from "react-router-dom";
-import { Download, FileText, Pencil, Plus, Search, Trash2 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  Bell,
+  Download,
+  FileText,
+  Pencil,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import PrimaryButton from "../../../components/shared/PrimaryButton";
+import SearchButton from "../../../components/shared/SearchInput";
+import SelectDropDown from "../../../components/shared/SelectDropDown";
+import StatusBadge from "../../../components/shared/StatusBadge";
 
 // This would be replaced with an actual API call
 const useMockCertificates = () => {
@@ -89,148 +101,164 @@ const useMockCertificates = () => {
 
 export default function Certificates() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState("all");
   const { data, isLoading } = useMockCertificates();
+  const navigate = useNavigate();
 
-  // Filter certificates based on search term
-  const filteredCertificates = !searchTerm
-    ? data?.certificates
-    : data?.certificates.filter(
-        (cert) =>
-          cert.program_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          cert.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          cert.courseTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          cert.program_type.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+  // Filter certificates based on search term and filters
+  const filteredCertificates = data?.certificates
+    .filter(
+      (cert) =>
+        !searchTerm ||
+        cert.program_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.courseTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        cert.program_type.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((cert) => filters === "all" || cert.status === filters);
+
+  const handleApplyFilters = (activeFilters) => {
+    setFilters(activeFilters);
+  };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-800">Certificates</h1>
-          <p className="text-sm text-gray-500">
-            Manage and issue certificates for your students
-          </p>
-        </div>
-        <Button asChild>
-          <Link to="/admin/certificates/add" className="flex items-center">
-            <Plus className="mr-2 h-4 w-4" />
-            Add Certificate
-          </Link>
-        </Button>
-      </div>
-
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="p-4 border-b border-gray-200">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-medium">All Certificates</h2>
-            <div className="relative w-64">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-400" />
-              <Input
-                placeholder="Search certificates..."
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+    <div>
+      <header className="bg-white shadow-sm">
+        <div className="flex justify-between items-center px-6 py-4">
+          <div>
+            <h1 className="text-xl font-semibold text-gray-800">
+              Certificates
+            </h1>
+            <p className="text-sm text-gray-500">
+              Manage and issue certificates for your students
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-500 hover:text-gray-700">
+              <Bell className="h-5 w-5" />
+            </button>
+            <div className="h-8 w-8 rounded-full bg-gray-300 overflow-hidden">
+              <img
+                src="/placeholder.svg?height=32&width=32"
+                alt="Profile"
+                width={32}
+                height={32}
+                className="h-full w-full object-cover"
               />
             </div>
           </div>
         </div>
+        <div className="flex justify-end px-6 py-4">
+          <PrimaryButton
+            className="flex gap-2 cursor-pointer"
+            type={"button"}
+            onClick={() => {
+              navigate("/admin/certificates/add");
+            }}
+          >
+            <Plus />
+            Add Certificate
+          </PrimaryButton>
+        </div>
+      </header>
 
-        {isLoading ? (
-          <div className="p-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="flex justify-between items-center py-2">
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-6 w-24" />
-              </div>
-            ))}
+      <div className="p-6">
+        <div className="bg-white rounded-md shadow">
+          <div className="flex justify-between items-center p-4 border-b">
+            <h2 className="text-lg font-semibold">
+              Certificates ({filteredCertificates?.length || 0})
+            </h2>
+            <div className="flex items-center gap-2 justify-end">
+              <SearchButton onSearch={setSearchTerm} />
+              <SelectDropDown
+                className="w-fit"
+                options={[
+                  { value: "all", label: "All" },
+                  { value: "issued", label: "Issued" },
+                  { value: "draft", label: "Draft" },
+                  { value: "revoked", label: "Revoked" },
+                ]}
+                onChange={handleApplyFilters}
+              />
+            </div>
           </div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Program Name</TableHead>
-                <TableHead>Program Type</TableHead>
-                <TableHead>Duration (months)</TableHead>
-                <TableHead>Student</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredCertificates && filteredCertificates.length > 0 ? (
-                filteredCertificates.map((certificate) => (
-                  <TableRow key={certificate.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center">
-                        <FileText className="h-4 w-4 mr-2 text-gray-400" />
-                        {certificate.program_name}
-                      </div>
-                    </TableCell>
-                    <TableCell>{certificate.program_type}</TableCell>
-                    <TableCell>{certificate.duration}</TableCell>
-                    <TableCell>{certificate.student}</TableCell>
-                    <TableCell>{certificate.courseTitle}</TableCell>
-                    <TableCell>
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          certificate.status === "issued"
-                            ? "bg-green-100 text-green-800"
-                            : certificate.status === "draft"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {certificate.status.charAt(0).toUpperCase() +
-                          certificate.status.slice(1)}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          title="Download"
-                        >
-                          <Download className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8"
-                          title="Edit"
-                          asChild
-                        >
-                          <Link
-                            to={`/admin/certificates/edit/${certificate.id}`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-red-500"
-                          title="Delete"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+
+          <div className="p-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Program Name</TableHead>
+                  <TableHead>Program Type</TableHead>
+                  <TableHead>Duration (months)</TableHead>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Course</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-6">
+                      Loading...
                     </TableCell>
                   </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-4">
-                    No certificates found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        )}
+                ) : filteredCertificates?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-6">
+                      No certificates found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredCertificates.map((certificate) => (
+                    <TableRow key={certificate.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center">
+                          <FileText className="h-4 w-4 mr-2 text-gray-400" />
+                          {certificate.program_name}
+                        </div>
+                      </TableCell>
+                      <TableCell>{certificate.program_type}</TableCell>
+                      <TableCell>{certificate.duration}</TableCell>
+                      <TableCell>{certificate.student}</TableCell>
+                      <TableCell>{certificate.courseTitle}</TableCell>
+                      <TableCell>
+                        <StatusBadge status={certificate.status} />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2 justify-end">
+                          <Download
+                            size={18}
+                            color="#667085"
+                            className="cursor-pointer"
+                            title="Download"
+                          />
+                          <Pencil
+                            size={18}
+                            color="#667085"
+                            className="cursor-pointer"
+                            title="Edit"
+                            onClick={() =>
+                              navigate(
+                                `/admin/certificates/edit/${certificate.id}`
+                              )
+                            }
+                          />
+                          <Trash2
+                            size={18}
+                            color="#667085"
+                            className="cursor-pointer"
+                            title="Delete"
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
     </div>
   );
