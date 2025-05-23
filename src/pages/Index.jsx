@@ -76,8 +76,8 @@ export default function Index() {
               >
                 <img
                   src={
-                    school?.image
-                      ? `${ImageUrl}${school?.image}`
+                    school?.coverImage
+                      ? `${ImageUrl}${school?.coverImage}`
                       : SCHOOLS[index]
                   }
                   alt={school?.name}

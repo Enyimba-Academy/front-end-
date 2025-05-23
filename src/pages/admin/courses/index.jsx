@@ -217,7 +217,7 @@ export default function AdminCourses() {
                 <div className="w-full h-40 border rounded-lg overflow-hidden">
                   {selectedCourse?.image ? (
                     <img
-                      src={`http://localhost:4000${selectedCourse.image}`}
+                      src={`${ImageUrl}${selectedCourse?.image}`}
                       alt="Course Cover"
                       className="w-full h-full object-cover"
                     />
