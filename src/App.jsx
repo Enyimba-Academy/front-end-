@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import Home from "@/pages/Index";
 import Layout from "@/components/Layout";
 import AboutUs from "@/pages/about-us";
@@ -30,104 +30,115 @@ import AdminCoursesForm from "@/pages/admin/courses/add";
 import Certificates from "@/pages/admin/certificates";
 import AddCertificate from "@/pages/admin/certificates/add";
 import StudentNavBar from "./components/StudentNavBar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/edit-profile"
-          element={
-            //<RequireAuth>
-            <EditProfile />
-            // </RequireAuth>
-          }
-        />
+            {/* Protected Routes */}
+            <Route
+              path="/edit-profile"
+              element={
+                //<RequireAuth>
+                <EditProfile />
+                // </RequireAuth>
+              }
+            />
 
-        <Route
-          path="/certificate"
-          element={
-            //<RequireAuth>
-            <CertificatePage />
-            // </RequireAuth>
-          }
-        />
-        <Route
-          path="/course/:id"
-          element={
-            //<RequireAuth>
-            <Course />
-            // </RequireAuth>
-          }
-        />
-        <Route
-          path="/courses/:id"
-          element={
-            //<RequireAuth>
-            <Courses />
-            // </RequireAuth>
-          }
-        />
-        <Route
-          path="/schools"
-          element={
-            //<RequireAuth>
-            <Schools />
-            // </RequireAuth>
-          }
-        />
-      </Route>
-      <Route
-        path="/video-lesson"
-        element={
-          // <RequireAuth>
-          <VideoLessonPage />
-          //  </RequireAuth>
-        }
-      />
-      <Route
-        path="/onboarding"
-        element={
-          // <RequireAuth>
-          <OnboardingFlow />
-          //  </RequireAuth>
-        }
-      />
-      <Route
-        path="/student-profile"
-        element={
-          <RequireAuth>
-            <StudentNavBar />
-            <StudentProfile />
-          </RequireAuth>
-        }
-      />
-      <Route path="/admin" element={<Dashboard />}>
-        <Route path="dashboard" element={<Admin />} />
-        <Route path="students" element={<Student />} />
-        <Route path="instructors" element={<Instructor />} />
-        <Route path="courses" element={<AdminCourses />} />
-        <Route path="content-library" element={<ContentLibrary />} />
-        <Route path="enrollment-payments" element={<EnrollmentPayments />} />
-        <Route path="settings" element={<Settings />} />
-        <Route path="add-school" element={<AdminSchoolForm />} />
-        <Route path="my-school" element={<School />} />
-        <Route path="add-school/:id" element={<AdminSchoolForm />} />
-        <Route path="add-course" element={<AdminCoursesForm />} />
-        <Route path="add-course/:id" element={<AdminCoursesForm />} />
-        <Route path="certificates" element={<Certificates />} />
-        <Route path="certificates/add" element={<AddCertificate />} />
-        <Route path="certificates/edit/:id" element={<AddCertificate />} />
-      </Route>
-    </Routes>
+            <Route
+              path="/certificate"
+              element={
+                //<RequireAuth>
+                <CertificatePage />
+                // </RequireAuth>
+              }
+            />
+            <Route
+              path="/course/:id"
+              element={
+                //<RequireAuth>
+                <Course />
+                // </RequireAuth>
+              }
+            />
+            <Route
+              path="/courses/:id"
+              element={
+                //<RequireAuth>
+                <Courses />
+                // </RequireAuth>
+              }
+            />
+            <Route
+              path="/schools"
+              element={
+                //<RequireAuth>
+                <Schools />
+                // </RequireAuth>
+              }
+            />
+          </Route>
+          <Route
+            path="/video-lesson/:id"
+            element={
+              <RequireAuth>
+                <VideoLessonPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/onboarding"
+            element={
+              // <RequireAuth>
+              <OnboardingFlow />
+              //  </RequireAuth>
+            }
+          />
+          <Route
+            path="/student-profile"
+            element={
+              <RequireAuth>
+                <StudentNavBar />
+                <StudentProfile />
+              </RequireAuth>
+            }
+          />
+          <Route path="/admin" element={<Dashboard />}>
+            <Route path="dashboard" element={<Admin />} />
+            <Route path="students" element={<Student />} />
+            <Route path="instructors" element={<Instructor />} />
+            <Route path="courses" element={<AdminCourses />} />
+            <Route path="content-library" element={<ContentLibrary />} />
+            <Route
+              path="enrollment-payments"
+              element={<EnrollmentPayments />}
+            />
+            <Route path="settings" element={<Settings />} />
+            <Route path="add-school" element={<AdminSchoolForm />} />
+            <Route path="my-school" element={<School />} />
+            <Route path="add-school/:id" element={<AdminSchoolForm />} />
+            <Route path="add-course" element={<AdminCoursesForm />} />
+            <Route path="add-course/:id" element={<AdminCoursesForm />} />
+            <Route path="certificates" element={<Certificates />} />
+            <Route path="certificates/add" element={<AddCertificate />} />
+            <Route path="certificates/edit/:id" element={<AddCertificate />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
