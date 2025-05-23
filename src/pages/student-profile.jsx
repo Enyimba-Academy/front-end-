@@ -251,7 +251,7 @@ export default function StudentProfile() {
                           <div className="text-xs text-gray-600">
                             Progress: {enrollment.progress}%
                           </div>
-                          <LinkOrButtonToShow status={enrollment.status} />
+                          <LinkOrButtonToShow status={enrollment} />
                         </div>
                       </div>
                     </div>
@@ -428,14 +428,20 @@ export default function StudentProfile() {
 }
 
 function LinkOrButtonToShow({ status }) {
-  console.log(status);
-  if (status === EnrollmentStatus.PENDING) {
+  if (status.status === EnrollmentStatus.PENDING) {
     return <StatusBadge status={status} />;
   }
-  if (status === EnrollmentStatus.APPROVED) {
-    return <PrimaryButton>Pay Now</PrimaryButton>;
+  if (status.status === EnrollmentStatus.APPROVED) {
+    return (
+      <PrimaryLink
+        to={`/video-lesson/${status.id}`}
+        className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
+      >
+        Pay Now
+      </PrimaryLink>
+    );
   }
-  if (status === EnrollmentStatus.REJECTED) {
+  if (status.status === EnrollmentStatus.REJECTED) {
     return <StatusBadge status={status} />;
   }
   return (

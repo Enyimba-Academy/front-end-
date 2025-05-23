@@ -2,7 +2,7 @@ import axios from "axios";
 import useAuthStore from "@/store/authStore";
 const baseURL = "https://api.etracademy.com/api";
 const devBaseURL = "http://localhost:4000/api";
-const Status = "Prod";
+const Status = "Dev";
 const api = axios.create({
   baseURL: Status === "Prod" ? baseURL : devBaseURL,
   withCredentials: true,

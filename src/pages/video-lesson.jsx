@@ -12,14 +12,20 @@ import {
   Play,
   Settings,
 } from "lucide-react";
-
+import {
+  useGetEnrollment,
+  useGetEnrollmentById,
+} from "@/hooks/useEnrollment.hook";
+import { useParams } from "react-router-dom";
 export default function VideoLessonPage() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const { id } = useParams();
   const [module1Expanded, setModule1Expanded] = useState(true);
   const [module2Expanded, setModule2Expanded] = useState(true);
   const [module3Expanded, setModule3Expanded] = useState(false);
   const [noteText, setNoteText] = useState("");
-
+  const { data, isLoading } = useGetEnrollmentById(id);
+  const enrollments = data?.enrollments;
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* Header */}
