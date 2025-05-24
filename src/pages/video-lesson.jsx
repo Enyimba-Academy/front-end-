@@ -1,50 +1,65 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   ArrowLeft,
   CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Download,
-  Edit,
-  Lightbulb,
   Maximize,
   Pause,
   Play,
   Settings,
-  BookOpen,
   FileText,
   HelpCircle,
   X as XIcon,
+  Loader,
+  Clock as ClockIcon,
 } from "lucide-react";
-import { useGetEnrollmentById } from "@/hooks/useEnrollment.hook";
-import { useParams, useNavigate } from "react-router-dom";
+import { useGetEnrollmentMaterials } from "@/hooks/useEnrollment.hook";
+import {
+  useMarkLessonCompleted,
+  useUpdateWatchTime,
+} from "@/hooks/useLessonProgress";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { ImageUrl } from "@/api/api";
 
 export default function VideoLessonPage() {
+  const { handleNext, isLast } = useOutletContext();
   const [isPlaying, setIsPlaying] = useState(false);
-  const { id } = useParams();
+  const { contentId, typeID, lessonId } = useParams();
+  const { data, isLoading } = useGetEnrollmentMaterials(
+    contentId,
+    typeID,
+    lessonId
+  );
   const navigate = useNavigate();
-  const { data } = useGetEnrollmentById(id);
   const enrollment = data;
+  console.log(data);
+
+  // Add hooks for lesson progress
+  const markLessonCompleted = useMarkLessonCompleted();
+  const updateWatchTime = useUpdateWatchTime();
+  const [watchTimeUpdateInterval, setWatchTimeUpdateInterval] = useState(null);
 
   // Destructure course data if available
   const course = enrollment?.course || {};
   const sections = course?.sections || [];
-  const courseTitle = course?.title || "Course";
+
   const courseImage =
     course?.image ||
     "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=400&width=600";
 
   // State for expanded sections and active content
-  const [expandedSections, setExpandedSections] = useState({});
+  const [, setExpandedSections] = useState({});
   const [activeContent, setActiveContent] = useState(null);
-  const [noteText, setNoteText] = useState("");
+  const [isContentLoading, setIsContentLoading] = useState(true);
 
   // Video player state
   const videoRef = useRef(null);
+  const videoContainerRef = useRef(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [showSettings, setShowSettings] = useState(false);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  const [savedProgress, setSavedProgress] = useState(0);
 
   // New quiz state variables
   const [quizStarted, setQuizStarted] = useState(false);
@@ -52,6 +67,53 @@ export default function VideoLessonPage() {
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [quizScore, setQuizScore] = useState(0);
+
+  // Content type based on typeID from params
+  const contentTypeFromParams = typeID?.toUpperCase() || "";
+
+  // Get current content info
+  const currentVideoUrl = activeContent?.video?.[0]?.url || "";
+  const currentVideoDescription = activeContent?.video?.[0]?.description || "";
+  const contentType = activeContent?.type || contentTypeFromParams || "";
+  const currentQuiz = activeContent?.quiz?.[0];
+  const currentQuizQuestions = currentQuiz?.questions || [];
+  const currentAssignment = activeContent?.assignment?.[0];
+
+  // Toggle play/pause (define as useCallback to avoid dependency loops)
+  const togglePlay = useCallback(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  }, [isPlaying, videoRef]);
+
+  // Keyboard event handler for spacebar control
+  useEffect(() => {
+    // Only add keyboard listener if we have an active video
+    if (contentType === "VIDEO" && currentVideoUrl) {
+      const handleKeyDown = (e) => {
+        // Check if it's the spacebar and not in an input/textarea element
+        if (
+          e.code === "Space" &&
+          !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+        ) {
+          e.preventDefault(); // Prevent scrolling on spacebar
+          togglePlay();
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+
+      // Clean up event listener
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [contentType, currentVideoUrl, togglePlay]);
 
   // Initialize expanded sections and set first content as active on data load
   useEffect(() => {
@@ -68,27 +130,131 @@ export default function VideoLessonPage() {
       if (sections[0]?.contents?.length > 0) {
         setActiveContent(sections[0].contents[0]);
       }
+      setIsContentLoading(false);
     }
   }, [sections]);
 
-  // Toggle section expansion
-  const toggleSection = (sectionId) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [sectionId]: !prev[sectionId],
-    }));
-  };
+  // If we have a direct content object from the API, use it
+  useEffect(() => {
+    if (data && !Array.isArray(data) && data.url) {
+      // Create a video content structure similar to what the component expects
+      setActiveContent({
+        id: data.id || lessonId,
+        title: data.title || "Video Lesson",
+        type: contentTypeFromParams || "VIDEO",
+        video: [
+          {
+            url: data.url,
+            description: data.description || "",
+            duration: data.duration,
+          },
+        ],
+      });
+      setIsContentLoading(false);
+    } else if (data && typeID?.toUpperCase() === "QUIZ") {
+      // Create a quiz content structure
+      setActiveContent({
+        id: data.id || lessonId,
+        title: data.title || "Quiz",
+        type: "QUIZ",
+        quiz: [
+          {
+            id: data.id || "quiz-1",
+            instructions:
+              data.description || "Complete this quiz to test your knowledge.",
+            questions: data.questions || [],
+          },
+        ],
+      });
+      setIsContentLoading(false);
+    }
+  }, [data, lessonId, contentTypeFromParams, typeID]);
 
-  // Handle content selection
-  const handleContentSelect = (content) => {
-    setActiveContent(content);
-    // Reset video player state when changing content
-    setIsPlaying(false);
-    setCurrentTime(0);
-    setProgress(0);
-  };
+  // Restore video playback time from localStorage when the video loads
+  useEffect(() => {
+    if (videoRef.current && activeContent?.id && contentType === "VIDEO") {
+      const savedTime = localStorage.getItem(
+        `video-progress-${activeContent.id}`
+      );
+      if (savedTime) {
+        const parsedTime = parseFloat(savedTime);
+        if (!isNaN(parsedTime) && parsedTime > 0) {
+          videoRef.current.currentTime = parsedTime;
+          setCurrentTime(parsedTime);
 
-  // Update video progress
+          // Calculate saved progress percentage for marker
+          if (videoRef.current.duration) {
+            setSavedProgress((parsedTime / videoRef.current.duration) * 100);
+          } else {
+            // If duration isn't loaded yet, set a callback
+            const handleDurationChange = () => {
+              setSavedProgress((parsedTime / videoRef.current.duration) * 100);
+              videoRef.current.removeEventListener(
+                "durationchange",
+                handleDurationChange
+              );
+            };
+            videoRef.current.addEventListener(
+              "durationchange",
+              handleDurationChange
+            );
+          }
+        }
+      }
+    }
+  }, [activeContent, contentType]);
+
+  // Save video position to localStorage periodically
+  useEffect(() => {
+    if (contentType === "VIDEO" && activeContent?.id) {
+      const saveInterval = setInterval(() => {
+        if (videoRef.current && !videoRef.current.paused) {
+          localStorage.setItem(
+            `video-progress-${activeContent.id}`,
+            videoRef.current.currentTime.toString()
+          );
+        }
+      }, 5000); // Save every 5 seconds
+
+      return () => clearInterval(saveInterval);
+    }
+  }, [contentType, activeContent?.id]);
+
+  // Save video position when the user leaves or pauses
+  useEffect(() => {
+    const saveVideoPosition = () => {
+      if (videoRef.current && activeContent?.id && contentType === "VIDEO") {
+        localStorage.setItem(
+          `video-progress-${activeContent.id}`,
+          videoRef.current.currentTime.toString()
+        );
+      }
+    };
+
+    // Save on page unload
+    window.addEventListener("beforeunload", saveVideoPosition);
+
+    // Save when video is paused
+    if (videoRef.current) {
+      videoRef.current.addEventListener("pause", saveVideoPosition);
+    }
+
+    return () => {
+      window.removeEventListener("beforeunload", saveVideoPosition);
+      if (videoRef.current) {
+        videoRef.current.removeEventListener("pause", saveVideoPosition);
+      }
+    };
+  }, [activeContent?.id, contentType]);
+
+  // Update loading state when API call completes
+  useEffect(() => {
+    if (!isLoading && data) {
+      setIsContentLoading(false);
+    }
+  }, [isLoading, data]);
+
+  // Update video timeUpdate handler to track progress
   const handleTimeUpdate = () => {
     if (videoRef.current) {
       const current = videoRef.current.currentTime;
@@ -100,10 +266,79 @@ export default function VideoLessonPage() {
     }
   };
 
+  // Set up interval to periodically update watch time in the backend
+  useEffect(() => {
+    if (
+      isPlaying &&
+      activeContent &&
+      activeContent.type === "VIDEO" &&
+      enrollment
+    ) {
+      // Set up an interval to update the watch time every 10 seconds
+      const interval = setInterval(() => {
+        if (videoRef.current && activeContent.id) {
+          updateWatchTime.mutate({
+            enrollmentId: enrollment.id,
+            lessonId: activeContent.id,
+            watchedSeconds: Math.floor(videoRef.current.currentTime),
+          });
+        }
+      }, 10000); // Update every 10 seconds
+
+      setWatchTimeUpdateInterval(interval);
+
+      // Clean up the interval on unmount or when video stops playing
+      return () => {
+        clearInterval(interval);
+      };
+    } else if (watchTimeUpdateInterval) {
+      // Clear interval if video is paused
+      clearInterval(watchTimeUpdateInterval);
+      setWatchTimeUpdateInterval(null);
+    }
+  }, [
+    isPlaying,
+    activeContent,
+    enrollment,
+    watchTimeUpdateInterval,
+    updateWatchTime,
+  ]);
+
+  // Cleanup on component unmount
+  useEffect(() => {
+    return () => {
+      if (watchTimeUpdateInterval) {
+        clearInterval(watchTimeUpdateInterval);
+      }
+    };
+  }, [watchTimeUpdateInterval]);
+
+  // Handle marking lesson as complete
+  const handleMarkComplete = () => {
+    if (activeContent && enrollment) {
+      markLessonCompleted.mutate({
+        enrollmentId: enrollment.id,
+        lessonId: activeContent.id,
+      });
+    }
+  };
+
   // Handle video loaded metadata
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
-      setDuration(videoRef.current.duration);
+      const videoDuration = videoRef.current.duration;
+      setDuration(videoDuration);
+
+      // Update saved progress marker position based on duration
+      const storedTimeValue = localStorage.getItem(
+        `video-progress-${activeContent?.id}`
+      );
+      if (storedTimeValue) {
+        const parsedStoredTime = parseFloat(storedTimeValue);
+        if (!isNaN(parsedStoredTime) && parsedStoredTime > 0) {
+          setSavedProgress((parsedStoredTime / videoDuration) * 100);
+        }
+      }
     }
   };
 
@@ -119,47 +354,19 @@ export default function VideoLessonPage() {
       .padStart(2, "0")}`;
   };
 
-  // Toggle play/pause
-  const togglePlay = () => {
+  // Handle progress bar click for seeking
+  const handleProgressBarClick = (e) => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+      const progressBar = e.currentTarget;
+      const rect = progressBar.getBoundingClientRect();
+      const clickPosition = e.clientX - rect.left;
+      const percentClicked = (clickPosition / rect.width) * 100;
+      const seekTime = (videoRef.current.duration * percentClicked) / 100;
+
+      videoRef.current.currentTime = seekTime;
+      setCurrentTime(seekTime);
+      setProgress(percentClicked);
     }
-  };
-
-  // Get current content info
-  const currentVideoUrl = activeContent?.video?.[0]?.url || "";
-  const currentVideoDescription = activeContent?.video?.[0]?.description || "";
-  const contentType = activeContent?.type || "";
-  const currentQuiz = activeContent?.quiz?.[0];
-  const currentQuizQuestions = currentQuiz?.questions || [];
-  const currentAssignment = activeContent?.assignment?.[0];
-
-  // Helper function to get content type icon
-  const getContentTypeIcon = (type) => {
-    switch (type) {
-      case "VIDEO":
-        return <Play size={14} className="mr-2" />;
-      case "QUIZ":
-        return <HelpCircle size={14} className="mr-2" />;
-      case "ASSIGNMENT":
-        return <FileText size={14} className="mr-2" />;
-      case "MATERIAL":
-        return <BookOpen size={14} className="mr-2" />;
-      default:
-        return (
-          <div className="w-3.5 h-3.5 rounded-full border border-gray-300 mr-2"></div>
-        );
-    }
-  };
-
-  // Handle back navigation
-  const handleBack = () => {
-    navigate(`/courses/${course.id}`);
   };
 
   // Start quiz handler
@@ -213,17 +420,83 @@ export default function VideoLessonPage() {
     }
   };
 
+  // Toggle settings dropdown
+  const toggleSettings = (e) => {
+    e.stopPropagation();
+    setShowSettings(!showSettings);
+  };
+
+  // Handle playback rate change
+  const handlePlaybackRateChange = (rate) => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
+      setShowSettings(false);
+    }
+  };
+
+  // Toggle fullscreen
+  const toggleFullscreen = () => {
+    if (!videoContainerRef.current) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch((err) => {
+        console.error(`Error exiting fullscreen: ${err.message}`);
+      });
+    } else {
+      videoContainerRef.current.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable fullscreen: ${err.message}`);
+      });
+    }
+  };
+
+  // Close settings when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSettings && !event.target.closest(".settings-menu")) {
+        setShowSettings(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSettings]);
+
+  // Loading state component
+  const renderLoading = () => (
+    <div className="flex-1 flex items-center justify-center p-10">
+      <div className="text-center">
+        <Loader size={48} className="animate-spin text-red-600 mx-auto mb-4" />
+        <p className="text-gray-600">Loading content...</p>
+      </div>
+    </div>
+  );
+
   // Render content based on type
   const renderContent = () => {
+    // Show loading state if content is loading
+    if (isLoading || isContentLoading) {
+      return renderLoading();
+    }
+
     switch (contentType) {
       case "VIDEO":
         return (
           <div className="relative w-full">
-            <div className="relative bg-black aspect-video">
+            <div
+              ref={videoContainerRef}
+              className="relative bg-black aspect-video"
+            >
               {currentVideoUrl ? (
                 <video
                   ref={videoRef}
-                  src={`${ImageUrl}${currentVideoUrl}`}
+                  src={
+                    currentVideoUrl.startsWith("/uploads")
+                      ? `${ImageUrl}${currentVideoUrl}`
+                      : currentVideoUrl
+                  }
                   className="w-full h-full object-cover"
                   poster={courseImage}
                   playsInline
@@ -264,17 +537,57 @@ export default function VideoLessonPage() {
                 <span className="text-xs sm:text-sm mr-2">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
-                <div className="flex-1 mx-2 h-1 bg-gray-600 rounded-full overflow-hidden">
+                <div
+                  className="flex-1 mx-2 h-1 bg-gray-600 rounded-full overflow-hidden relative cursor-pointer"
+                  onClick={handleProgressBarClick}
+                >
                   <div
                     className="h-full bg-red-600 rounded-full"
                     style={{ width: `${progress}%` }}
                   ></div>
+                  {savedProgress > 0 &&
+                    savedProgress < 100 &&
+                    progress < savedProgress && (
+                      <div
+                        className="absolute top-0 h-full w-1 bg-yellow-400"
+                        style={{ left: `${savedProgress}%` }}
+                        title="Resume from here"
+                      ></div>
+                    )}
                 </div>
                 <div className="flex items-center space-x-2 sm:space-x-3">
-                  <button>
-                    <Settings size={14} className="sm:size-4" />
-                  </button>
-                  <button>
+                  <div className="relative settings-menu">
+                    <button onClick={toggleSettings}>
+                      <Settings size={14} className="sm:size-4" />
+                    </button>
+                    {showSettings && (
+                      <div className="absolute bottom-full right-0 mb-2 bg-black bg-opacity-90 rounded-md p-2 min-w-32 text-sm">
+                        <div className="mb-2 pb-1 border-b border-gray-700">
+                          <p className="text-gray-300 mb-1">Playback Speed</p>
+                          {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
+                            <button
+                              key={rate}
+                              onClick={() => handlePlaybackRateChange(rate)}
+                              className={`block w-full text-left px-2 py-1 rounded ${
+                                playbackRate === rate
+                                  ? "bg-red-700"
+                                  : "hover:bg-gray-700"
+                              }`}
+                            >
+                              {rate === 1 ? "Normal" : `${rate}x`}
+                            </button>
+                          ))}
+                        </div>
+                        <div>
+                          <p className="text-gray-300 mb-1">Quality</p>
+                          <button className="block w-full text-left px-2 py-1 rounded bg-red-700">
+                            Auto
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <button onClick={toggleFullscreen}>
                     <Maximize size={14} className="sm:size-4" />
                   </button>
                 </div>
@@ -563,7 +876,7 @@ export default function VideoLessonPage() {
 
             <div className="mb-6">
               <div className="flex items-center mb-2">
-                <CalendarIcon className="w-5 h-5 text-gray-500 mr-2" />
+                <ClockIcon className="w-5 h-5 text-gray-500 mr-2" />
                 <span className="text-sm text-gray-600">
                   Due Date: {currentAssignment?.dueDate || "No due date"}
                 </span>
@@ -605,292 +918,59 @@ export default function VideoLessonPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white">
-        <div className="flex items-center">
+    <div className="flex-1 flex flex-col overflow-y-auto">
+      {/* Dynamic Content based on Type */}
+      {renderContent()}
+
+      {/* Lesson Content Info */}
+      <div className="p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
+          {activeContent?.title || data?.title || "Select a lesson to begin"}
+        </h2>
+        <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
+          {contentType === "VIDEO"
+            ? currentVideoDescription || data?.description
+            : contentType === "QUIZ"
+            ? currentQuiz?.instructions
+            : contentType === "ASSIGNMENT"
+            ? currentAssignment?.instructions
+            : "Please select a lesson from the menu to start learning."}
+        </p>
+
+        {/* Navigation */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mt-6 sm:mt-8">
+          <button className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center">
+            <ArrowLeft size={16} className="mr-1" />
+            <span>Previous Lesson</span>
+          </button>
           <button
-            onClick={handleBack}
-            className="mr-2 text-gray-600 hover:text-gray-900"
+            onClick={handleMarkComplete}
+            disabled={markLessonCompleted.isPending}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center disabled:bg-red-400"
           >
-            <ArrowLeft size={20} />
-          </button>
-          <h1 className="text-sm md:text-base font-medium text-gray-900 truncate">
-            {courseTitle}
-          </h1>
-        </div>
-        <div className="flex items-center space-x-4">
-          <button className="flex items-center text-red-600 text-sm font-medium">
-            <Download size={16} className="mr-1" />
-            <span className="hidden sm:inline">Resources</span>
-          </button>
-          <button className="flex items-center text-gray-600 text-sm font-medium">
-            <span className="hidden sm:inline">Help</span>
-          </button>
-          <div className="relative">
-            <button className="flex items-center text-gray-600 text-sm font-medium">
-              <Edit size={16} className="mr-1" />
-              <span className="hidden sm:inline">Notes</span>
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full text-white text-xs flex items-center justify-center">
-                2
-              </div>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
-        {/* Left Sidebar - Course Navigation */}
-        <div className="hidden lg:block w-64 border-r border-gray-200 overflow-y-auto bg-white">
-          <div className="p-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search lessons..."
-                className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-              <svg
-                className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
-          {/* Course Sections (Modules) */}
-          {sections.map((section, sectionIndex) => (
-            <div key={section.id} className="border-t border-gray-200">
-              <button
-                onClick={() => toggleSection(section.id)}
-                className={`flex items-center justify-between w-full px-4 py-3 text-left ${
-                  activeContent &&
-                  section.contents.some(
-                    (content) => content.id === activeContent.id
-                  )
-                    ? "bg-red-50"
-                    : ""
-                }`}
-              >
-                <div className="flex items-center">
-                  <div
-                    className={`w-5 h-5 rounded-full ${
-                      sectionIndex === 0
-                        ? "bg-green-500"
-                        : activeContent &&
-                          section.contents.some(
-                            (content) => content.id === activeContent.id
-                          )
-                        ? "bg-red-500"
-                        : "bg-gray-300"
-                    } flex items-center justify-center mr-2`}
-                  >
-                    {sectionIndex === 0 ? (
-                      <span className="text-white text-xs font-bold">
-                        {sectionIndex + 1}
-                      </span>
-                    ) : (
-                      <span className="text-white text-xs font-bold">
-                        {sectionIndex + 1}
-                      </span>
-                    )}
-                  </div>
-                  <span
-                    className={`text-sm font-medium ${
-                      activeContent &&
-                      section.contents.some((c) => c.id === activeContent.id)
-                        ? "text-red-600"
-                        : ""
-                    }`}
-                  >
-                    {section.title}
-                  </span>
-                </div>
-                {expandedSections[section.id] ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </button>
-
-              {/* Section Contents */}
-              {expandedSections[section.id] && (
-                <div className="pl-11 pr-4 pb-2">
-                  <ul className="space-y-2">
-                    {section.contents.map((content) => (
-                      <li
-                        key={content.id}
-                        onClick={() => handleContentSelect(content)}
-                        className={`flex items-center text-sm cursor-pointer ${
-                          activeContent && activeContent.id === content.id
-                            ? "text-red-600 font-medium"
-                            : "text-gray-600"
-                        }`}
-                      >
-                        {activeContent && activeContent.id === content.id
-                          ? getContentTypeIcon(content.type)
-                          : getContentTypeIcon(content.type)}
-                        <span>{content.title}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
-
-          {/* Fallback if no sections */}
-          {sections.length === 0 && (
-            <div className="p-4 text-center text-gray-500">
-              No content available
-            </div>
-          )}
-        </div>
-
-        {/* Center - Content Display */}
-        <div className="flex-1 flex flex-col overflow-y-auto">
-          {/* Dynamic Content based on Type */}
-          {renderContent()}
-
-          {/* Lesson Content Info */}
-          <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-3">
-              {activeContent?.title || "Select a lesson to begin"}
-            </h2>
-            <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8">
-              {contentType === "VIDEO"
-                ? currentVideoDescription
-                : contentType === "QUIZ"
-                ? currentQuiz?.instructions
-                : contentType === "ASSIGNMENT"
-                ? currentAssignment?.instructions
-                : "Please select a lesson from the menu to start learning."}
-            </p>
-
-            {/* Navigation */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-0 mt-6 sm:mt-8">
-              <button className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center">
-                <ArrowLeft size={16} className="mr-1" />
-                <span>Previous Lesson</span>
-              </button>
-              <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md flex items-center w-full sm:w-auto justify-center">
+            {markLessonCompleted.isPending ? (
+              <span>Updating...</span>
+            ) : (
+              <>
                 <CheckCircle size={16} className="mr-1" />
                 <span>Mark Complete</span>
-              </button>
-              <button className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center">
-                <span>Next Lesson</span>
-                <ArrowLeft size={16} className="ml-1 transform rotate-180" />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Sidebar - Notes and Resources */}
-        <div className="hidden xl:block w-72 border-l border-gray-200 overflow-y-auto bg-gray-50">
-          <div className="p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Lesson Notes</h3>
-            <textarea
-              value={noteText}
-              onChange={(e) => setNoteText(e.target.value)}
-              placeholder="Take notes..."
-              className="w-full h-40 p-3 border border-gray-300 rounded-md text-sm resize-none"
-            ></textarea>
-            <button className="mt-2 flex items-center text-red-600 text-sm font-medium">
-              <Download size={14} className="mr-1" />
-              <span>Export Notes</span>
+              </>
+            )}
+          </button>
+          {!isLast && (
+            <button
+              className="flex items-center text-gray-600 hover:text-gray-900 w-full sm:w-auto justify-center"
+              onClick={() => handleNext(navigate)}
+            >
+              <span>Next Lesson</span>
+              <ArrowLeft size={16} className="ml-1 transform rotate-180" />
             </button>
-          </div>
-
-          <div className="border-t border-gray-200 p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Resources</h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center text-sm text-gray-600 hover:text-gray-900"
-                >
-                  <Download size={14} className="mr-2" />
-                  <span>Course Materials</span>
-                </a>
-              </li>
-              {activeContent?.material?.map((material) => (
-                <li key={material.id}>
-                  <a
-                    href={material.url}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-900"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Download size={14} className="mr-2" />
-                    <span>{material.title || "Download Material"}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="border-t border-gray-200 p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Pro Tips</h3>
-            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded-r-md">
-              <div className="flex">
-                <Lightbulb
-                  size={16}
-                  className="text-yellow-500 mr-2 flex-shrink-0 mt-0.5"
-                />
-                <p className="text-sm text-gray-700">
-                  Click on different lessons in the sidebar to switch between
-                  course content.
-                </p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
   );
 }
-
-// Icons needed for UI
-const ClockIcon = ({ className }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-    />
-  </svg>
-);
-
-const CalendarIcon = ({ className }) => (
-  <svg
-    className={className}
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-    />
-  </svg>
-);
 
 const UploadIcon = ({ className }) => (
   <svg

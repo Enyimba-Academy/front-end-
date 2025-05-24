@@ -5,6 +5,7 @@ import {
   getEnrollmentById,
   updateEnrollment,
 } from "../api/enrollmentService";
+import { getMyLesson } from "@/api/lessonProgressService";
 
 export const useCreateEnrollment = () => {
   const queryClient = useQueryClient();
@@ -37,5 +38,13 @@ export const useUpdateEnrollment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["enrollment"] });
     },
+  });
+};
+
+export const useGetEnrollmentMaterials = (contentId, typeID, lessonId) => {
+  return useQuery({
+    queryKey: ["enrollmentMaterials", contentId, typeID, lessonId],
+    queryFn: () => getMyLesson(contentId, typeID, lessonId),
+    enabled: !!contentId && !!typeID && !!lessonId,
   });
 };

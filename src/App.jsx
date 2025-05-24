@@ -31,6 +31,7 @@ import Certificates from "@/pages/admin/certificates";
 import AddCertificate from "@/pages/admin/certificates/add";
 import StudentNavBar from "./components/StudentNavBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import VideoLayout from "./components/VideoLayout";
 
 const queryClient = new QueryClient();
 
@@ -116,6 +117,15 @@ function App() {
               </RequireAuth>
             }
           />
+
+          {/* Nested Route structure for VideoLayout to maintain state */}
+          <Route path="/lesson/:id" element={<VideoLayout />}>
+            <Route
+              path="content/:contentId/:typeID/:lessonId"
+              element={<VideoLessonPage />}
+            />
+          </Route>
+
           <Route path="/admin" element={<Dashboard />}>
             <Route path="dashboard" element={<Admin />} />
             <Route path="students" element={<Student />} />
