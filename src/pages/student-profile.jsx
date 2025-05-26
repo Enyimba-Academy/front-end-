@@ -434,7 +434,7 @@ function LinkOrButtonToShow({ status }) {
   if (status.status === EnrollmentStatus.APPROVED) {
     return (
       <PrimaryLink
-        to={`/video-lesson/${status.id}`}
+        to={`/lesson/${status.id}`}
         className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
       >
         Pay Now

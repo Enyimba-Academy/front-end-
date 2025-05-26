@@ -28,9 +28,7 @@ export const getLessonProgress = async (enrollmentId, lessonId) => {
   return response.data.data;
 };
 
-export const getMyLesson = async (contentId, typeId, lessonId) => {
-  const response = await api.get(
-    `/material/${contentId}/${typeId}/${lessonId}`
-  );
+export const getMyLesson = async (contentId) => {
+  const response = await api.get(`/material/${contentId}`);
   return response.data.data;
 };

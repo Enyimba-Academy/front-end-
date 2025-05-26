@@ -120,10 +120,7 @@ function App() {
 
           {/* Nested Route structure for VideoLayout to maintain state */}
           <Route path="/lesson/:id" element={<VideoLayout />}>
-            <Route
-              path="content/:contentId/:typeID/:lessonId"
-              element={<VideoLessonPage />}
-            />
+            <Route path="content/:contentId" element={<VideoLessonPage />} />
           </Route>
 
           <Route path="/admin" element={<Dashboard />}>

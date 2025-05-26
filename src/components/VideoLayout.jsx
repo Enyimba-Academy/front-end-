@@ -61,34 +61,20 @@ export default function VideoLayout() {
 
   // Function to get icon based on content type
   const getContentTypeIcon = (content) => {
-    // Determine content type based on non-empty arrays
-    if (content.video && content.video.length > 0) {
-      return <span className="mr-2">🎬</span>;
-    } else if (content.quiz && content.quiz.length > 0) {
-      return <span className="mr-2">📝</span>;
-    } else if (content.material && content.material.length > 0) {
+    const type = content.type ? content.type.toLowerCase() : "";
+    if (type === "video") return <span className="mr-2">🎬</span>;
+    if (type === "quiz") return <span className="mr-2">📝</span>;
+    if (type === "material" || type === "document")
       return <span className="mr-2">📄</span>;
-    } else if (content.assignment && content.assignment.length > 0) {
-      return <span className="mr-2">📋</span>;
-    } else {
-      // Fallback based on type string if available
-      const typeString = content.type ? content.type.toLowerCase() : "";
-      if (typeString.includes("video")) {
-        return <span className="mr-2">🎬</span>;
-      } else if (typeString.includes("quiz")) {
-        return <span className="mr-2">📝</span>;
-      } else if (
-        typeString.includes("document") ||
-        typeString.includes("material")
-      ) {
-        return <span className="mr-2">📄</span>;
-      } else if (typeString.includes("assignment")) {
-        return <span className="mr-2">📋</span>;
-      }
+    if (type === "assignment") return <span className="mr-2">📋</span>;
+    return <span className="mr-2">��</span>;
+  };
 
-      // Default fallback
-      return <span className="mr-2">📚</span>;
-    }
+  // Add new function to check if content is completed
+  const isContentCompleted = (content) => {
+    return (
+      content.lessonProgresses?.some((progress) => progress.completed) || false
+    );
   };
 
   // Skeleton loader component for sections
@@ -174,21 +160,6 @@ export default function VideoLayout() {
     }
   }, [location.pathname, sections]);
 
-  // Add this function near your other utility functions
-  const getContentMediaId = (content) => {
-    // Get lowercase type
-    const type = content.type ? content.type.toLowerCase() : "";
-
-    // Check if array exists and has items
-    const mediaArray = content[type];
-    if (mediaArray && Array.isArray(mediaArray) && mediaArray.length > 0) {
-      return mediaArray[0].id;
-    }
-
-    // Fallback to content ID if no media items found
-    return content.id;
-  };
-
   return (
     <div className="flex flex-col h-screen bg-white">
       {/* Header */}
@@ -204,52 +175,12 @@ export default function VideoLayout() {
             {courseTitle}
           </h1>
         </div>
-        <div className="flex items-center space-x-4">
-          <button className="flex items-center text-red-600 text-sm font-medium">
-            <Download size={16} className="mr-1" />
-            <span className="hidden sm:inline">Resources</span>
-          </button>
-          <button className="flex items-center text-gray-600 text-sm font-medium">
-            <span className="hidden sm:inline">Help</span>
-          </button>
-          <div className="relative">
-            <button className="flex items-center text-gray-600 text-sm font-medium">
-              <Edit size={16} className="mr-1" />
-              <span className="hidden sm:inline">Notes</span>
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 rounded-full text-white text-xs flex items-center justify-center">
-                2
-              </div>
-            </button>
-          </div>
-        </div>
       </header>
 
       {/* Main Content */}
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
         {/* Left Sidebar - Course Navigation */}
         <div className="hidden lg:block w-64 border-r border-gray-200 overflow-y-auto bg-white">
-          <div className="p-4">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search lessons..."
-                className="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md text-sm"
-              />
-              <svg
-                className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-          </div>
-
           {/* Course Sections (Modules) */}
           {isLoading ? (
             // Show skeleton loaders when loading
@@ -313,11 +244,9 @@ export default function VideoLayout() {
                       {section.contents.map((content) => (
                         <NavLink
                           key={content.id}
-                          to={`/lesson/${id}/content/${content.id}/${
-                            content.type
-                          }/${getContentMediaId(content)}`}
+                          to={`/lesson/${id}/content/${content.id}`}
                           className={({ isActive }) =>
-                            `flex  items-center text-sm cursor-pointer ${
+                            `flex items-center text-sm cursor-pointer ${
                               isActive
                                 ? "text-red-600 font-medium"
                                 : "text-gray-600"
@@ -332,8 +261,10 @@ export default function VideoLayout() {
                           }}
                         >
                           {getContentTypeIcon(content)}
-
-                          <span>{content.title}</span>
+                          <span className="flex-1">{content.title}</span>
+                          {isContentCompleted(content) && (
+                            <span className="ml-2 text-green-500">✓</span>
+                          )}
                         </NavLink>
                       ))}
                     </ul>
@@ -359,20 +290,6 @@ export default function VideoLayout() {
 
         {/* Right Sidebar - Notes and Resources */}
         <div className="hidden xl:block w-72 border-l border-gray-200 overflow-y-auto bg-gray-50">
-          <div className="p-4">
-            <h3 className="font-medium text-gray-900 mb-3">Lesson Notes</h3>
-            <textarea
-              //value={noteText}
-              //onChange={(e) => setNoteText(e.target.value)}
-              placeholder="Take notes..."
-              className="w-full h-40 p-3 border border-gray-300 rounded-md text-sm resize-none"
-            ></textarea>
-            <button className="mt-2 flex items-center text-red-600 text-sm font-medium">
-              <Download size={14} className="mr-1" />
-              <span>Export Notes</span>
-            </button>
-          </div>
-
           <div className="border-t border-gray-200 p-4">
             <h3 className="font-medium text-gray-900 mb-3">Resources</h3>
             <ul className="space-y-2">

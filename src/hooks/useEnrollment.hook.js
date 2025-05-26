@@ -41,10 +41,10 @@ export const useUpdateEnrollment = () => {
   });
 };
 
-export const useGetEnrollmentMaterials = (contentId, typeID, lessonId) => {
+export const useGetEnrollmentMaterials = (contentId) => {
   return useQuery({
-    queryKey: ["enrollmentMaterials", contentId, typeID, lessonId],
-    queryFn: () => getMyLesson(contentId, typeID, lessonId),
-    enabled: !!contentId && !!typeID && !!lessonId,
+    queryKey: ["enrollmentMaterials", contentId],
+    queryFn: () => getMyLesson(contentId),
+    enabled: !!contentId,
   });
 };
