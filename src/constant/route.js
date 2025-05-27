@@ -27,11 +27,11 @@ export const adminRoutes = [
   {
     name: "Enrollment",
     path: "enrollment-payments",
-    icon: "CreditCard",
+    icon: "BookOpen",
   },
   {
-    name: "Settings",
-    path: "settings",
-    icon: "Settings",
+    name: "Payments",
+    path: "payments",
+    icon: "CreditCard",
   },
 ];

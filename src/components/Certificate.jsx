@@ -101,7 +101,7 @@ export default function Certificate({
       {/* Custom Modal Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 animate-fadeIn overflow-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 animate-fadeIn overflow-auto space-y-7"
           onClick={handleOverlayClick}
           style={{ overscrollBehavior: "contain" }}
         >
@@ -109,7 +109,7 @@ export default function Certificate({
           <div className="absolute top-6 right-8 flex gap-3">
             <button
               onClick={downloadCertificate}
-              className="bg-white rounded-full p-2 shadow hover:bg-red-100 transition-colors border border-red-200"
+              className="bg-white rounded-full p-2 shadow hover:bg-red-100 transition-colors border border-red-200 cursor-pointer"
               title="Download Certificate"
               disabled={downloading}
             >
@@ -117,7 +117,7 @@ export default function Certificate({
             </button>
             <button
               onClick={() => setIsOpen(false)}
-              className="bg-white rounded-full p-2 shadow hover:bg-red-100 transition-colors border border-red-200"
+              className="bg-white rounded-full p-2 shadow hover:bg-red-100 transition-colors border border-red-200 cursor-pointer"
               title="Close"
             >
               <X className="w-6 h-6 text-red-800" />
@@ -125,76 +125,96 @@ export default function Certificate({
           </div>
 
           {/* Centered Certificate */}
-          <div className="w-full flex flex-col items-center justify-center px-2 md:px-8 py-12">
+          <div className="w-full flex flex-col items-center justify-center px-2 md:px-8 py-8">
             <div
               ref={certificateRef}
-              className="bg-white border-8 border-red-800 relative mx-auto flex flex-col justify-center items-center shadow-xl"
+              className="bg-white border-8 border-red-800 relative mx-auto flex flex-col justify-center items-center shadow-xl rounded-2xl"
               style={{
-                backgroundColor: "#fff", // Force white background for html2canvas
-                aspectRatio: "11/8.5",
+                backgroundColor: "#fff",
+                marginTop: "70px",
                 width: "90vw",
                 maxWidth: "1100px",
-                height: "auto",
+                height: "10% ",
                 minHeight: "400px",
                 overflow: "hidden",
                 boxSizing: "border-box",
+                position: "relative",
+                padding: "20px",
               }}
             >
-              {/* Decorative corners */}
-              <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-red-600"></div>
-              <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-red-600"></div>
-              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-red-600"></div>
-              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-red-600"></div>
+              {/* Watermark (faded logo) */}
+              <img
+                src="/logo.png"
+                alt="Watermark"
+                className="absolute inset-0 w-2/3 h-2/3 mx-auto my-auto opacity-10 pointer-events-none select-none object-contain"
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 0,
+                }}
+              />
 
-              <div className="text-center space-y-4 md:space-y-6 h-full flex flex-col justify-center px-4 md:px-12 py-4 md:py-8 w-full">
+              {/* Decorative corners */}
+              <div className="absolute top-4 left-4 w-8 h-8 border-l-4 border-t-4 border-red-600 z-10"></div>
+              <div className="absolute top-4 right-4 w-8 h-8 border-r-4 border-t-4 border-red-600 z-10"></div>
+              <div className="absolute bottom-4 left-4 w-8 h-8 border-l-4 border-b-4 border-red-600 z-10"></div>
+              <div className="absolute bottom-4 right-4 w-8 h-8 border-r-4 border-b-4 border-red-600 z-10"></div>
+
+              <div className="relative z-10 text-center flex flex-col justify-center px-2 md:px-10 py-2 md:py-6 w-full h-full space-y-2 md:space-y-4">
                 {/* Header */}
-                <div className="space-y-2">
+                <div className="space-y-1 md:space-y-2">
                   <img
                     src="/logo.png"
                     alt="Enyimba TV & Radio Academy Logo"
-                    className="w-16 h-16 md:w-20 md:h-20 mx-auto object-contain"
-                    style={{ marginTop: "-2.5rem" }}
+                    className="w-14 h-14 md:w-20 md:h-20 mx-auto object-contain"
+                    style={{ marginTop: "-1.5rem" }}
                   />
                   <h1 className="text-2xl md:text-4xl font-bold text-red-800 tracking-wide">
                     ENYIMBA TV & RADIO ACADEMY
                   </h1>
-                  <div className="w-24 md:w-32 h-1 bg-red-600 mx-auto"></div>
+                  <div className="w-20 md:w-32 h-1 bg-red-600 mx-auto"></div>
                 </div>
 
                 {/* Certificate Title */}
-                <div className="space-y-2 md:space-y-4">
-                  <h2 className="text-2xl md:text-3xl font-serif text-gray-800">
+                <div className="space-y-1 md:space-y-2">
+                  <h2 className="text-xl md:text-2xl font-serif text-gray-800 font-semibold">
                     Certificate of Completion
                   </h2>
-                  <p className="text-base md:text-lg text-gray-600">
+                  <p className="text-sm md:text-base text-gray-600">
                     This is to certify that
                   </p>
                 </div>
 
                 {/* Recipient Name */}
-                <div className="space-y-2">
-                  <h3 className="text-2xl md:text-4xl font-bold text-red-800 border-b-2 border-red-200 pb-2 inline-block">
+                <div className="space-y-1">
+                  <h3 className="text-2xl md:text-4xl font-extrabold text-red-800 border-b-2 border-red-200 pb-1 inline-block tracking-wide">
                     {recipientName}
                   </h3>
                 </div>
 
                 {/* Course Details */}
-                <div className="space-y-2 md:space-y-3 text-gray-700">
-                  <p className="text-base md:text-lg">
+                <div className="space-y-1 md:space-y-2 text-gray-700">
+                  <p className="text-sm md:text-base">
                     has successfully completed the
                   </p>
-                  <h4 className="text-xl md:text-2xl font-semibold text-red-700">
+                  <h4 className="text-lg md:text-2xl font-bold text-red-700">
                     {courseName}
                   </h4>
-                  <p className="text-base md:text-lg">
+                  <p className="text-sm md:text-base">
                     and has demonstrated proficiency in broadcasting excellence
                   </p>
                 </div>
 
+                {/* Divider above footer */}
+                <div className="w-full flex justify-center my-2 md:my-4">
+                  <div className="w-3/4 h-0.5 bg-gray-200 rounded-full"></div>
+                </div>
+
                 {/* Date and Signatures */}
-                <div className="flex justify-between items-end mt-4 md:mt-8 pt-4 md:pt-8 w-full">
+                <div className="flex justify-between items-end mt-2 md:mt-4 pt-2 md:pt-4 w-full">
                   <div className="text-center">
-                    <div className="w-24 md:w-32 h-0.5 bg-gray-400 mb-2"></div>
+                    <div className="w-20 md:w-32 h-0.5 bg-gray-400 mb-1"></div>
                     <p className="text-xs md:text-sm text-gray-600">Date</p>
                     <p className="text-sm md:text-base font-semibold">
                       {completionDate}
@@ -202,8 +222,8 @@ export default function Certificate({
                   </div>
 
                   <div className="text-center">
-                    <div className="w-32 md:w-40 h-12 md:h-16 bg-red-50 border-2 border-red-200 rounded-lg flex items-center justify-center mb-2">
-                      <Award className="w-6 h-6 md:w-8 md:h-8 text-red-600" />
+                    <div className="w-24 md:w-40 h-10 md:h-16 bg-red-50 border-2 border-red-200 rounded-lg flex items-center justify-center mb-1">
+                      <Award className="w-5 h-5 md:w-8 md:h-8 text-red-600" />
                     </div>
                     <p className="text-xs md:text-sm text-gray-600">
                       Official Seal
@@ -211,7 +231,7 @@ export default function Certificate({
                   </div>
 
                   <div className="text-center">
-                    <div className="w-24 md:w-32 h-0.5 bg-gray-400 mb-2"></div>
+                    <div className="w-20 md:w-32 h-0.5 bg-gray-400 mb-1"></div>
                     <p className="text-xs md:text-sm text-gray-600">
                       Instructor
                     </p>

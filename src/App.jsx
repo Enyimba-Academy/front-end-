@@ -32,6 +32,7 @@ import AddCertificate from "@/pages/admin/certificates/add";
 import StudentNavBar from "./components/StudentNavBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VideoLayout from "./components/VideoLayout";
+import AdminPayments from "./pages/admin/payments";
 
 const queryClient = new QueryClient();
 
@@ -142,6 +143,7 @@ function App() {
             <Route path="certificates" element={<Certificates />} />
             <Route path="certificates/add" element={<AddCertificate />} />
             <Route path="certificates/edit/:id" element={<AddCertificate />} />
+            <Route path="payments" element={<AdminPayments />} />
           </Route>
         </Routes>
       </BrowserRouter>

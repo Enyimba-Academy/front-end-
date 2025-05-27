@@ -55,6 +55,13 @@ export default function StatusBadge({ status }) {
           Archived
         </div>
       );
+    case EnrollmentStatus.PAID:
+    case "PAID":
+      return (
+        <div className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-sm w-fit">
+          Paid
+        </div>
+      );
     default:
       return (
         <div className="bg-gray-500 text-gray-50 px-2 py-1 rounded-full text-sm w-fit">

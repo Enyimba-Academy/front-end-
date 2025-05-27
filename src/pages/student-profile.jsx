@@ -225,16 +225,6 @@ export default function StudentProfile() {
                 >
                   Certificates
                 </button>
-                <button
-                  onClick={() => setActiveTab("settings")}
-                  className={`flex-1 px-4 py-3 text-sm font-medium ${
-                    activeTab === "settings"
-                      ? "text-red-600 border-b-2 border-red-600"
-                      : "text-gray-600 hover:text-gray-800"
-                  }`}
-                >
-                  Settings
-                </button>
               </div>
             </div>
 
@@ -340,16 +330,6 @@ export default function StudentProfile() {
               )}
 
               {/* Settings Tab */}
-              {activeTab === "settings" && (
-                <div>
-                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-                    Settings
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600">
-                    Account settings and preferences
-                  </p>
-                </div>
-              )}
             </div>
           </div>
 
