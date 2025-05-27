@@ -1,6 +1,15 @@
 import { useState } from "react";
-import { Download, Edit, Lock, Share2 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Download,
+  Edit,
+  Lock,
+  Share2,
+  BookOpen,
+  Award,
+  Clock,
+  ChevronRight,
+} from "lucide-react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useGetEnrollment } from "../hooks/useEnrollment.hook";
 import { EnrollmentStatus } from "../constant/enrollmentEnum";
@@ -8,6 +17,9 @@ import StatusBadge from "../components/shared/StatusBadge";
 import PrimaryLink from "../components/shared/PrimaryLink";
 import StudentNavBar from "../components/StudentNavBar";
 import PrimaryButton from "../components/shared/PrimaryButton";
+import { usePaystackPayment } from "react-paystack";
+import { useQueryClient } from "@tanstack/react-query";
+import Certificate from "../components/Certificate";
 
 function LoadingSkeleton() {
   return (
@@ -104,322 +116,348 @@ function LoadingSkeleton() {
 export default function StudentProfile() {
   const [activeTab, setActiveTab] = useState("enrolled");
   const { user } = useAuth();
-  const navigate = useNavigate();
   const { data, isLoading } = useGetEnrollment();
   const enrollments = data?.enrollments;
+
   if (isLoading) {
     return <LoadingSkeleton />;
   }
 
+  const totalProgress =
+    enrollments?.reduce((acc, curr) => acc + (curr.progress || 0), 0) /
+    (enrollments?.length || 1);
+  const completedCourses =
+    enrollments?.filter((e) => e.progress === 100).length || 0;
+
   return (
-    <div className="max-w-7xl mx-auto bg-white">
-      {/* Header with blue top border */}
-      <div className="">
-        {/* Profile Header */}
-        <div className="px-4 py-6 sm:py-8 md:px-8 flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-          {/* Profile Image */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-2 border-gray-200">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=100&width=100"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* Profile Info */}
-          <div className="flex-1 text-center sm:text-left">
-            <h1 className="text-2xl font-semibold text-gray-800">
-              {user.firstName} {user.lastName}
-            </h1>
-            <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
-              {enrollments?.[0]?.course?.level || "No Level"} | Enrolled:{" "}
-              {new Date(enrollments?.[0]?.createdAt).toLocaleDateString()}
-            </p>
-
-            {/* Stats */}
-            <div className="flex flex-wrap justify-center sm:justify-start gap-4 sm:gap-8 mb-4 sm:mb-6">
-              <div className="text-center">
-                <p className="text-gray-600 text-xs sm:text-sm">
-                  Courses Enrolled
-                </p>
-                <p className="text-red-600 font-bold text-lg sm:text-xl">
-                  {enrollments?.length || 0}
-                </p>
-              </div>
-              <div className="text-center">
-                <p className="text-gray-600 text-xs sm:text-sm">Progress</p>
-                <p className="text-red-600 font-bold text-lg sm:text-xl">
-                  {enrollments?.[0]?.progress || 0}%
-                </p>
-              </div>
-              <div className="text-center flex flex-col items-center">
-                <p className="text-gray-600 text-xs sm:text-sm">
-                  Account Status
-                </p>
-
-                <StatusBadge
-                  status={
-                    enrollments?.[0]?.user?.is_blocked
-                      ? EnrollmentStatus.INACTIVE
-                      : EnrollmentStatus.ACTIVE
-                  }
-                />
-              </div>
-            </div>
-
-            {/* Edit Profile Button */}
-            <Link
-              to="/edit-profile"
-              className="inline-block border border-red-600 text-red-600 px-3 sm:px-4 py-1.5 sm:py-2 rounded text-sm sm:text-base hover:bg-red-50 transition-colors"
-            >
-              Edit Profile
-            </Link>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-red-600 to-red-700 text-white py-8 px-4 sm:px-8">
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+            Welcome back, {user.firstName}! 👋
+          </h1>
+          <p className="text-red-100 text-sm sm:text-base">
+            Continue your learning journey today
+          </p>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex flex-col lg:flex-row">
-        {/* Left Content */}
-        <div className="flex-1 border-r border-gray-200">
-          {/* Tabs */}
-          <div className="border-b border-gray-200 overflow-x-auto">
-            <div className="flex min-w-max">
-              <button
-                onClick={() => setActiveTab("enrolled")}
-                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
-                  activeTab === "enrolled"
-                    ? "text-red-600 border-b-2 border-red-600"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-              >
-                Enrolled Courses
-              </button>
-              <button
-                onClick={() => setActiveTab("certificates")}
-                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
-                  activeTab === "certificates"
-                    ? "text-red-600 border-b-2 border-red-600"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-              >
-                Certificates
-              </button>
-              <button
-                onClick={() => setActiveTab("settings")}
-                className={`px-4 sm:px-6 py-3 sm:py-4 font-medium text-xs sm:text-sm whitespace-nowrap ${
-                  activeTab === "settings"
-                    ? "text-red-600 border-b-2 border-red-600"
-                    : "text-gray-600 hover:text-gray-800"
-                }`}
-              >
-                Settings
-              </button>
-            </div>
-          </div>
-
-          {/* Tab Content */}
-          <div className="p-4 sm:p-6">
-            {/* Enrolled Courses Tab */}
-            {activeTab === "enrolled" && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-                  Enrolled Courses
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  {enrollments?.map((enrollment) => (
-                    <div
-                      key={enrollment.id}
-                      className="border border-gray-200 rounded-lg overflow-hidden"
-                    >
-                      <div className="aspect-video w-full bg-gray-100">
-                        <img
-                          src={enrollment.course.image || "/pick.png"}
-                          alt={enrollment.course.title}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-3 sm:p-4">
-                        <h3 className="font-medium text-sm sm:text-base text-gray-800 mb-1 sm:mb-2">
-                          {enrollment.course.title}
-                        </h3>
-                        <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">
-                          {enrollment.course._count.sections} Modules •{" "}
-                          {enrollment.course.duration}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <div className="text-xs text-gray-600">
-                            Progress: {enrollment.progress}%
-                          </div>
-                          <LinkOrButtonToShow status={enrollment} />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <div className="bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center">
+              <div className="p-2 bg-red-100 rounded-lg">
+                <BookOpen className="w-5 h-5 text-red-600" />
               </div>
-            )}
-
-            {/* Certificates Tab */}
-            {activeTab === "certificates" && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-                  Certificates
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="p-3 sm:p-4">
-                      <img
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg?height=300&width=400"
-                        alt="Certificate"
-                        className="w-full h-auto object-contain border border-gray-200"
-                      />
-                      <div className="flex justify-between items-center mt-2 sm:mt-3">
-                        <div className="flex items-center text-green-600">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4 sm:h-5 sm:w-5 mr-1"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path
-                              fillRule="evenodd"
-                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                          <span className="text-xs sm:text-sm font-medium">
-                            Verified
-                          </span>
-                        </div>
-                        <div className="flex gap-2">
-                          <button className="text-red-600">
-                            <Download
-                              size={16}
-                              className="sm:w-5 sm:h-5 w-4 h-4"
-                            />
-                          </button>
-                          <button className="text-red-600">
-                            <Share2
-                              size={16}
-                              className="sm:w-5 sm:h-5 w-4 h-4"
-                            />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Settings Tab */}
-            {activeTab === "settings" && (
-              <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
-                  Settings
-                </h2>
-                <p className="text-sm sm:text-base text-gray-600">
-                  Account settings and preferences
+              <div className="ml-4">
+                <p className="text-sm text-gray-600">Courses Enrolled</p>
+                <p className="text-xl font-semibold text-gray-900">
+                  {enrollments?.length || 0}
                 </p>
               </div>
-            )}
+            </div>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <Award className="w-5 h-5 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm text-gray-600">Completed</p>
+                <p className="text-xl font-semibold text-gray-900">
+                  {completedCourses}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Clock className="w-5 h-5 text-blue-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm text-gray-600">Average Progress</p>
+                <p className="text-xl font-semibold text-gray-900">
+                  {Math.round(totalProgress)}%
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-lg p-4 shadow-sm">
+            <div className="flex items-center">
+              <div className="p-2 bg-purple-100 rounded-lg">
+                <Award className="w-5 h-5 text-purple-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm text-gray-600">Achievements</p>
+                <p className="text-xl font-semibold text-gray-900">2</p>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Right Sidebar */}
-        <div className="w-full lg:w-80 p-4 sm:p-6 bg-gray-50">
-          {/* Quick Actions */}
-          <div className="mb-6 sm:mb-8">
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-3 sm:mb-4">
-              Quick Actions
-            </h3>
-            <ul className="space-y-2 sm:space-y-3">
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
+        {/* Main Content */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Left Content */}
+          <div className="flex-1">
+            {/* Tabs */}
+            <div className="bg-white rounded-lg shadow-sm mb-6">
+              <div className="flex border-b border-gray-200">
+                <button
+                  onClick={() => setActiveTab("enrolled")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium ${
+                    activeTab === "enrolled"
+                      ? "text-red-600 border-b-2 border-red-600"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
                 >
-                  <Edit className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                  <span>Edit Profile</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
+                  My Courses
+                </button>
+                <button
+                  onClick={() => setActiveTab("certificates")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium ${
+                    activeTab === "certificates"
+                      ? "text-red-600 border-b-2 border-red-600"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
                 >
-                  <Download className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                  <span>Download All Certificates</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="flex items-center text-sm sm:text-base text-gray-700 hover:text-red-600"
+                  Certificates
+                </button>
+                <button
+                  onClick={() => setActiveTab("settings")}
+                  className={`flex-1 px-4 py-3 text-sm font-medium ${
+                    activeTab === "settings"
+                      ? "text-red-600 border-b-2 border-red-600"
+                      : "text-gray-600 hover:text-gray-800"
+                  }`}
                 >
-                  <Lock className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3" />
-                  <span>Privacy Settings</span>
-                </a>
-              </li>
-            </ul>
+                  Settings
+                </button>
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              {activeTab === "enrolled" && (
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                    My Learning Journey
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {enrollments?.map((enrollment) => (
+                      <div
+                        key={enrollment.id}
+                        className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow"
+                      >
+                        <div className="aspect-video w-full bg-gray-100 relative">
+                          <img
+                            src={enrollment.course.image || "/pick.png"}
+                            alt={enrollment.course.title}
+                            className="w-full h-full object-cover"
+                          />
+                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                            <div className="w-full bg-gray-200 rounded-full h-1.5 mb-2">
+                              <div
+                                className="bg-red-600 h-1.5 rounded-full"
+                                style={{ width: `${enrollment.progress}%` }}
+                              ></div>
+                            </div>
+                            <p className="text-white text-sm">
+                              {enrollment.progress}% Complete
+                            </p>
+                          </div>
+                        </div>
+                        <div className="p-4">
+                          <h3 className="font-medium text-gray-800 mb-2">
+                            {enrollment.course.title}
+                          </h3>
+                          <div className="flex items-center text-sm text-gray-600 mb-4">
+                            <BookOpen className="w-4 h-4 mr-2" />
+                            <span>
+                              {enrollment.course._count.sections} Modules
+                            </span>
+                            <span className="mx-2">•</span>
+                            <Clock className="w-4 h-4 mr-2" />
+                            <span>{enrollment.course.duration}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <StatusBadge status={enrollment.status} />
+                            <LinkOrButtonToShow status={enrollment} />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Certificates Tab */}
+              {activeTab === "certificates" && (
+                <div>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-6">
+                    My Certificates
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Certificate />
+                    {/* {enrollments
+                      ?.filter((e) => e.progress === 100)
+                      .map((enrollment) => (
+                        <Certificate
+                          key={enrollment.id}
+                          recipientName={`${user.firstName} ${user.lastName}`}
+                          courseName={enrollment.course.title}
+                          completionDate={new Date(
+                            enrollment.updatedAt
+                          ).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                          instructorName={
+                            enrollment.course.instructor?.name ||
+                            "Course Instructor"
+                          }
+                        />
+                      ))} */}
+                    {/* {enrollments?.filter((e) => e.progress === 100).length ===
+                      0 && (
+                      <div className="col-span-2 text-center py-12">
+                        <div className="w-16 h-16 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                          <Award className="w-8 h-8 text-gray-400" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                          No Certificates Yet
+                        </h3>
+                        <p className="text-gray-600">
+                          Complete your courses to earn certificates
+                        </p>
+                      </div>
+                    )} */}
+                  </div>
+                </div>
+              )}
+
+              {/* Settings Tab */}
+              {activeTab === "settings" && (
+                <div>
+                  <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 sm:mb-6">
+                    Settings
+                  </h2>
+                  <p className="text-sm sm:text-base text-gray-600">
+                    Account settings and preferences
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
-          {/* Achievements */}
-          <div>
-            <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-3 sm:mb-4">
-              Achievements
-            </h3>
-            <ul className="space-y-3 sm:space-y-4">
-              <li className="flex items-start">
-                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-0.5 sm:mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3 sm:h-4 sm:w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+          {/* Right Sidebar */}
+          <div className="w-full lg:w-80 space-y-6">
+            {/* Profile Card */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
+                  <img
+                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg"
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="ml-4">
+                  <h3 className="font-semibold text-gray-800">
+                    {user.firstName} {user.lastName}
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    {enrollments?.[0]?.course?.level || "No Level"}
+                  </p>
+                </div>
+              </div>
+              <Link
+                to="/edit-profile"
+                className="flex items-center justify-center w-full px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Profile
+              </Link>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="font-semibold text-gray-800 mb-4">
+                Quick Actions
+              </h3>
+              <ul className="space-y-3">
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-2 sm:ml-3">
-                  <p className="font-medium text-sm sm:text-base text-gray-800">
-                    Top 10% Student
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-600">
-                    Photography Excellence
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <div className="flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-red-100 flex items-center justify-center text-red-600 mt-0.5 sm:mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-3 w-3 sm:h-4 sm:w-4"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                    <div className="flex items-center">
+                      <Edit className="w-5 h-5 text-gray-600 mr-3" />
+                      <span className="text-gray-700">Edit Profile</span>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="ml-2 sm:ml-3">
-                  <p className="font-medium text-sm sm:text-base text-gray-800">
-                    7-Day Learning Streak
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-600">
-                    Keep it up!
-                  </p>
-                </div>
-              </li>
-            </ul>
+                    <div className="flex items-center">
+                      <Download className="w-5 h-5 text-gray-600 mr-3" />
+                      <span className="text-gray-700">
+                        Download Certificates
+                      </span>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex items-center">
+                      <Lock className="w-5 h-5 text-gray-600 mr-3" />
+                      <span className="text-gray-700">Privacy Settings</span>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
+                  </a>
+                </li>
+              </ul>
+            </div>
+
+            {/* Achievements */}
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <h3 className="font-semibold text-gray-800 mb-4">Achievements</h3>
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="font-medium text-gray-800">Top 10% Student</p>
+                    <p className="text-sm text-gray-600">
+                      Photography Excellence
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                    <Award className="w-4 h-4" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="font-medium text-gray-800">
+                      7-Day Learning Streak
+                    </p>
+                    <p className="text-sm text-gray-600">Keep it up!</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -428,28 +466,54 @@ export default function StudentProfile() {
 }
 
 function LinkOrButtonToShow({ status }) {
+  const queryClient = useQueryClient();
+  const { user } = useAuth();
+  const config = {
+    reference: `${new Date().getTime()}-${status.course.id}`,
+    email: user.email,
+    amount: status.course.price * 100,
+    publicKey: "pk_test_37335d37c9fb118d8a917de0a58a8efde1bb96c4",
+    metadata: {
+      courseId: status.course.id,
+      userId: status.user.id,
+      enrollmentId: status.id,
+    },
+  };
+  const initializePayment = usePaystackPayment(config);
+  const onSuccess = (reference) => {
+    queryClient.invalidateQueries({
+      queryKey: ["enrollments"],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["enrollment"],
+    });
+  };
+  const onClose = () => {
+    console.log("closed");
+  };
   if (status.status === EnrollmentStatus.PENDING) {
-    return <StatusBadge status={status} />;
+    return <StatusBadge status={status.status} />;
   }
   if (status.status === EnrollmentStatus.APPROVED) {
     return (
-      <PrimaryLink
-        to={`/lesson/${status.id}`}
-        className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
+      <PrimaryButton
+        onClick={() => initializePayment(onSuccess, onClose)}
+        className="text-white bg-red-500 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
       >
         Pay Now
-      </PrimaryLink>
+      </PrimaryButton>
     );
   }
   if (status.status === EnrollmentStatus.REJECTED) {
-    return <StatusBadge status={status} />;
+    return <StatusBadge status={status.status} />;
   }
+
   return (
     <PrimaryLink
-      to="/video-lesson"
+      to={`/lesson/${status.id}`}
       className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
     >
-      Continue
+      Watch Lesson
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-3 w-3 sm:h-4 sm:w-4 ml-1"
