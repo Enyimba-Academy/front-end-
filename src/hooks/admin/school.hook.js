@@ -18,14 +18,33 @@ export const useAddSchool = () => {
   return { addSchool, isLoading };
 };
 
-export const useGetSchools = () => {
+export const useGetSchools = ({
+  page = "1",
+  limit = "10",
+  search,
+  sortBy = "updatedAt",
+  sortOrder = "desc",
+  status,
+} = {}) => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["schools"],
-    queryFn: () => schoolService.getSchool(),
+    queryKey: ["schools", { page, limit, search, sortBy, sortOrder, status }],
+    queryFn: () =>
+      schoolService.getSchool({
+        page,
+        limit,
+        search,
+        sortBy,
+        sortOrder,
+        status,
+      }),
     onError: (error) => {
       toast.error("Failed to fetch schools");
       console.error("Error fetching schools:", error);
     },
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    cacheTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
   });
 
   return {

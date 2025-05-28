@@ -55,7 +55,7 @@ export default function RegisterPage() {
   const courseId = searchParams.get("courseId");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const { register, isRegistering } = useAuth();
+  const { register, isRegistering, registerError } = useAuth();
   const { data: courseData } = useCourseById(courseId);
   const course = courseData?.course;
 
@@ -74,29 +74,26 @@ export default function RegisterPage() {
     agreeTerms: false,
   };
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      await register(
-        {
-          ...values,
-          ...(courseId && { courseId }),
+  const handleSubmit = async (values) => {
+    register(
+      {
+        ...values,
+        ...(courseId && { courseId }),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Registration successful");
+          if (courseId) {
+            navigate(`/student-profile`);
+          } else {
+            navigate("/onboarding");
+          }
         },
-        {
-          onSuccess: () => {
-            toast.success("Registration successful");
-            if (courseId) {
-              navigate(`/student-profile`);
-            } else {
-              navigate("/onboarding");
-            }
-          },
-        }
-      );
-    } catch (error) {
-      toast.error(error.message || "Registration failed");
-    } finally {
-      setSubmitting(false);
-    }
+        onError: (error) => {
+          toast.error(error.response.data.message);
+        },
+      }
+    );
   };
 
   return (
@@ -131,6 +128,11 @@ export default function RegisterPage() {
 
             <div className="mt-8 sm:mx-auto sm:w-full">
               <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                {registerError && (
+                  <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                    {registerError.response.data.message}
+                  </div>
+                )}
                 <Formik
                   initialValues={initialValues}
                   validationSchema={registerSchema}

@@ -33,6 +33,7 @@ import StudentNavBar from "./components/StudentNavBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VideoLayout from "./components/VideoLayout";
 import AdminPayments from "./pages/admin/payments";
+import EditStudent from "@/pages/admin/student/edit";
 
 const queryClient = new QueryClient();
 
@@ -124,9 +125,17 @@ function App() {
             <Route path="content/:contentId" element={<VideoLessonPage />} />
           </Route>
 
-          <Route path="/admin" element={<Dashboard />}>
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth>
+                <Dashboard />
+              </RequireAuth>
+            }
+          >
             <Route path="dashboard" element={<Admin />} />
             <Route path="students" element={<Student />} />
+            <Route path="students/:id" element={<EditStudent />} />
             <Route path="instructors" element={<Instructor />} />
             <Route path="courses" element={<AdminCourses />} />
             <Route path="content-library" element={<ContentLibrary />} />

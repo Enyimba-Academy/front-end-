@@ -1,7 +1,5 @@
 import { Bell, Plus, Eye, Trash2, Edit2 } from "lucide-react";
 import PrimaryButton from "../../../components/shared/PrimaryButton";
-import SearchButton from "../../../components/shared/SearchInput";
-import SelectDropDown from "../../../components/shared/SelectDropDown";
 import { Link, useNavigate } from "react-router-dom";
 import {
   useGetSchools,
@@ -20,24 +18,34 @@ import {
 } from "../../../components/ui/table";
 import RejectionModal from "../../../components/shared/RejectionModal";
 import { ImageUrl } from "@/api/api";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export default function School() {
-  const [filters, setFilters] = useState(true);
-  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("updatedAt");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [status, setStatus] = useState(false);
 
   const { schools, isLoading } = useGetSchools({
-    filters,
-    page: 1,
-    search,
+    page: "1",
+    limit: "10",
+    search: searchQuery,
+    sortBy,
+    sortOrder,
+    status,
   });
+
   const [selectedSchool, setSelectedSchool] = useState(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const { deleteSchool, isLoading: isDeleting } = useDeleteSchool();
-
-  const handleApplyFilters = (activeFilters) => {
-    setFilters(activeFilters);
-  };
 
   const navigate = useNavigate();
 
@@ -77,17 +85,43 @@ export default function School() {
             <h2 className="text-lg font-semibold">
               Schools ({schools?.data?.length || 0})
             </h2>
-            {/* <div className="flex items-center gap-2">
-              <SearchButton onSearch={setSearch} />
-              <SelectDropDown
-                className="w-fit"
-                options={[
-                  { value: true, label: "Active" },
-                  { value: false, label: "Inactive" },
-                ]}
-                onChange={handleApplyFilters}
+            <div className="flex items-center gap-2 justify-end">
+              <Input
+                type="text"
+                placeholder="Search schools..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-64"
               />
-            </div> */}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="createdAt">Created At</SelectItem>
+                  <SelectItem value="updatedAt">Updated At</SelectItem>
+                  <SelectItem value="name">Name</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortOrder} onValueChange={setSortOrder}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Order" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="asc">Ascending</SelectItem>
+                  <SelectItem value="desc">Descending</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={false}>Active</SelectItem>
+                  <SelectItem value={true}>Inactive</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="p-4">
@@ -184,17 +218,6 @@ export default function School() {
         </div>
       </div>
 
-      {isEditModalOpen && (
-        <RightModal
-          toggleModal={() => setIsEditModalOpen(false)}
-          isOpen={isEditModalOpen}
-        >
-          <div>
-            <h1>Edit School</h1>
-          </div>
-        </RightModal>
-      )}
-
       {isDeleteModalOpen && selectedSchool && (
         <RejectionModal
           isOpen={isDeleteModalOpen}
@@ -210,10 +233,11 @@ export default function School() {
           title="Delete School"
           message="Are you sure you want to delete this school?"
           isLoading={isDeleting}
+          buttonText="Yes, Delete"
         />
       )}
 
-      {isViewModalOpen && (
+      {isViewModalOpen && selectedSchool && (
         <RightModal
           toggleModal={() => setIsViewModalOpen(false)}
           isOpen={isViewModalOpen}

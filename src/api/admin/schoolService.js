@@ -6,8 +6,24 @@ export const schoolService = {
     const response = await api.post(`${ADMIN_BASE_URL}/schools`, school);
     return response.data;
   },
-  getSchool: async () => {
-    const response = await api.get(`${ADMIN_BASE_URL}/schools`);
+  getSchool: async ({
+    page = "1",
+    limit = "10",
+    search,
+    sortBy = "updatedAt",
+    sortOrder = "desc",
+    status,
+  } = {}) => {
+    const response = await api.get(`${ADMIN_BASE_URL}/schools`, {
+      params: {
+        page,
+        limit,
+        search,
+        sortBy,
+        sortOrder,
+        status,
+      },
+    });
     return response.data.data;
   },
   getSchoolById: async (id) => {

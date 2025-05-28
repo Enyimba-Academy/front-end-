@@ -1,10 +1,16 @@
-import { Bell, Plus, Eye, Trash2, Edit2 } from "lucide-react";
+import { Bell, Plus, Eye, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAdminStudents } from "@/hooks/admin/student.hook";
-import RightModal from "../../components/shared/RightModal";
 import StatusBadge from "../../components/shared/StatusBadge";
-import SearchButton from "../../components/shared/SearchInput";
-import SelectDropDown from "../../components/shared/SelectDropDown";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableHeader,
@@ -15,18 +21,22 @@ import {
 } from "../../components/ui/table";
 
 export default function Student() {
-  const [showStudentDetails, setShowStudentDetails] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const { data, isLoading } = useAdminStudents();
-
-  const handleViewStudent = (student) => {
-    setSelectedStudent(student);
-    setShowStudentDetails(true);
-  };
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [status, setStatus] = useState(false);
+  const { data, isLoading } = useAdminStudents({
+    page: 1,
+    limit: 10,
+    search: searchQuery,
+    sortBy,
+    sortOrder,
+    status,
+  });
+  const navigate = useNavigate();
 
   const handleEditStudent = (student) => {
-    console.log("Edit student:", student);
-    // Add your edit student logic here
+    navigate(`/admin/students/${student.id}`);
   };
 
   const handleDeleteStudent = (student) => {
@@ -64,16 +74,46 @@ export default function Student() {
             <h2 className="text-lg font-semibold">
               Students ({data?.students?.length || 0})
             </h2>
-            {/* <div className="flex items-center gap-2 justify-end">
-              <SearchButton />
-              <SelectDropDown
-                className="w-fit"
-                options={[
-                  { value: true, label: "Active" },
-                  { value: false, label: "Blocked" },
-                ]}
+            <div className="flex items-center gap-2 justify-end">
+              <Input
+                type="text"
+                placeholder="Search students..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-64"
               />
-            </div> */}
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="createdAt">Created At</SelectItem>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="email">Email</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={sortOrder} onValueChange={setSortOrder}>
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Order" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="asc">Ascending</SelectItem>
+                  <SelectItem value="desc">Descending</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select
+                value={status.toString()}
+                onValueChange={(value) => setStatus(value === "true")}
+              >
+                <SelectTrigger className="w-[120px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="false">Active</SelectItem>
+                  <SelectItem value="true">Blocked</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="p-4">
@@ -130,12 +170,6 @@ export default function Student() {
                       <TableCell>0%</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Edit2
-                            size={18}
-                            color="#667085"
-                            className="cursor-pointer"
-                            onClick={() => handleEditStudent(student)}
-                          />
                           <Trash2
                             size={18}
                             color="#667085"
@@ -146,7 +180,7 @@ export default function Student() {
                             size={18}
                             color="#667085"
                             className="cursor-pointer"
-                            onClick={() => handleViewStudent(student)}
+                            onClick={() => handleEditStudent(student)}
                           />
                         </div>
                       </TableCell>
@@ -158,66 +192,6 @@ export default function Student() {
           </div>
         </div>
       </div>
-      {showStudentDetails && selectedStudent && (
-        <RightModal
-          isOpen={showStudentDetails}
-          toggleModal={() => setShowStudentDetails(false)}
-          showClose={true}
-        >
-          <div className="p-6 overflow-auto">
-            <div className="mb-6">
-              <h1 className="text-2xl font-semibold text-gray-800 mb-2">
-                {`${selectedStudent.firstName} ${selectedStudent.lastName}`}
-              </h1>
-              <StatusBadge
-                status={selectedStudent?.is_blocked ? "Blocked" : "Active"}
-              />
-            </div>
-
-            <div className="space-y-6">
-              {/* Student Avatar */}
-              <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">
-                  Profile Picture
-                </h3>
-                <div className="w-full h-40 border rounded-lg overflow-hidden">
-                  {selectedStudent?.avatar ? (
-                    <img
-                      src={selectedStudent.avatar}
-                      alt="Student Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-600 text-4xl font-medium">
-                        {selectedStudent?.firstName?.charAt(0)?.toUpperCase()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Student Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    Enrolled Courses
-                  </h3>
-                  <p className="text-gray-700">
-                    {selectedStudent?.enrollments?.length || 0}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">
-                    Progress
-                  </h3>
-                  <p className="text-gray-700">0%</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </RightModal>
-      )}
     </div>
   );
 }

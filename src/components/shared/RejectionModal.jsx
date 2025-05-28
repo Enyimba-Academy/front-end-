@@ -10,6 +10,7 @@ export default function RejectionModal({
   title,
   message,
   isLoading,
+  buttonText = "Yes, Reject",
 }) {
   return (
     <CenterModal toggleModal={toggleModal} isOpen={isOpen}>
@@ -24,12 +25,20 @@ export default function RejectionModal({
           <PrimaryButton
             onClick={handleCancel}
             disabled={isLoading}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+            className={
+              "px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer bg-white"
+            }
           >
             Cancel
           </PrimaryButton>
-          <PrimaryButton onClick={handleReject} disabled={isLoading}>
-            {isLoading ? "Loading..." : "Yes, Reject"}
+          <PrimaryButton
+            onClick={handleReject}
+            disabled={isLoading}
+            className={
+              "bg-red-600 disabled:bg-red-400 disabled:cursor-not-allowed"
+            }
+          >
+            {isLoading ? "Loading..." : buttonText}
           </PrimaryButton>
         </div>
       </div>

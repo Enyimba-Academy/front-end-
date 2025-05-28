@@ -20,7 +20,7 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await resetPassword(
+      resetPassword(
         { token, password: values.password },
         {
           onSuccess: () => {

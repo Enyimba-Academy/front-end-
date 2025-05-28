@@ -26,14 +26,14 @@ export default function LoginPage() {
           onSuccess: (data) => {
             const user = data.data.user;
             console.log(user);
-            toast.success("Login successful");
             if (user.role === ROLES.ADMIN) {
               navigate("/admin/dashboard");
             } else {
-              navigate("/");
+              navigate("/student-profile");
             }
-            const from = location.state?.from?.pathname || "/";
-            navigate(from, { replace: true });
+          },
+          onError: (error) => {
+            toast.error(error.response.data.message);
           },
         }
       );
@@ -70,7 +70,7 @@ export default function LoginPage() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {loginError && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-              {loginError.message}
+              {loginError.response.data.message}
             </div>
           )}
 
