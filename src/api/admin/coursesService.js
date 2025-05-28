@@ -6,8 +6,14 @@ export const coursesService = {
     const response = await api.post(`${ADMIN_BASE_URL}/courses`, course);
     return response.data;
   },
-  getCourses: async () => {
-    const response = await api.get(`${ADMIN_BASE_URL}/courses`);
+  getCourses: async ({ filters, page, search } = {}) => {
+    const response = await api.get(`${ADMIN_BASE_URL}/courses`, {
+      params: {
+        filters,
+        page,
+        search,
+      },
+    });
     return response.data;
   },
   getCourseById: async (id) => {

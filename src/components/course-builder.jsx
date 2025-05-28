@@ -216,7 +216,7 @@ export default function CourseBuilder() {
             title: "Course updated",
             description: "Your course has been updated successfully.",
           });
-          navigate("/admin/courses");
+          window.location.href = "/admin/courses";
         },
         onError: (error) => {
           toast({
@@ -232,7 +232,7 @@ export default function CourseBuilder() {
             title: "Course saved",
             description: "Your course has been saved successfully.",
           });
-          navigate("/admin/courses");
+          window.location.href = "/admin/courses";
         },
         onError: (error) => {
           toast({

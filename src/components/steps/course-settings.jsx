@@ -56,7 +56,7 @@ export default function CourseSettings({ showErrors, onContinue, onBack }) {
             </Label>
             <div className="relative mt-1">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <span className="text-gray-500">$</span>
+                <span className="text-gray-500">₦</span>
               </div>
               <Input
                 id="price"

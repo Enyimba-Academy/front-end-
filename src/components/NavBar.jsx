@@ -8,6 +8,7 @@ import {
   X,
   User,
   LogOut,
+  Loader2,
 } from "lucide-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import PrimaryLink from "./shared/PrimaryLink";
@@ -17,7 +18,7 @@ import { useAuth } from "../hooks/useAuth";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, isLoadingUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -88,7 +89,11 @@ export default function NavBar() {
         </div>
 
         {/* Desktop Action Buttons */}
-        {!user ? (
+        {isLoadingUser ? (
+          <div className="hidden lg:flex items-center">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+          </div>
+        ) : !user ? (
           <div className="hidden lg:flex items-center gap-4">
             <Link
               to="/login"
@@ -171,7 +176,11 @@ export default function NavBar() {
                 Contact
               </NavLink>
               <div className="w-full h-px bg-gray-200 my-2"></div>
-              {!user ? (
+              {isLoadingUser ? (
+                <div className="flex justify-center w-full py-3">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                </div>
+              ) : !user ? (
                 <>
                   <Link
                     to="/login"

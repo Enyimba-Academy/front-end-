@@ -71,7 +71,7 @@ export default function CoursePreview({
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
           <div className="flex items-center gap-2 mb-2">
             {getVisibilityBadge()}
-            {values.isPaid && <Badge variant="success">${values.price}</Badge>}
+            {values.isPaid && <Badge variant="success">₦{values.price}</Badge>}
           </div>
           <h1 className="text-3xl font-bold text-white">{values.name}</h1>
         </div>
@@ -81,9 +81,9 @@ export default function CoursePreview({
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg font-semibold mb-3">About this course</h3>
         <p className="text-gray-700">{values.description}</p>
-        <p className="text-gray-700">
+        {/* <p className="text-gray-700">
           <span className="font-semibold">School:</span> {values.school}
-        </p>
+        </p> */}
         <p className="text-gray-700">
           <span className="font-semibold">Level:</span> {values.level}
         </p>

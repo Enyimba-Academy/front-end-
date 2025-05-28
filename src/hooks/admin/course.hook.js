@@ -10,6 +10,7 @@ export const useCreateCourse = () => {
       console.log("Course created successfully:", data);
       toast.success("Course created successfully");
       queryClient.invalidateQueries({ queryKey: ["courses"] });
+      queryClient.invalidateQueries({ queryKey: ["course"] });
     },
     onError: (error) => {
       console.error("Error creating course:", error);
@@ -18,10 +19,14 @@ export const useCreateCourse = () => {
   });
 };
 
-export const useGetCourses = () => {
+export const useGetCourses = ({ filters, page, search } = {}) => {
   return useQuery({
-    queryKey: ["courses"],
-    queryFn: coursesService.getCourses,
+    queryKey: ["courses", { filters, page, search }],
+    queryFn: () => coursesService.getCourses({ filters, page, search }),
+    refetchOnWindowFocus: true,
+    staleTime: 0,
+    cacheTime: 5 * 60 * 1000,
+    retry: 1,
   });
 };
 
@@ -42,6 +47,7 @@ export const useUpdateCourse = (id) => {
       console.log("Course updated successfully:", data);
       toast.success("Course updated successfully");
       queryClient.invalidateQueries({ queryKey: ["courses"] });
+      queryClient.invalidateQueries({ queryKey: ["course"] });
     },
     onError: (error) => {
       console.error("Error updating course:", error);

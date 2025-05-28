@@ -7,7 +7,7 @@ import {
 } from "../../../hooks/admin/course.hook";
 import SearchButton from "../../../components/shared/SearchInput";
 import SelectDropDown from "../../../components/shared/SelectDropDown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StatusBadge from "../../../components/shared/StatusBadge";
 import RightModal from "../../../components/shared/RightModal";
 import {
@@ -27,19 +27,28 @@ export default function AdminCourses() {
   const [search, setSearch] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { mutate: deleteCourse, isPending: isDeleting } = useDeleteCourse();
-  const { data: courses, isLoading } = useGetCourses({
+  const {
+    data: courses,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetCourses({
     filters,
     page,
     search,
   });
 
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+
   console.log(courses?.data?.courses);
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
-  const handleApplyFilters = (activeFilters) => {
-    setFilters(activeFilters);
-  };
+  // const handleApplyFilters = (activeFilters) => {
+  //   setFilters(activeFilters);
+  // };
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-NG", {
@@ -59,18 +68,9 @@ export default function AdminCourses() {
             <p className="text-sm text-gray-500">Welcome back, Admin</p>
           </div>
           <div className="flex items-center space-x-4">
-            <button className="text-gray-500 hover:text-gray-700">
+            {/* <button className="text-gray-500 hover:text-gray-700">
               <Bell className="h-5 w-5" />
-            </button>
-            <div className="h-8 w-8 rounded-full bg-gray-300 overflow-hidden">
-              <img
-                src="/placeholder.svg?height=32&width=32"
-                alt="Profile"
-                width={32}
-                height={32}
-                className="h-full w-full object-cover"
-              />
-            </div>
+            </button> */}
           </div>
         </div>
         <div className="flex justify-end px-6 py-4">
@@ -92,17 +92,7 @@ export default function AdminCourses() {
             <h2 className="text-lg font-semibold">
               Courses ({courses?.data?.courses?.length || 0})
             </h2>
-            <div className="flex items-center gap-2 justify-end">
-              <SearchButton onSearch={setSearch} />
-              <SelectDropDown
-                className="w-fit"
-                options={[
-                  { value: true, label: "Active" },
-                  { value: false, label: "Inactive" },
-                ]}
-                onChange={handleApplyFilters}
-              />
-            </div>
+            <div className="flex items-center gap-2 justify-end"></div>
           </div>
 
           <div className="p-4">
@@ -122,7 +112,23 @@ export default function AdminCourses() {
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={7} className="text-center py-6">
-                      Loading...
+                      <div className="flex justify-center items-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : isError ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-6">
+                      <div className="text-red-500">
+                        Error loading courses. Please try again.
+                        <button
+                          onClick={() => refetch()}
+                          className="ml-2 text-primary hover:underline"
+                        >
+                          Retry
+                        </button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ) : courses?.data?.courses?.length === 0 ? (
@@ -140,19 +146,35 @@ export default function AdminCourses() {
                             {course?.image ? (
                               <img
                                 src={`${ImageUrl}${course?.image}`}
-                                alt={course?.title}
+                                alt={course?.title || "Course image"}
                                 className="h-full w-full object-cover"
                               />
                             ) : (
                               <div className="h-full w-full bg-gray-300" />
                             )}
                           </div>
-                          <span>{course?.title}</span>
+                          <span>
+                            {typeof course?.title === "string"
+                              ? course.title
+                              : "Untitled Course"}
+                          </span>
                         </div>
                       </TableCell>
-                      <TableCell>{course?.school?.name || "N/A"}</TableCell>
-                      <TableCell>{course?.duration || "N/A"}</TableCell>
-                      <TableCell>{course?.level || "N/A"}</TableCell>
+                      <TableCell>
+                        {typeof course?.school?.name === "string"
+                          ? course.school.name
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {typeof course?.duration === "string"
+                          ? course.duration
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell>
+                        {typeof course?.level === "string"
+                          ? course.level
+                          : "N/A"}
+                      </TableCell>
                       <TableCell>{formatPrice(course?.price || 0)}</TableCell>
                       <TableCell>
                         <StatusBadge status={course?.status} />
@@ -203,7 +225,7 @@ export default function AdminCourses() {
           <div className="p-6 overflow-auto">
             <div className="mb-6">
               <h1 className="text-2xl font-semibold text-gray-800 mb-2">
-                {selectedCourse?.title}
+                {selectedCourse?.title || "Untitled Course"}
               </h1>
               <StatusBadge status={selectedCourse?.status} />
             </div>
@@ -234,7 +256,9 @@ export default function AdminCourses() {
                 <h3 className="text-sm font-medium text-gray-500 mb-2">
                   Description
                 </h3>
-                <p className="text-gray-700">{selectedCourse?.description}</p>
+                <p className="text-gray-700">
+                  {selectedCourse?.description || "No description available"}
+                </p>
               </div>
 
               {/* Course Details */}
@@ -297,15 +321,18 @@ export default function AdminCourses() {
                   Sections ({selectedCourse?.sections?.length || 0})
                 </h3>
                 <div className="border rounded-lg divide-y">
-                  {selectedCourse?.sections?.length === 0 ? (
+                  {!selectedCourse?.sections ||
+                  selectedCourse?.sections?.length === 0 ? (
                     <p className="p-3 text-gray-500">No sections available</p>
                   ) : (
                     selectedCourse?.sections?.map((section) => (
                       <div key={section.id} className="p-3">
-                        <p className="font-medium">{section.title}</p>
+                        <p className="font-medium">
+                          {section.title || "Untitled Section"}
+                        </p>
                         <p className="text-sm text-gray-500">
-                          {section._count.contents}{" "}
-                          {section._count.contents === 1
+                          {section._count?.contents || 0}{" "}
+                          {(section._count?.contents || 0) === 1
                             ? "content"
                             : "contents"}
                         </p>

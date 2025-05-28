@@ -98,7 +98,7 @@ export default function EnrollmentPayments() {
             <h2 className="text-lg font-semibold">
               Enrollments ({data?.length || 0})
             </h2>
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <SearchButton />
               <SelectDropDown
                 className="w-fit"
@@ -109,7 +109,7 @@ export default function EnrollmentPayments() {
                   { value: "rejected", label: "Rejected" },
                 ]}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="p-4">

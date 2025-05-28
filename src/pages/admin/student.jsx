@@ -64,7 +64,7 @@ export default function Student() {
             <h2 className="text-lg font-semibold">
               Students ({data?.students?.length || 0})
             </h2>
-            <div className="flex items-center gap-2 justify-end">
+            {/* <div className="flex items-center gap-2 justify-end">
               <SearchButton />
               <SelectDropDown
                 className="w-fit"
@@ -73,7 +73,7 @@ export default function Student() {
                   { value: false, label: "Blocked" },
                 ]}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="p-4">
