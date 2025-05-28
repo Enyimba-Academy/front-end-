@@ -18,8 +18,6 @@ export default function Index() {
     seconds: 0,
   });
 
-  console.log(schools);
-
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
@@ -81,7 +79,7 @@ export default function Index() {
                       : SCHOOLS[index]
                   }
                   alt={school?.name}
-                  className="w-full h-48 "
+                  className="w-full h-48 object-cover"
                 />
                 <div className="p-6 border-b">
                   <div className="flex items-center justify-between mb-4 flex-col">
