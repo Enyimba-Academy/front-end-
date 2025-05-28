@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Download, Award, Calendar, User, X } from "lucide-react";
 import html2canvas from "html2canvas";
 
@@ -8,7 +7,6 @@ export default function Certificate({
   recipientName = "John Doe",
   courseName = "Broadcasting Excellence Program",
   completionDate = "December 2024",
-  instructorName = "Dr. Sarah Johnson",
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const certificateRef = useRef(null);
@@ -227,16 +225,6 @@ export default function Certificate({
                     </div>
                     <p className="text-xs md:text-sm text-gray-600">
                       Official Seal
-                    </p>
-                  </div>
-
-                  <div className="text-center">
-                    <div className="w-20 md:w-32 h-0.5 bg-gray-400 mb-1"></div>
-                    <p className="text-xs md:text-sm text-gray-600">
-                      Instructor
-                    </p>
-                    <p className="text-sm md:text-base font-semibold">
-                      {instructorName}
                     </p>
                   </div>
                 </div>

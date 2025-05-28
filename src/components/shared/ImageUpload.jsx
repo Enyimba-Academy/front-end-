@@ -8,7 +8,7 @@ import { ImageUrl } from "@/api/api";
 export default function ImageUpload({ label }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
-  const { mutate: uploadImage, progress } = useUploadImage();
+  const { mutate: uploadImage, progress, isPending } = useUploadImage();
   const { setFieldValue, values } = useFormikContext();
 
   const handleDragOver = (e) => {
@@ -119,13 +119,14 @@ export default function ImageUpload({ label }) {
             </p>
             <PrimaryButton
               onClick={handleClick}
-              className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer"
+              className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isPending}
             >
-              Choose File
+              {isPending ? "Uploading..." : "Choose File"}
             </PrimaryButton>
           </>
         )}
-        {progress > 0 && progress < 100 && (
+        {progress > 0 && progress < 100 && isPending && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="w-3/4 bg-white rounded-lg p-4">
               <div className="w-full bg-gray-200 rounded-full h-2.5">

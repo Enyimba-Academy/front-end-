@@ -16,7 +16,11 @@ export function VideoContent({ sectionIndex, contentIndex, content }) {
 
   const fileInputRef = useRef(null);
 
-  const { mutate: uploadVideo, progress: videoProgress } = useUploadVideo();
+  const {
+    mutate: uploadVideo,
+    progress: videoProgress,
+    isPending,
+  } = useUploadVideo();
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -69,13 +73,17 @@ export function VideoContent({ sectionIndex, contentIndex, content }) {
             type="button"
             variant="outline"
             onClick={() => fileInputRef.current.click()}
-            className="w-full h-24 flex flex-col items-center justify-center border-dashed"
-            disabled={!!videoPreview}
+            className="w-full h-24 flex flex-col items-center justify-center border-dashed disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!!videoPreview || isPending}
           >
             <Upload className="h-6 w-6 mb-2" />
-            <span>{content.videoName || "Click to upload video"}</span>
+            <span>
+              {content.videoName || isPending
+                ? "Uploading..."
+                : "Click to upload video"}
+            </span>
           </Button>
-          {videoProgress > 0 && videoProgress < 100 && (
+          {videoProgress > 0 && videoProgress < 100 && isPending && (
             <div className="mt-2">
               <Progress value={videoProgress} className="h-2" />
               <p className="text-sm text-gray-500 mt-1 text-center">

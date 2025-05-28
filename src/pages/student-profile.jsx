@@ -20,6 +20,7 @@ import PrimaryButton from "../components/shared/PrimaryButton";
 import { usePaystackPayment } from "react-paystack";
 import { useQueryClient } from "@tanstack/react-query";
 import Certificate from "../components/Certificate";
+import { ImageUrl } from "@/api/api";
 
 function LoadingSkeleton() {
   return (
@@ -145,7 +146,7 @@ export default function StudentProfile() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
           <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="flex items-center">
               <div className="p-2 bg-red-100 rounded-lg">
@@ -185,7 +186,7 @@ export default function StudentProfile() {
               </div>
             </div>
           </div>
-          <div className="bg-white rounded-lg p-4 shadow-sm">
+          {/* <div className="bg-white rounded-lg p-4 shadow-sm">
             <div className="flex items-center">
               <div className="p-2 bg-purple-100 rounded-lg">
                 <Award className="w-5 h-5 text-purple-600" />
@@ -195,7 +196,7 @@ export default function StudentProfile() {
                 <p className="text-xl font-semibold text-gray-900">2</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Main Content */}
@@ -243,7 +244,7 @@ export default function StudentProfile() {
                       >
                         <div className="aspect-video w-full bg-gray-100 relative">
                           <img
-                            src={enrollment.course.image || "/pick.png"}
+                            src={`${ImageUrl}${enrollment.course.image}`}
                             alt={enrollment.course.title}
                             className="w-full h-full object-cover"
                           />
@@ -290,8 +291,7 @@ export default function StudentProfile() {
                     My Certificates
                   </h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Certificate />
-                    {/* {enrollments
+                    {enrollments
                       ?.filter((e) => e.progress === 100)
                       .map((enrollment) => (
                         <Certificate
@@ -310,7 +310,7 @@ export default function StudentProfile() {
                             "Course Instructor"
                           }
                         />
-                      ))} */}
+                      ))}
                     {/* {enrollments?.filter((e) => e.progress === 100).length ===
                       0 && (
                       <div className="col-span-2 text-center py-12">
@@ -338,12 +338,10 @@ export default function StudentProfile() {
             {/* Profile Card */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <div className="flex items-center mb-4">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200">
-                  <img
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/placeholder-ob7miW3mUreePYfXdVwkpFWHthzoR5.svg"
-                    alt="Profile"
-                    className="w-full h-full object-cover"
-                  />
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-gray-200 bg-red-100 flex items-center justify-center">
+                  <span className="text-2xl font-semibold text-red-600">
+                    {user.firstName.charAt(0)}
+                  </span>
                 </div>
                 <div className="ml-4">
                   <h3 className="font-semibold text-gray-800">
@@ -354,17 +352,17 @@ export default function StudentProfile() {
                   </p>
                 </div>
               </div>
-              <Link
+              {/* <Link
                 to="/edit-profile"
                 className="flex items-center justify-center w-full px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Profile
-              </Link>
+              </Link> */}
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            {/* <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="font-semibold text-gray-800 mb-4">
                 Quick Actions
               </h3>
@@ -408,10 +406,10 @@ export default function StudentProfile() {
                   </a>
                 </li>
               </ul>
-            </div>
+            </div> */}
 
             {/* Achievements */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            {/* <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="font-semibold text-gray-800 mb-4">Achievements</h3>
               <ul className="space-y-4">
                 <li className="flex items-start">
@@ -437,7 +435,7 @@ export default function StudentProfile() {
                   </div>
                 </li>
               </ul>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

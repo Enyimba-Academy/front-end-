@@ -16,7 +16,11 @@ export function ResourceContent({ sectionIndex, contentIndex, content }) {
   const [linkUrl, setLinkUrl] = useState("");
   const fileInputRef = useRef(null);
 
-  const { mutate: uploadFile, progress: fileProgress } = useUploadFile();
+  const {
+    mutate: uploadFile,
+    progress: fileProgress,
+    isPending,
+  } = useUploadFile();
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
@@ -111,7 +115,7 @@ export function ResourceContent({ sectionIndex, contentIndex, content }) {
             ref={fileInputRef}
           />
         </label>
-        {fileProgress > 0 && fileProgress < 100 && (
+        {fileProgress > 0 && fileProgress < 100 && isPending && (
           <div className="w-full mt-2">
             <Progress value={fileProgress} className="h-2" />
             <p className="text-sm text-gray-500 mt-1 text-center">
@@ -124,9 +128,10 @@ export function ResourceContent({ sectionIndex, contentIndex, content }) {
           type="button"
           variant="outline"
           onClick={() => setIsAddingLink(true)}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isPending}
         >
-          <Plus className="w-4 h-4" />
+          {isPending ? "Adding..." : <Plus className="w-4 h-4" />}
           <span>Add Link</span>
         </Button>
       </div>

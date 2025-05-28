@@ -13,9 +13,10 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-
+import { useAuth } from "@/hooks/useAuth";
 export default function Dashboard() {
   const location = useLocation();
+  const { user } = useAuth();
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -66,10 +67,18 @@ export default function Dashboard() {
 
           <SidebarFooter className="p-4 border-t border-slate-200 mt-auto">
             <div className="flex items-center p-2 rounded-md hover:bg-slate-100">
-              <div className="w-8 h-8 bg-slate-300 rounded-full mr-3"></div>
+              <div className="w-8 h-8 bg-slate-300 rounded-full mr-3">
+                <img
+                  src={user?.avatar}
+                  alt="avatar"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </div>
               <div>
-                <p className="text-sm font-medium text-slate-700">Admin User</p>
-                <p className="text-xs text-slate-500">admin@example.com</p>
+                <p className="text-sm font-medium text-slate-700">
+                  {user?.firstName} {user?.lastName}
+                </p>
+                <p className="text-xs text-slate-500">{user?.email}</p>
               </div>
             </div>
           </SidebarFooter>

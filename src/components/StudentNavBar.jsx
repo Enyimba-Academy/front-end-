@@ -35,29 +35,11 @@ export default function StudentNavBar() {
                 <Home className="w-4 h-4 mr-2" />
                 Dashboard
               </Link>
-              <Link
-                to="/my-courses"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300"
-              >
-                <BookOpen className="w-4 h-4 mr-2" />
-                My Courses
-              </Link>
-              <Link
-                to="/student-profile"
-                className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-500 hover:text-gray-900 hover:border-gray-300"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Profile
-              </Link>
             </div>
           </div>
 
           {/* Right side buttons */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            <button className="p-2 text-gray-500 hover:text-gray-900 relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-600 ring-2 ring-white"></span>
-            </button>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-700">
                 {user?.firstName} {user?.lastName}

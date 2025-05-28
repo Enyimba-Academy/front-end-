@@ -62,6 +62,13 @@ export default function StatusBadge({ status }) {
           Paid
         </div>
       );
+    case "COMPLETED":
+      return (
+        <div className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-sm w-fit">
+          Completed
+        </div>
+      );
+
     default:
       return (
         <div className="bg-gray-500 text-gray-50 px-2 py-1 rounded-full text-sm w-fit">
