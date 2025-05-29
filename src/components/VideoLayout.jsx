@@ -18,6 +18,7 @@ import {
 } from "react-router-dom";
 import { useMemo, useState, useEffect } from "react";
 import { useCourseContentNavigation } from "@/hooks/nextVideoHook";
+import CourseIntroduction from "./CourseIntroduction";
 
 export default function VideoLayout() {
   const { id } = useParams();
@@ -56,7 +57,7 @@ export default function VideoLayout() {
     if (type === "material" || type === "document")
       return <span className="mr-2">📄</span>;
     if (type === "assignment") return <span className="mr-2">📋</span>;
-    return <span className="mr-2">��</span>;
+    return <span className="mr-2"></span>;
   };
 
   // Add new function to check if content is completed
@@ -157,6 +158,9 @@ export default function VideoLayout() {
       }
     }
   }, [location.pathname, sections]);
+
+  // Check if we should show the introduction page
+  const showIntroduction = !currentContentId;
 
   return (
     <div className="flex flex-col h-screen bg-white">
@@ -293,8 +297,12 @@ export default function VideoLayout() {
 
         {/* Center - Content Display */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          {/* Dynamic Content based on Type */}
-          <Outlet context={nav} />
+          {/* Show introduction or course content based on state */}
+          {showIntroduction ? (
+            <CourseIntroduction course={enrollment?.course} enrollmentId={id} />
+          ) : (
+            <Outlet context={nav} />
+          )}
         </div>
 
         {/* Right Sidebar - Notes and Resources */}
