@@ -38,6 +38,10 @@ export const useVideoPlayer = (contentId) => {
       const videoDuration = videoRef.current.duration;
       setDuration(videoDuration);
 
+      // Set initial time to 1 second
+      videoRef.current.currentTime = 1;
+      setCurrentTime(1);
+
       const storedTimeValue = localStorage.getItem(
         `video-progress-${contentId}`
       );

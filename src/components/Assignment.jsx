@@ -18,7 +18,7 @@ const UploadIcon = ({ className }) => (
 );
 
 export const Assignment = ({ assignment }) => {
-  return (
+  return assignment ? (
     <div className="w-full bg-white rounded-md shadow-sm border border-gray-200 p-6">
       <div className="flex items-center mb-4">
         <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-4">
@@ -51,13 +51,16 @@ export const Assignment = ({ assignment }) => {
         {assignment?.allowedFileTypes && (
           <div className="mt-2 text-sm text-gray-600">
             <span>
-              Allowed file types: {assignment.allowedFileTypes.join(", ")}
+              Allowed file types:{" "}
+              {Array.isArray(assignment?.allowedFileTypes)
+                ? assignment.allowedFileTypes.join(", ")
+                : assignment.allowedFileTypes}
             </span>
           </div>
         )}
         {assignment?.maxFileSize && (
           <div className="mt-1 text-sm text-gray-600">
-            <span>Maximum file size: {assignment.maxFileSize}</span>
+            <span>Maximum file size: {assignment?.maxFileSize}</span>
           </div>
         )}
       </div>
@@ -71,5 +74,5 @@ export const Assignment = ({ assignment }) => {
         </button>
       </div>
     </div>
-  );
+  ) : null;
 };

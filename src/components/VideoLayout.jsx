@@ -36,7 +36,6 @@ export default function VideoLayout() {
     () => enrollment?.course?.sections || [],
     [enrollment]
   );
-  const [expandedSections, setExpandedSections] = useState({});
   const currentContentId = useMemo(() => {
     const parts = location.pathname.split("/");
     const idx = parts.indexOf("content");
@@ -50,14 +49,6 @@ export default function VideoLayout() {
   // Function to handle back button click
   const handleBack = () => {
     navigate(-1);
-  };
-
-  // Function to toggle section expansion
-  const toggleSection = (sectionId) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [sectionId]: !prev[sectionId],
-    }));
   };
 
   // Function to get icon based on content type
@@ -76,6 +67,26 @@ export default function VideoLayout() {
     return (
       content.lessonProgresses?.some((progress) => progress.completed) || false
     );
+  };
+
+  // Function to check if content has valid media
+  const hasValidMedia = (content) => {
+    if (content.type === "VIDEO") {
+      return content.videoUrl && content.videoUrl.trim() !== "";
+    }
+    if (content.type === "QUIZ") {
+      return content.instructions && content.instructions.trim() !== "";
+    }
+    if (content.type === "ASSIGNMENT") {
+      return (
+        content.assignmentDescription &&
+        content.assignmentDescription.trim() !== ""
+      );
+    }
+    if (content.type === "MATERIAL" || content.type === "DOCUMENT") {
+      return content.fileUrl && content.fileUrl.trim() !== "";
+    }
+    return false;
   };
 
   // Skeleton loader component for sections
@@ -108,14 +119,6 @@ export default function VideoLayout() {
   // Update expanded sections and active content when data changes
   useEffect(() => {
     if (sections.length > 0) {
-      // Initialize all sections as expanded by default
-      const initialExpandedState = sections.reduce((acc, section, index) => {
-        acc[section.id] = index === 0; // Only expand first section by default
-        return acc;
-      }, {});
-
-      setExpandedSections(initialExpandedState);
-
       // Set first content as active if it exists and no active content is set
       if (!activeContent && sections[0]?.contents?.length > 0) {
         setActiveContent(sections[0].contents[0]);
@@ -151,10 +154,7 @@ export default function VideoLayout() {
 
           // Expand the section containing this content
           if (foundSectionId) {
-            setExpandedSections((prev) => ({
-              ...prev,
-              [foundSectionId]: true,
-            }));
+            setActiveContent(foundContent);
           }
         }
       }
@@ -192,87 +192,87 @@ export default function VideoLayout() {
             </>
           ) : (
             // Show actual content when loaded
-            sections.map((section, sectionIndex) => (
-              <div key={section.id} className="border-t border-gray-200">
-                <div
-                  className={`flex items-center justify-between w-full px-4 py-3 text-left cursor-pointer ${
-                    activeContent &&
-                    section.contents.some((c) => c.id === activeContent.id)
-                      ? "bg-red-50"
-                      : ""
-                  }`}
-                  onClick={() => toggleSection(section.id)}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={`w-5 h-5 rounded-full ${
-                        sectionIndex === 0
-                          ? "bg-green-500"
-                          : activeContent &&
-                            section.contents.some(
-                              (content) => content.id === activeContent.id
-                            )
-                          ? "bg-red-500"
-                          : "bg-gray-300"
-                      } flex items-center justify-center mr-2`}
-                    >
-                      <span className="text-white text-xs font-bold">
-                        {sectionIndex + 1}
+            sections
+              .filter((section) =>
+                section.contents.some((content) => hasValidMedia(content))
+              )
+              .map((section, sectionIndex) => (
+                <div key={section.id} className="border-t border-gray-200">
+                  <div
+                    className={`flex items-center justify-between w-full px-4 py-3 text-left ${
+                      activeContent &&
+                      section.contents.some((c) => c.id === activeContent.id)
+                        ? "bg-red-50"
+                        : ""
+                    }`}
+                  >
+                    <div className="flex items-center">
+                      <div
+                        className={`w-5 h-5 rounded-full ${
+                          sectionIndex === 0
+                            ? "bg-green-500"
+                            : activeContent &&
+                              section.contents.some(
+                                (content) => content.id === activeContent.id
+                              )
+                            ? "bg-red-500"
+                            : "bg-gray-300"
+                        } flex items-center justify-center mr-2`}
+                      >
+                        <span className="text-white text-xs font-bold">
+                          {sectionIndex + 1}
+                        </span>
+                      </div>
+                      <span
+                        className={`text-sm font-medium ${
+                          activeContent &&
+                          section.contents.some(
+                            (c) => c.id === activeContent.id
+                          )
+                            ? "text-red-600"
+                            : ""
+                        }`}
+                      >
+                        {section.title}
                       </span>
                     </div>
-                    <span
-                      className={`text-sm font-medium ${
-                        activeContent &&
-                        section.contents.some((c) => c.id === activeContent.id)
-                          ? "text-red-600"
-                          : ""
-                      }`}
-                    >
-                      {section.title}
-                    </span>
                   </div>
-                  {expandedSections[section.id] ? (
-                    <ChevronUp size={16} />
-                  ) : (
-                    <ChevronDown size={16} />
-                  )}
-                </div>
 
-                {/* Section Contents */}
-                {expandedSections[section.id] && (
+                  {/* Section Contents - Always show when section has valid content */}
                   <div className="pl-11 pr-4 pb-2">
                     <ul className="space-y-2">
-                      {section.contents.map((content) => (
-                        <NavLink
-                          key={content.id}
-                          to={`/lesson/${id}/content/${content.id}`}
-                          className={({ isActive }) =>
-                            `flex items-center text-sm cursor-pointer ${
-                              isActive
-                                ? "text-red-600 font-medium"
-                                : "text-gray-600"
-                            }`
-                          }
-                          onClick={() => {
-                            document
-                              .querySelectorAll("video")
-                              .forEach((video) => {
-                                video.pause();
-                              });
-                          }}
-                        >
-                          {getContentTypeIcon(content)}
-                          <span className="flex-1">{content.title}</span>
-                          {isContentCompleted(content) && (
-                            <span className="ml-2 text-green-500">✓</span>
-                          )}
-                        </NavLink>
-                      ))}
+                      {section.contents
+                        .filter((content) => hasValidMedia(content))
+                        .map((content) => (
+                          <NavLink
+                            key={content.id}
+                            to={`/lesson/${id}/content/${content.id}`}
+                            className={({ isActive }) =>
+                              `flex items-center text-sm cursor-pointer ${
+                                isActive
+                                  ? "text-red-600 font-medium"
+                                  : "text-gray-600"
+                              }`
+                            }
+                            onClick={() => {
+                              document
+                                .querySelectorAll("video")
+                                .forEach((video) => {
+                                  video.pause();
+                                });
+                            }}
+                          >
+                            {getContentTypeIcon(content)}
+                            <span className="flex-1">{content.title}</span>
+                            {isContentCompleted(content) && (
+                              <span className="ml-2 text-green-500">✓</span>
+                            )}
+                          </NavLink>
+                        ))}
                     </ul>
                   </div>
-                )}
-              </div>
-            ))
+                </div>
+              ))
           )}
 
           {/* Fallback if no sections and not loading */}

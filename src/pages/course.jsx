@@ -107,7 +107,7 @@ export default function Course() {
                 <LinkToShow enrollments={user?.enrollments} course={course} />
               ) : (
                 <PrimaryLink to={`/register?courseId=${course.id}`}>
-                  Apply Now
+                  Enroll Now
                 </PrimaryLink>
               )}
               <button className="flex items-center text-gray-700 hover:text-gray-900">
@@ -365,8 +365,10 @@ function LinkToShow({ enrollments, course }) {
           }
         )
       }
+      className="bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+      disabled={isPending}
     >
-      {isPending ? "Enrolling..." : "Enroll"}
+      {isPending ? "Applying..." : "Apply Now"}
     </PrimaryButton>
   );
 }
