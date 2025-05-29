@@ -1,17 +1,72 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, X, BookOpen, Home, User, LogOut, Bell } from "lucide-react";
+import {
+  Menu,
+  X,
+  BookOpen,
+  Home,
+  User,
+  LogOut,
+  Bell,
+  BookOpenCheck,
+  GraduationCap,
+  AlertCircle,
+  CheckCircle2,
+  Check,
+  CreditCard,
+  CheckCircle,
+} from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
+import {
+  useNotification,
+  useMarkAllNotificationsAsRead,
+} from "../hooks/notification.hook";
 
 export default function StudentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { data: notifications, isLoading, error } = useNotification();
+  const { mutate: markAllAsRead, isPending: isMarkingAsRead } =
+    useMarkAllNotificationsAsRead();
+  const notificationCount =
+    notifications?.data?.filter((n) => !n.isRead)?.length || 0;
+  const notificationData = notifications?.data;
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/");
     window.location.reload();
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "ENROLLMENT":
+        return <BookOpenCheck className="h-5 w-5 text-blue-500" />;
+      case "COURSE":
+        return <BookOpen className="h-5 w-5 text-green-500" />;
+      case "ENROLLMENT_APPROVED":
+        return <CheckCircle className="h-5 w-5 text-emerald-500" />;
+      case "PAYMENT_SUCCESS":
+        return <CreditCard className="h-5 w-5 text-purple-500" />;
+      default:
+        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+    }
   };
 
   return (
@@ -44,6 +99,72 @@ export default function StudentNavBar() {
               <span className="text-sm text-gray-700">
                 {user?.firstName} {user?.lastName}
               </span>
+              <div className="relative">
+                <button
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  className="ml-auto flex-shrink-0 p-1 text-gray-400 hover:text-gray-500 relative"
+                >
+                  <Bell className="h-6 w-6 cursor-pointer text-red-600" />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notificationCount}
+                    </span>
+                  )}
+                </button>
+
+                {isNotificationOpen && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50">
+                    <div className="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                      <h3 className="text-sm font-semibold text-gray-900">
+                        Notifications
+                      </h3>
+                      {notificationCount > 0 && (
+                        <button
+                          onClick={handleMarkAllAsRead}
+                          disabled={isMarkingAsRead}
+                          className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {notificationData?.length > 0 ? (
+                        notificationData.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`px-4 py-3 hover:bg-gray-50 ${
+                              !notification.isRead ? "bg-blue-50" : ""
+                            }`}
+                          >
+                            <div className="flex items-start">
+                              <div className="flex-shrink-0 mt-1">
+                                {getNotificationIcon(notification.type)}
+                              </div>
+                              <div className="flex-1 ml-3">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {notification.title}
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {formatDate(notification.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-gray-500">
+                          No notifications
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center px-3 py-1.5 border border-red-600 text-sm font-medium rounded-md text-red-600 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
@@ -114,11 +235,72 @@ export default function StudentNavBar() {
                   {user?.email}
                 </div>
               </div>
-              <button className="ml-auto flex-shrink-0 p-1 text-gray-400 hover:text-gray-500">
-                <Bell className="h-6 w-6" />
-              </button>
-            </div>
-            <div className="mt-3 space-y-1">
+              <div className="relative ml-auto">
+                <button
+                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-500 relative"
+                >
+                  <Bell className="h-6 w-6" />
+                  {notificationCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                      {notificationCount}
+                    </span>
+                  )}
+                </button>
+
+                {isNotificationOpen && (
+                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50">
+                    <div className="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                      <h3 className="text-sm font-semibold text-gray-900">
+                        Notifications
+                      </h3>
+                      {notificationCount > 0 && (
+                        <button
+                          onClick={handleMarkAllAsRead}
+                          disabled={isMarkingAsRead}
+                          className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"
+                        >
+                          <Check className="h-4 w-4 mr-1" />
+                          Mark all as read
+                        </button>
+                      )}
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {notificationData?.length > 0 ? (
+                        notificationData.map((notification) => (
+                          <div
+                            key={notification.id}
+                            className={`px-4 py-3 hover:bg-gray-50 ${
+                              !notification.isRead ? "bg-blue-50" : ""
+                            }`}
+                          >
+                            <div className="flex items-start">
+                              <div className="flex-shrink-0 mt-1">
+                                {getNotificationIcon(notification.type)}
+                              </div>
+                              <div className="flex-1 ml-3">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {notification.title}
+                                </p>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {notification.message}
+                                </p>
+                                <p className="text-xs text-gray-400 mt-1">
+                                  {formatDate(notification.createdAt)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-gray-500">
+                          No notifications
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
               <button
                 onClick={handleLogout}
                 className="flex items-center w-full px-4 py-2 text-base font-medium text-red-600 hover:text-red-800 hover:bg-gray-100"

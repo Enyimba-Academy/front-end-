@@ -7,14 +7,14 @@ export default function RequireAuth({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuthStore();
-  const { isLoadingUser } = useAuth();
+  const { isLoadingUser, user } = useAuth();
 
   useEffect(() => {
-    if (!isLoadingUser && !isAuthenticated) {
+    if (!user && !isAuthenticated) {
       // Redirect to login page but save the attempted URL
       navigate("/login", { state: { from: location }, replace: true });
     }
-  }, [isAuthenticated, isLoadingUser, navigate, location]);
+  }, [user, isAuthenticated, navigate, location]);
 
   if (isLoadingUser) {
     return (

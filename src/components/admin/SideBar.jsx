@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { adminRoutes } from "../../constant/route";
 import Icon from "../icons/Icon";
 import { Outlet } from "react-router-dom";
-
+import { useState } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -14,9 +14,60 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { useAuth } from "@/hooks/useAuth";
+import {
+  Bell,
+  BookOpen,
+  BookOpenCheck,
+  CheckCircle,
+  CreditCard,
+  AlertCircle,
+  Check,
+} from "lucide-react";
+import {
+  useGetNotificationsByRole,
+  useMarkAllNotificationsAsReadByRole,
+} from "@/hooks/notification.hook";
+
 export default function Dashboard() {
   const location = useLocation();
   const { user } = useAuth();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const { data: notifications } = useGetNotificationsByRole();
+  const { mutate: markAllAsRead, isPending: isMarkingAsRead } =
+    useMarkAllNotificationsAsReadByRole();
+
+  const notificationCount =
+    notifications?.data?.filter((n) => !n.isRead)?.length || 0;
+  const notificationData = notifications?.data;
+
+  const handleMarkAllAsRead = () => {
+    markAllAsRead();
+  };
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case "ENROLLMENT":
+        return <BookOpenCheck className="h-5 w-5 text-blue-500" />;
+      case "COURSE":
+        return <BookOpen className="h-5 w-5 text-green-500" />;
+      case "ENROLLMENT_APPROVED":
+        return <CheckCircle className="h-5 w-5 text-emerald-500" />;
+      case "PAYMENT_SUCCESS":
+        return <CreditCard className="h-5 w-5 text-purple-500" />;
+      default:
+        return <AlertCircle className="h-5 w-5 text-gray-500" />;
+    }
+  };
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -93,6 +144,89 @@ export default function Dashboard() {
 
           {/* Dashboard Content */}
           <div className="h-full w-full overflow-auto">
+            <header className="bg-white shadow-sm">
+              <div className="flex justify-end items-center px-6 py-4">
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                      className="text-gray-500 hover:text-gray-700 relative"
+                    >
+                      <Bell className="h-5 w-5 cursor-pointer text-red-600" />
+                      {notificationCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {notificationCount}
+                        </span>
+                      )}
+                    </button>
+
+                    {isNotificationOpen && (
+                      <div className="absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg py-1 z-50">
+                        <div className="px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+                          <h3 className="text-sm font-semibold text-gray-900">
+                            Notifications
+                          </h3>
+                          {notificationCount > 0 && (
+                            <button
+                              onClick={handleMarkAllAsRead}
+                              disabled={isMarkingAsRead}
+                              className="inline-flex items-center px-2 py-1 text-xs font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors duration-200"
+                            >
+                              <Check className="h-4 w-4 mr-1" />
+                              Mark all as read
+                            </button>
+                          )}
+                        </div>
+                        <div className="max-h-96 overflow-y-auto">
+                          {notificationData?.length > 0 ? (
+                            notificationData.map((notification) => (
+                              <div
+                                key={notification.id}
+                                className={`px-4 py-3 hover:bg-gray-50 ${
+                                  !notification.isRead ? "bg-blue-50" : ""
+                                }`}
+                              >
+                                <div className="flex items-start">
+                                  <div className="flex-shrink-0 mt-1">
+                                    {getNotificationIcon(notification.type)}
+                                  </div>
+                                  <div className="flex-1 ml-3">
+                                    <p className="text-sm font-medium text-gray-900">
+                                      {notification.title}
+                                    </p>
+                                    <p className="text-sm text-gray-500 mt-1">
+                                      {notification.message}
+                                    </p>
+                                    <p className="text-xs text-gray-400 mt-1">
+                                      {formatDate(notification.createdAt)}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="px-4 py-3 text-sm text-gray-500">
+                              No notifications
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="h-8 w-8 rounded-full bg-gray-300 overflow-hidden">
+                    <img
+                      src={
+                        user?.avatar || "/placeholder.svg?height=32&width=32"
+                      }
+                      alt="Profile"
+                      width={32}
+                      height={32}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
+            </header>
             <Outlet />
           </div>
         </div>

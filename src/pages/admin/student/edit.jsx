@@ -11,6 +11,73 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Skeleton Components
+const PersonalInfoSkeleton = () => (
+  <div className="bg-white rounded-lg shadow p-6">
+    <Skeleton className="h-6 w-48 mb-4" />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {[...Array(6)].map((_, i) => (
+        <div key={i} className="flex items-start">
+          <Skeleton className="w-5 h-5 mr-3 mt-1" />
+          <div className="flex-1">
+            <Skeleton className="h-4 w-24 mb-2" />
+            <Skeleton className="h-5 w-32" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const TableSkeleton = ({ rows = 3 }) => (
+  <div className="bg-white rounded-lg shadow p-6">
+    <Skeleton className="h-6 w-48 mb-4" />
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-4 flex-1" />
+        ))}
+      </div>
+      {[...Array(rows)].map((_, i) => (
+        <div key={i} className="flex gap-4">
+          {[...Array(4)].map((_, j) => (
+            <Skeleton key={j} className="h-4 flex-1" />
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const StatsSkeleton = () => (
+  <div className="bg-white rounded-lg shadow p-6">
+    <Skeleton className="h-6 w-32 mb-4" />
+    <div className="space-y-4">
+      {[...Array(4)].map((_, i) => (
+        <div key={i}>
+          <Skeleton className="h-4 w-24 mb-2" />
+          <Skeleton className="h-8 w-16" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const CertificatesSkeleton = () => (
+  <div className="bg-white rounded-lg shadow p-6">
+    <Skeleton className="h-6 w-48 mb-4" />
+    <div className="space-y-4">
+      {[...Array(3)].map((_, i) => (
+        <div key={i} className="border rounded-lg p-4">
+          <Skeleton className="h-5 w-32 mb-2" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export default function EditStudent() {
   const { id } = useParams();
@@ -26,7 +93,38 @@ export default function EditStudent() {
   }, [data, id]);
 
   if (!student) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Skeleton */}
+          <div className="mb-8">
+            <Skeleton className="h-6 w-32 mb-4" />
+            <div className="flex justify-between items-start">
+              <div>
+                <Skeleton className="h-8 w-64 mb-2" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+              <Skeleton className="h-6 w-20" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Left Column */}
+            <div className="lg:col-span-2 space-y-6">
+              <PersonalInfoSkeleton />
+              <TableSkeleton />
+              <TableSkeleton />
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              <StatsSkeleton />
+              <CertificatesSkeleton />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const formatDate = (dateString) => {
