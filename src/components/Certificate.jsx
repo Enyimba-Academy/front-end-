@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Download, Award, Calendar, User, X } from "lucide-react";
 import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function Certificate({
   recipientName = "John Doe",
@@ -27,24 +28,32 @@ export default function Certificate({
               ".remove-from-export"
             );
             elementsToRemove.forEach((el) => el.remove());
+
+            // Convert any oklch colors to rgb
+            const elements = clonedDoc.getElementsByTagName("*");
+            for (let element of elements) {
+              const computedStyle = window.getComputedStyle(element);
+              const bgColor = computedStyle.backgroundColor;
+              const textColor = computedStyle.color;
+
+              if (bgColor) element.style.backgroundColor = bgColor;
+              if (textColor) element.style.color = textColor;
+            }
           },
         });
-        canvas.toBlob(
-          (blob) => {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.download = `${recipientName.replace(
-              /\s+/g,
-              "_"
-            )}_Certificate.png`;
-            link.href = url;
-            link.click();
-            URL.revokeObjectURL(url);
-            setDownloading(false);
-          },
-          "image/png",
-          1.0
-        );
+
+        // Create PDF
+        const imgData = canvas.toDataURL("image/png", 1.0);
+        const pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "px",
+          format: [canvas.width, canvas.height],
+        });
+
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+        pdf.save(`${recipientName.replace(/\s+/g, "_")}_Certificate.pdf`);
+
+        setDownloading(false);
       } catch (error) {
         setDownloading(false);
         console.error("Error generating certificate:", error);
@@ -63,16 +72,16 @@ export default function Certificate({
     <>
       {/* Certificate Card */}
       <Card
-        className="w-full max-w-md mx-auto cursor-pointer hover:shadow-lg transition-shadow duration-300 border-2 border-red-800"
+        className="w-full max-w-md mx-auto cursor-pointer hover:shadow-lg transition-shadow duration-300 border-2 border-[#991b1b]"
         onClick={() => setIsOpen(true)}
       >
         <CardContent className="p-6">
           <div className="text-center space-y-4">
-            <div className="w-16 h-16 mx-auto bg-red-800 rounded-full flex items-center justify-center">
+            <div className="w-16 h-16 mx-auto bg-[#991b1b] rounded-full flex items-center justify-center">
               <Award className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-red-800 mb-2">
+              <h3 className="text-xl font-bold text-[#991b1b] mb-2">
                 Certificate of Completion
               </h3>
               <p className="text-gray-600 text-sm">
@@ -168,35 +177,35 @@ export default function Certificate({
                     className="w-14 h-14 md:w-20 md:h-20 mx-auto object-contain"
                     style={{ marginTop: "-1.5rem" }}
                   />
-                  <h1 className="text-2xl md:text-4xl font-bold text-red-800 tracking-wide">
+                  <h1 className="text-2xl md:text-4xl font-bold text-[#991b1b] tracking-wide">
                     ENYIMBA TV & RADIO ACADEMY
                   </h1>
-                  <div className="w-20 md:w-32 h-1 bg-red-600 mx-auto"></div>
+                  <div className="w-20 md:w-32 h-1 bg-[#dc2626] mx-auto"></div>
                 </div>
 
                 {/* Certificate Title */}
                 <div className="space-y-1 md:space-y-2">
-                  <h2 className="text-xl md:text-2xl font-serif text-gray-800 font-semibold">
+                  <h2 className="text-xl md:text-2xl font-serif text-[#1f2937] font-semibold">
                     Certificate of Completion
                   </h2>
-                  <p className="text-sm md:text-base text-gray-600">
+                  <p className="text-sm md:text-base text-[#4b5563]">
                     This is to certify that
                   </p>
                 </div>
 
                 {/* Recipient Name */}
                 <div className="space-y-1">
-                  <h3 className="text-2xl md:text-4xl font-extrabold text-red-800 border-b-2 border-red-200 pb-1 inline-block tracking-wide">
+                  <h3 className="text-2xl md:text-4xl font-extrabold text-[#991b1b] border-b-2 border-[#fecaca] pb-1 inline-block tracking-wide">
                     {recipientName}
                   </h3>
                 </div>
 
                 {/* Course Details */}
-                <div className="space-y-1 md:space-y-2 text-gray-700">
+                <div className="space-y-1 md:space-y-2 text-[#374151]">
                   <p className="text-sm md:text-base">
                     has successfully completed the
                   </p>
-                  <h4 className="text-lg md:text-2xl font-bold text-red-700">
+                  <h4 className="text-lg md:text-2xl font-bold text-[#b91c1c]">
                     {courseName}
                   </h4>
                   <p className="text-sm md:text-base">

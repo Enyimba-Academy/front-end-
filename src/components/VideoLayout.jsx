@@ -25,10 +25,7 @@ export default function VideoLayout() {
   const location = useLocation();
 
   // Use staleTime and cacheTime to prevent unnecessary refetching
-  const { data, isLoading } = useGetEnrollmentById(id, {
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 10 * 60 * 1000, // 10 minutes
-  });
+  const { data, isLoading } = useGetEnrollmentById(id);
 
   const enrollment = data;
   const [activeContent, setActiveContent] = useState(null);
