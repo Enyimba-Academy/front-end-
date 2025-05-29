@@ -6,6 +6,7 @@ import {
   ChevronUp,
   ChevronDown,
   Lightbulb,
+  DoorOpen,
 } from "lucide-react";
 import {
   Link,
@@ -280,6 +281,17 @@ export default function VideoLayout() {
               No content available
             </div>
           )}
+        </div>
+
+        {/* Back to Dashboard Button - Fixed at bottom */}
+        <div className="fixed bottom-0 left-0 w-64 p-4 border-t border-gray-200 bg-white">
+          <Link
+            to="/student-profile"
+            className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+          >
+            <DoorOpen size={16} className="mr-2" />
+            Back to Dashboard
+          </Link>
         </div>
 
         {/* Center - Content Display */}

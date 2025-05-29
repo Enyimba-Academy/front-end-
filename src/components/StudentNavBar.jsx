@@ -29,7 +29,7 @@ export default function StudentNavBar() {
             </Link>
             <div className="hidden md:ml-6 md:flex md:space-x-8">
               <Link
-                to="/student-dashboard"
+                to="/student-profile"
                 className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-900 border-b-2 border-red-600"
               >
                 <Home className="w-4 h-4 mr-2" />

@@ -9,7 +9,7 @@ import {
   Clock,
   ChevronRight,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { useGetEnrollment } from "../hooks/useEnrollment.hook";
 import { EnrollmentStatus } from "../constant/enrollmentEnum";
@@ -21,6 +21,7 @@ import { usePaystackPayment } from "react-paystack";
 import { useQueryClient } from "@tanstack/react-query";
 import Certificate from "../components/Certificate";
 import { ImageUrl } from "@/api/api";
+import { toast } from "react-toastify";
 
 function LoadingSkeleton() {
   return (
@@ -445,6 +446,7 @@ export default function StudentProfile() {
 
 function LinkOrButtonToShow({ status }) {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const config = {
     reference: `${new Date().getTime()}-${status.course.id}`,
@@ -456,31 +458,43 @@ function LinkOrButtonToShow({ status }) {
       userId: status.user.id,
       enrollmentId: status.id,
     },
+    currency: "NGN",
   };
   const initializePayment = usePaystackPayment(config);
-  const onSuccess = (reference) => {
-    queryClient.invalidateQueries({
-      queryKey: ["enrollments"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["enrollment"],
-    });
-  };
-  const onClose = () => {
-    console.log("closed");
-  };
-  if (status.status === EnrollmentStatus.PENDING) {
-    return <StatusBadge status={status.status} />;
-  }
+
   if (status.status === EnrollmentStatus.APPROVED) {
     return (
       <PrimaryButton
-        onClick={() => initializePayment(onSuccess, onClose)}
+        onClick={(e) => {
+          e.preventDefault();
+          initializePayment({
+            onSuccess: (reference) => {
+              console.log("Payment successful!", reference);
+              toast.success("Payment successful!");
+              setTimeout(() => {
+                window.location.reload();
+              }, 3500);
+            },
+            onClose: () => {
+              console.log("Payment modal closed");
+              queryClient.invalidateQueries({
+                queryKey: ["enrollments"],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["enrollment"],
+              });
+              toast.info("Payment cancelled");
+            },
+          });
+        }}
         className="text-white bg-red-500 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
       >
         Pay Now
       </PrimaryButton>
     );
+  }
+  if (status.status === EnrollmentStatus.PENDING) {
+    return <StatusBadge status={status.status} />;
   }
   if (status.status === EnrollmentStatus.REJECTED) {
     return <StatusBadge status={status.status} />;
@@ -491,7 +505,7 @@ function LinkOrButtonToShow({ status }) {
       to={`/lesson/${status.id}`}
       className="text-red-600 font-medium text-xs sm:text-sm flex items-center cursor-pointer"
     >
-      Watch Lesson
+      {status.progress === 0 ? "Start Lesson" : "Continue Lesson"}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-3 w-3 sm:h-4 sm:w-4 ml-1"

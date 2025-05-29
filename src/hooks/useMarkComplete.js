@@ -16,10 +16,13 @@ export const useMarkComplete = () => {
     onSuccess: (_, variables) => {
       // Invalidate relevant queries
       queryClient.invalidateQueries({
-        queryKey: ["lessonProgress", variables.enrollmentId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["enrollmentMaterials", variables.contentId],
+        queryKey: [
+          "lessonProgress",
+          variables.enrollmentId,
+          "enrollment",
+          "enrollmentMaterials",
+          variables.contentId,
+        ],
       });
     },
   });
