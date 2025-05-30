@@ -1,4 +1,11 @@
-import { Bell, Plus, Eye, Trash2 } from "lucide-react";
+import {
+  Bell,
+  Plus,
+  Eye,
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAdminStudents } from "@/hooks/admin/student.hook";
@@ -19,14 +26,16 @@ import {
   TableBody,
   TableCell,
 } from "../../components/ui/table";
+import { Button } from "@/components/ui/button";
 
 export default function Student() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("createdAt");
   const [sortOrder, setSortOrder] = useState("desc");
   const [status, setStatus] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const { data, isLoading } = useAdminStudents({
-    page: 1,
+    page: currentPage,
     limit: 10,
     search: searchQuery,
     sortBy,
@@ -35,6 +44,7 @@ export default function Student() {
   });
   const navigate = useNavigate();
 
+  console.log(data);
   const handleEditStudent = (student) => {
     navigate(`/admin/students/${student.id}`);
   };
@@ -42,6 +52,10 @@ export default function Student() {
   const handleDeleteStudent = (student) => {
     console.log("Delete student:", student);
     // Add your delete student logic here
+  };
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
   };
 
   return (
@@ -58,7 +72,7 @@ export default function Student() {
         <div className="bg-white rounded-md shadow">
           <div className="flex justify-between items-center p-4 border-b">
             <h2 className="text-lg font-semibold">
-              Students ({data?.students?.length || 0})
+              Students ({data?.total || 0})
             </h2>
             <div className="flex items-center gap-2 justify-end">
               <Input
@@ -74,7 +88,6 @@ export default function Student() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="createdAt">Created At</SelectItem>
-
                   <SelectItem value="email">Email</SelectItem>
                 </SelectContent>
               </Select>
@@ -175,6 +188,35 @@ export default function Student() {
                 )}
               </TableBody>
             </Table>
+
+            {/* Pagination Controls */}
+            <div className="flex items-center justify-between px-4 py-3 border-t">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-gray-700">
+                  Showing page {data?.currentPage} of {data?.totalPages}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={!data?.hasPreviousPage}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={!data?.hasNextPage}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
