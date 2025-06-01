@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { adminRoutes } from "../../constant/route";
 import Icon from "../icons/Icon";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +32,7 @@ export default function Dashboard() {
   const location = useLocation();
   const { user } = useAuth();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef(null);
   const { data: notifications } = useGetNotificationsByRole();
   const { mutate: markAllAsRead, isPending: isMarkingAsRead } =
     useMarkAllNotificationsAsReadByRole();
@@ -68,6 +69,22 @@ export default function Dashboard() {
         return <AlertCircle className="h-5 w-5 text-gray-500" />;
     }
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <SidebarProvider defaultOpen={true}>
@@ -147,7 +164,7 @@ export default function Dashboard() {
             <header className="bg-white shadow-sm">
               <div className="flex justify-end items-center px-6 py-4">
                 <div className="flex items-center space-x-4">
-                  <div className="relative">
+                  <div className="relative" ref={notificationRef}>
                     <button
                       onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                       className="text-gray-500 hover:text-gray-700 relative"

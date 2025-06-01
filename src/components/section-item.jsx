@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useFormikContext, FieldArray } from "formik";
 
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,7 @@ export function SectionItem({
   const [sectionName, setSectionName] = useState(section.title);
   const [isAddContentOpen, setIsAddContentOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const inputRef = useRef(null);
 
   const handleEditName = () => {
     if (isEditing) {
@@ -43,6 +44,25 @@ export function SectionItem({
     }
     setIsEditing(!isEditing);
   };
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isEditing &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
+        setFieldValue(`sections[${sectionIndex}].title`, sectionName);
+        setIsEditing(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditing, sectionName, sectionIndex, setFieldValue]);
 
   const handleContentsReorder = (reorderedContents) => {
     setFieldValue(`sections[${sectionIndex}].contents`, reorderedContents);
@@ -76,12 +96,21 @@ export function SectionItem({
 
           {isEditing ? (
             <Input
+              ref={inputRef}
               value={sectionName}
               onChange={(e) => setSectionName(e.target.value)}
               className={`max-w-md ${
                 error && error.title && showErrors ? "border-red-500" : ""
               }`}
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleEditName();
+                } else if (e.key === "Escape") {
+                  setSectionName(section.title);
+                  setIsEditing(false);
+                }
+              }}
             />
           ) : (
             <h3 className="text-xl font-semibold">{section.title}</h3>
@@ -90,7 +119,10 @@ export function SectionItem({
             type="button"
             variant="ghost"
             size="icon"
-            onClick={handleEditName}
+            onClick={(e) => {
+              e.preventDefault();
+              handleEditName();
+            }}
             className="h-8 w-8"
           >
             {isEditing ? (
@@ -201,9 +233,7 @@ export function SectionItem({
                   const newContent = {
                     id: createId(),
                     type: contentType,
-                    title: `New ${
-                      contentType.charAt(0).toUpperCase() + contentType.slice(1)
-                    }`,
+                    title: getDefaultTitle(contentType),
                     description: "",
                     ...(contentType === "quiz" && {
                       quizType: "multiChoice",
@@ -227,10 +257,8 @@ export function SectionItem({
                   push(newContent);
                   setIsAddContentOpen(false);
                 }}
-                disabledTypes={{
-                  quiz: hasQuiz,
-                  assignment: hasAssignment,
-                }}
+                hasQuiz={hasQuiz}
+                hasAssignment={hasAssignment}
               />
             </div>
           )}
@@ -239,3 +267,19 @@ export function SectionItem({
     </div>
   );
 }
+
+// Helper functions
+const getDefaultTitle = (contentType) => {
+  switch (contentType) {
+    case "video":
+      return "Video Lecture";
+    case "material":
+      return "Course Materials";
+    case "quiz":
+      return "Quiz";
+    case "assignment":
+      return "Assignment";
+    default:
+      return "New Content";
+  }
+};

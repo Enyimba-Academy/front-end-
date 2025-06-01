@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { useFormikContext } from "formik"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+import { useState, useRef, useEffect } from "react";
+import { useFormikContext } from "formik";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Trash,
   Edit,
@@ -19,12 +19,12 @@ import {
   ChevronUp,
   GripVertical,
   AlertCircle,
-} from "lucide-react"
-import { VideoContent } from "@/components/content-types/video-content"
-import { ResourceContent } from "@/components/content-types/resource-content"
-import { QuizContent } from "@/components/content-types/quiz-content"
-import { AssignmentContent } from "@/components/content-types/assignment-content"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+} from "lucide-react";
+import { VideoContent } from "@/components/content-types/video-content";
+import { ResourceContent } from "@/components/content-types/resource-content";
+import { QuizContent } from "@/components/content-types/quiz-content";
+import { AssignmentContent } from "@/components/content-types/assignment-content";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export function ContentItem({
   content,
@@ -37,46 +37,72 @@ export function ContentItem({
   touched,
   showErrors,
 }) {
-  const { values, handleChange, setFieldValue } = useFormikContext()
-  const [isEditing, setIsEditing] = useState(false)
-  const [contentTitle, setContentTitle] = useState(content.title)
-  const [isExpanded, setIsExpanded] = useState(false)
+  const { values, handleChange, setFieldValue } = useFormikContext();
+  const [isEditing, setIsEditing] = useState(false);
+  const [contentTitle, setContentTitle] = useState(content.title);
+  const [isExpanded, setIsExpanded] = useState(true);
+  const inputRef = useRef(null);
 
   const handleEditTitle = () => {
     if (isEditing) {
-      setFieldValue(`sections[${sectionIndex}].contents[${contentIndex}].title`, contentTitle)
+      setFieldValue(
+        `sections[${sectionIndex}].contents[${contentIndex}].title`,
+        contentTitle
+      );
     }
-    setIsEditing(!isEditing)
-  }
+    setIsEditing(!isEditing);
+  };
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isEditing &&
+        inputRef.current &&
+        !inputRef.current.contains(event.target)
+      ) {
+        setFieldValue(
+          `sections[${sectionIndex}].contents[${contentIndex}].title`,
+          contentTitle
+        );
+        setIsEditing(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditing, contentTitle, sectionIndex, contentIndex, setFieldValue]);
 
   const getContentIcon = () => {
     switch (content.type) {
       case "video":
-        return <FileVideo className="h-5 w-5 text-red-600" />
+        return <FileVideo className="h-5 w-5 text-red-600" />;
       case "resource":
-        return <FileText className="h-5 w-5 text-blue-600" />
+        return <FileText className="h-5 w-5 text-blue-600" />;
       case "quiz":
-        return <HelpCircle className="h-5 w-5 text-green-600" />
+        return <HelpCircle className="h-5 w-5 text-green-600" />;
       case "assignment":
-        return <FileSpreadsheet className="h-5 w-5 text-orange-600" />
+        return <FileSpreadsheet className="h-5 w-5 text-orange-600" />;
     }
-  }
+  };
 
   const getContentTitle = () => {
     switch (content.type) {
       case "video":
-        return "Video"
+        return "Video";
       case "resource":
-        return "Resource"
+        return "Resource";
       case "quiz":
-        return "Quiz"
+        return "Quiz";
       case "assignment":
-        return "Assignment"
+        return "Assignment";
     }
-  }
+  };
 
   const renderContentEditor = () => {
-    if (!isExpanded) return null
+    if (!isExpanded) return null;
 
     switch (content.type) {
       case "video":
@@ -88,7 +114,7 @@ export function ContentItem({
             error={error}
             showErrors={showErrors}
           />
-        )
+        );
       case "resource":
         return (
           <ResourceContent
@@ -98,7 +124,7 @@ export function ContentItem({
             error={error}
             showErrors={showErrors}
           />
-        )
+        );
       case "quiz":
         return (
           <QuizContent
@@ -108,7 +134,7 @@ export function ContentItem({
             error={error && error.questions}
             showErrors={showErrors}
           />
-        )
+        );
       case "assignment":
         return (
           <AssignmentContent
@@ -118,15 +144,19 @@ export function ContentItem({
             error={error && error.assignmentDetails}
             showErrors={showErrors}
           />
-        )
+        );
     }
-  }
+  };
 
   // Count resources for badge display
-  const resourceCount = (content.resources || []).length
+  const resourceCount = (content.resources || []).length;
 
   return (
-    <Card className={`border ${error && showErrors ? "border-red-300" : "border-gray-200"}`}>
+    <Card
+      className={`border ${
+        error && showErrors ? "border-red-300" : "border-gray-200"
+      }`}
+    >
       <CardHeader className="flex flex-row items-center justify-between py-3 px-4 bg-gray-50">
         <div className="flex items-center gap-2">
           <button
@@ -140,18 +170,42 @@ export function ContentItem({
           <div className="flex items-center gap-2">
             {isEditing ? (
               <Input
+                ref={inputRef}
                 value={contentTitle}
                 onChange={(e) => setContentTitle(e.target.value)}
-                className={`w-64 ${error && error.title && showErrors ? "border-red-500" : ""}`}
+                className={`w-64 ${
+                  error && error.title && showErrors ? "border-red-500" : ""
+                }`}
                 autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleEditTitle();
+                  } else if (e.key === "Escape") {
+                    setContentTitle(content.title);
+                    setIsEditing(false);
+                  }
+                }}
               />
             ) : (
               <span className="font-medium">
                 {getContentTitle()}: {content.title}
               </span>
             )}
-            <Button type="button" variant="ghost" size="icon" onClick={handleEditTitle} className="h-6 w-6">
-              {isEditing ? <Check className="h-3 w-3" /> : <Edit className="h-3 w-3" />}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.preventDefault();
+                handleEditTitle();
+              }}
+              className="h-6 w-6"
+            >
+              {isEditing ? (
+                <Check className="h-3 w-3" />
+              ) : (
+                <Edit className="h-3 w-3" />
+              )}
             </Button>
           </div>
           {resourceCount > 0 && (
@@ -180,7 +234,13 @@ export function ContentItem({
               </>
             )}
           </Button>
-          <Button type="button" variant="ghost" size="icon" onClick={onRemove} className="h-7 w-7 text-destructive">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={onRemove}
+            className="h-7 w-7 text-destructive"
+          >
             <Trash className="h-4 w-4" />
           </Button>
         </div>
@@ -197,14 +257,22 @@ export function ContentItem({
         <CardContent className="p-4">
           <div className="space-y-4">
             <div>
-              <Label htmlFor={`sections[${sectionIndex}].contents[${contentIndex}].description`}>Description</Label>
+              <Label
+                htmlFor={`sections[${sectionIndex}].contents[${contentIndex}].description`}
+              >
+                Description
+              </Label>
               <Textarea
                 id={`sections[${sectionIndex}].contents[${contentIndex}].description`}
                 name={`sections[${sectionIndex}].contents[${contentIndex}].description`}
                 value={content.description || ""}
                 onChange={handleChange}
                 rows={3}
-                className={error && error.description && showErrors ? "border-red-500" : ""}
+                className={
+                  error && error.description && showErrors
+                    ? "border-red-500"
+                    : ""
+                }
               />
               {error && error.description && showErrors && (
                 <p className="text-red-500 text-sm mt-1">{error.description}</p>
@@ -216,5 +284,5 @@ export function ContentItem({
         </CardContent>
       )}
     </Card>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Menu,
@@ -25,6 +25,7 @@ import {
 export default function StudentNavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const notificationRef = useRef(null);
   const { user, logout } = useAuth();
   const { data: notifications, isLoading, error } = useNotification();
   const { mutate: markAllAsRead, isPending: isMarkingAsRead } =
@@ -33,6 +34,22 @@ export default function StudentNavBar() {
     notifications?.data?.filter((n) => !n.isRead)?.length || 0;
   const notificationData = notifications?.data;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        notificationRef.current &&
+        !notificationRef.current.contains(event.target)
+      ) {
+        setIsNotificationOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -99,7 +116,7 @@ export default function StudentNavBar() {
               <span className="text-sm text-gray-700">
                 {user?.firstName} {user?.lastName}
               </span>
-              <div className="relative">
+              <div className="relative" ref={notificationRef}>
                 <button
                   onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                   className="ml-auto flex-shrink-0 p-1 text-gray-400 hover:text-gray-500 relative"
@@ -235,7 +252,7 @@ export default function StudentNavBar() {
                   {user?.email}
                 </div>
               </div>
-              <div className="relative ml-auto">
+              <div className="relative ml-auto" ref={notificationRef}>
                 <button
                   onClick={() => setIsNotificationOpen(!isNotificationOpen)}
                   className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-500 relative"
