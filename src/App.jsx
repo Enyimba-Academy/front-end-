@@ -34,6 +34,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import VideoLayout from "./components/VideoLayout";
 import AdminPayments from "./pages/admin/payments";
 import EditStudent from "@/pages/admin/student/edit";
+import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -154,6 +155,9 @@ function App() {
             <Route path="certificates/edit/:id" element={<AddCertificate />} />
             <Route path="payments" element={<AdminPayments />} />
           </Route>
+
+          {/* Catch all route - 404 page */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

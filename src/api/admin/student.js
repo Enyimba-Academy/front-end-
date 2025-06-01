@@ -25,3 +25,12 @@ export const getStudents = async ({
     });
   return response;
 };
+
+export const getStudentById = async (id) => {
+  const response = await api
+    .get(`${ADMIN_BASE_URL}/students/${id}`)
+    .then((res) => {
+      return res.data;
+    });
+  return response;
+};

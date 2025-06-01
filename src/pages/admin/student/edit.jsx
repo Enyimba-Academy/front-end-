@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+
 import { ArrowLeft, Mail, Phone, MapPin, Calendar, User } from "lucide-react";
-import { useAdminStudents } from "@/hooks/admin/student.hook";
+import { useAdminStudentById } from "@/hooks/admin/student.hook";
 import StatusBadge from "@/components/shared/StatusBadge";
 import {
   Table,
@@ -82,17 +82,10 @@ const CertificatesSkeleton = () => (
 export default function EditStudent() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useAdminStudents();
-  const [student, setStudent] = useState(null);
+  const { data, isLoading, error } = useAdminStudentById(id);
+  const student = data;
 
-  useEffect(() => {
-    if (data?.students) {
-      const foundStudent = data.students.find((s) => s.id === id);
-      setStudent(foundStudent);
-    }
-  }, [data, id]);
-
-  if (!student) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
